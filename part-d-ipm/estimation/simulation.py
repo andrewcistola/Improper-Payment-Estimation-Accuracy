@@ -12,21 +12,22 @@ Amounts follow the SQL arithmetic exactly (cents; DOUBLE shares; round
 half away from zero); shared/tests/test_simulation.py checks that applying
 each PDE's own finding reproduces errors/ y to the cent.
 
-Audit and projection (claim-level design, as in production; two-sample):
-  audit      : sim_claims PDEs sampled from all PDEs, independent of
-               beneficiary (sim_claim_sample). Finding = corrected GDC /
-               submitted GDC (0 = missing documentation; 1 = no error).
-  each iteration:
-    1. donor claims = the audited claims ('assign') or a resample of them
-       with replacement ('resample')
-    2. draw sim_bene_draws beneficiaries with replacement from the
-       population (108,000 = all, standing in for production's random
-       1 million beneficiaries)
-    3. every PDE of a drawn beneficiary takes the finding of a random
-       donor claim of the same kind (brand vs generic); audited PDEs keep
-       their own finding; corrected GDC = round(submitted x ratio)
-    4. rerun the benefit for each drawn beneficiary; the iteration's rate
-       is sum |y| / sum x over the drawn beneficiaries
+Design (claim level, as in production). Each audit year has two samples,
+drawn once in SQL (40_simulation_inputs.sql) and held fixed for all of
+that year's iterations:
+  audit sample       : sim_audit_size PDEs sampled from all PDEs,
+                       independent of beneficiary (sim_audit_sample).
+                       Finding = corrected GDC / submitted GDC
+                       (0 = missing documentation; 1 = no error).
+  beneficiary sample : sim_bene_size beneficiaries drawn with replacement
+                       (sim_bene_sample; 108,000 = the population size,
+                       standing in for production's random 1 million).
+Each iteration:
+  1. every PDE of a beneficiary-sample beneficiary takes the finding of a
+     random audit-sample PDE of the same kind (brand vs generic); audited
+     PDEs keep their own finding; corrected GDC = round(submitted x ratio)
+  2. rerun the benefit for each beneficiary in the beneficiary sample; the
+     iteration's rate is sum |y| / sum x over the beneficiary sample
 """
 import numpy as np
 from numba import njit
@@ -134,7 +135,6 @@ class Kernel:
         counts = np.bincount(self.row_unit, minlength=self.n_benes)
         self.start = np.concatenate([[0], np.cumsum(counts)[:-1]]).astype(np.int64)
         self.count = counts.astype(np.int64)
-        self.n_draws = int(v["sim_bene_draws"])
         self.m_sub = medicare_cents(self.sub, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
 
     def improper_cents(self, g_corrected):
@@ -142,13 +142,20 @@ class Kernel:
         return self.m_sub - medicare_cents(g_corrected, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
 
     def audited(self, rep):
-        s = self.con.execute("SELECT row_idx FROM sim_claim_sample WHERE rep = ? ORDER BY row_idx",
+        """The audit year's audit sample: row indices of the audited PDEs."""
+        s = self.con.execute("SELECT row_idx FROM sim_audit_sample WHERE rep = ? ORDER BY row_idx",
                              [rep]).fetchnumpy()
-        idx = np.asarray(s["row_idx"], dtype=np.int64)
-        return idx, np.zeros(len(idx), dtype=np.int64)       # one stratum: SRS of claims
+        return np.asarray(s["row_idx"], dtype=np.int64)
 
-    def prepare(self, audited_mask):
+    def prepare(self, rep, audited_mask):
+        """Fix the audit year's samples: audited PDEs and beneficiary sample."""
         self._audited = audited_mask
+        b = self.con.execute("SELECT unit_idx FROM sim_bene_sample WHERE rep = ? ORDER BY unit_idx",
+                             [rep]).fetchnumpy()
+        self._benes = np.asarray(b["unit_idx"], dtype=np.int64)  # sorted; a repeat = drawn twice
+        self._n_rows = int(self.count[self._benes].sum())        # PDEs of the beneficiary sample
+        self._m_sub = self.m_sub[self._benes]
+        self._x = float(self.x[self._benes].sum())
 
     def iterate(self, donors, rng):
         kind = self.brand[donors].astype(np.int64)
@@ -157,9 +164,8 @@ class Kernel:
         order = np.argsort(kind[err], kind="stable")
         err_ratio = self.ratio[donors[err]][order]
         err_off = np.searchsorted(kind[err][order], np.arange(3)).astype(np.int64)
-        drawn = np.sort(rng.integers(0, self.n_benes, self.n_draws))   # order is irrelevant; sorted is faster
-        u = rng.random(int(self.count[drawn].sum()))
-        m_cor = drawn_medicare(drawn, self.start, self.count, self.sub, self.cor, self._audited,
+        u = rng.random(self._n_rows)
+        m_cor = drawn_medicare(self._benes, self.start, self.count, self.sub, self.cor, self._audited,
                                self.brand, self.lis, u, p_err, err_off, err_ratio, *self.p)
-        y = self.m_sub[drawn] - m_cor
-        return {"national": float(np.abs(y).sum()) / float(self.x[drawn].sum())}
+        y = self._m_sub - m_cor
+        return {"national": float(np.abs(y).sum()) / self._x}

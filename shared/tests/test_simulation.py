@@ -40,7 +40,7 @@ def test_part_c_payment_function_exact():
 
 def test_part_d_payment_function_exact():
     cfg = yaml.safe_load((ROOT / "part-d-ipm/errors/config.yaml").read_text())["defaults"]
-    v = {**cfg, "seed": 1, "sim_reps": 1, "sim_claims": 10, "sim_bene_draws": 10}
+    v = {**cfg, "seed": 1, "sim_reps": 1, "sim_audit_size": 10, "sim_bene_size": 10}
     if not (ROOT / "part-d-ipm/errors/output/base/pde_detail.parquet").exists():
         pytest.skip("build part-d-ipm/errors first")
     con = setup("part-d-ipm/errors/output/base", "part-d-ipm/estimation/sql/40_simulation_inputs.sql", v)
@@ -52,6 +52,13 @@ def test_part_d_payment_function_exact():
     m = mod.drawn_medicare(np.arange(k.n_benes), k.start, k.count, k.sub, k.cor, np.ones(k.units, bool),
                            k.brand, k.lis, np.zeros(k.units), np.zeros(2), np.zeros(3, np.int64), np.zeros(0), *k.p)
     assert np.array_equal(k.m_sub - m, truth)
+    # the audit year's beneficiary sample is fixed: with every claim audited,
+    # every iteration gives the same rate, the exact rate over that sample
+    benes = con.execute("SELECT unit_idx FROM sim_bene_sample WHERE rep = 1").fetchnumpy()["unit_idx"]
+    assert len(benes) == 10
+    k.prepare(1, np.ones(k.units, bool))
+    rates = [k.iterate(np.arange(k.units), np.random.default_rng(s))["national"] for s in (1, 2)]
+    assert rates[0] == rates[1] == np.abs(truth[benes]).sum() / k.x[benes].sum()
 
 
 def test_eipm_payment_function_exact():
@@ -121,3 +128,6 @@ def test_simulation_reproducible(tmp_path):
         e.run(["left_p0.30"])
         out.append((tmp_path / f"r{i}" / "left_p0.30" / "estimates.parquet").read_bytes())
     assert out[0] == out[1]
+    import duckdb
+    methods = {m for (m,) in duckdb.sql(f"SELECT DISTINCT method FROM '{tmp_path}/r0/left_p0.30/estimates.parquet'").fetchall()}
+    assert methods == {"expansion", "ratio", "regression", "simulation"}    # one simulation: the audit as audited

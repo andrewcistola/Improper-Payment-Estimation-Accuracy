@@ -67,11 +67,11 @@ class Kernel:
         return np.sign(v) * ((np.abs(v) + 500) // 1000)                     # cents, half away
 
     def audited(self, rep):
-        s = self.con.execute("SELECT unit_id, stratum FROM sample WHERE rep = ? AND domain = 'national' "
+        s = self.con.execute("SELECT unit_id FROM sample WHERE rep = ? AND domain = 'national' "
                              "ORDER BY unit_id", [rep]).fetchnumpy()
-        return np.searchsorted(self.unit_id, np.asarray(s["unit_id"])), np.asarray(s["stratum"])
+        return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
-    def prepare(self, audited_mask):
+    def prepare(self, rep, audited_mask):
         self.hccs.prepare(audited_mask)
         self.enrollees.prepare(audited_mask)
         own_h = audited_mask[self.row_unit]

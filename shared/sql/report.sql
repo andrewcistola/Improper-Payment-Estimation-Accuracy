@@ -2,7 +2,7 @@
 -- shared/sql/report.sql : fabricated truth vs each estimate and its CI
 -- ---------------------------------------------------------------------
 -- Joins every program's estimation results (estimates.parquet: one row
--- per Monte Carlo sample x method x interval) to the fabricated truth in
+-- per audit year x method x interval) to the fabricated truth in
 -- the population (truth.json: theta = true improper payment rate).
 -- No estimation is redone here.
 --

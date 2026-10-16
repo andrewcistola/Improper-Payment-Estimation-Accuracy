@@ -51,11 +51,11 @@ class Kernel:
         return {f"{self.state}|{k}": float(v.sum()) / self.X for k, v in y.items()}
 
     def audited(self, rep):
-        s = self.con.execute("SELECT unit_id, stratum FROM sample WHERE rep = ? AND domain = ? "
+        s = self.con.execute("SELECT unit_id FROM sample WHERE rep = ? AND domain = ? "
                              "ORDER BY unit_id", [rep, f"{self.state}|overall"]).fetchnumpy()
-        return np.searchsorted(self.unit_id, np.asarray(s["unit_id"])), np.asarray(s["stratum"])
+        return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
-    def prepare(self, audited_mask):
+    def prepare(self, rep, audited_mask):
         self.claims.prepare(audited_mask)
         self._yc = np.where(audited_mask, self.yc, 0)
         aud_bene = np.zeros(self.n_benes, dtype=bool)

@@ -1,5 +1,5 @@
 -- =====================================================================
--- shared/sql/sample_srs.sql : Monte Carlo samples, stratified SRS
+-- shared/sql/sample_srs.sql : audit years (Monte Carlo replicates), stratified SRS
 -- ---------------------------------------------------------------------
 -- Rule: within each stratum, simple random sampling without replacement:
 -- the samp_h units with the smallest uniform key u(seed, rep, unit_id)

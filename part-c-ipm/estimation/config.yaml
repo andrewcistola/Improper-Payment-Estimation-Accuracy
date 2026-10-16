@@ -1,12 +1,12 @@
 # Part C IPM - estimation: draw production-design samples from the
 # errors/ population and estimate the gross improper payment rate with
 # each method (expansion, ratio, regression, and the audit-finding simulation).
-program: partc_estimation   # also the seed label for sampling and bootstrap
+program: partc_estimation   # also the seed label for sampling and simulation
 seed: 20261016
 output_dir: results
 steps:
   - sql: part-c-ipm/estimation/sql/01_frame.sql        # estimand + design
-  - sql: shared/sql/sample_srs.sql                          # Monte Carlo samples
+  - sql: shared/sql/sample_srs.sql                          # audit years (Monte Carlo replicates)
   - sql: part-c-ipm/estimation/sql/10_expansion.sql
   - sql: part-c-ipm/estimation/sql/20_ratio.sql
   - sql: part-c-ipm/estimation/sql/30_regression.sql
@@ -24,9 +24,9 @@ defaults:
     - {stratum: low, n_h: 1500}
     - {stratum: medium, n_h: 1500}
     - {stratum: high, n_h: 1500}
-  reps: 200        # Monte Carlo samples (MC SE of 95% coverage ~ 1.5 pt)
-  sim_reps: 50       # audited samples scored for the simulation method (first 50 of reps)
-  sim_iterations: 1000  # simulation iterations per audited sample
+  reps: 200        # audit years (Monte Carlo replicates; MC SE of 95% coverage ~ 1.5 pt)
+  sim_reps: 50       # audit years scored for the simulation method (first 50 of reps)
+  sim_iterations: 1000  # simulation iterations per audit year
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 scenarios:
   - name: base
