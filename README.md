@@ -52,17 +52,17 @@ Add `--set reps=20 sim_reps=3 sim_iterations=100` (20 audit years, 3 of them run
 
 ## Results
 
-Coverage of two-sided 95% intervals: the % of audit years in which the interval contains the true rate. The parentheses show the % of audit years in which the interval lies entirely above / entirely below the true rate; a well-calibrated interval misses about 2.5% on each side.
+Each cell counts audit years out of 25: how many of the 95% intervals contain the true rate. The parentheses count the intervals lying entirely above / entirely below the true rate. A valid 95% interval contains the truth in about 24 of 25 audit years, and by chance alone 22 or more happen 97% of the time.
 
 | Program | Expansion | Ratio | Regression | Microsimulation |
 |---|---|---|---|---|
-| Part C (n = 4,500) | 92.0 (0.0/8.0) | 96.0 (0.0/4.0) | 96.0 (0.0/4.0) | 28.0 (20.0/52.0) |
-| Part D (n = 1,500 beneficiaries; microsimulation: audit sample of 5,000 PDEs) | 96.0 (0.0/4.0) | 96.0 (0.0/4.0) | 96.0 (4.0/0.0) | 32.0 (24.0/44.0) |
-| PERM overall (9 states, n = 520 each) | 91.6 (1.3/7.1) | 91.1 (1.3/7.6) | 91.6 (1.3/7.1) | 23.1 (37.8/39.1) |
-| PERM eligibility | 88.9 (0.4/10.7) | 88.9 (0.4/10.7) | 88.9 (0.4/10.7) | 27.1 (32.9/40.0) |
-| EIPM (n = 2,000) | 88.0 (0.0/12.0) | 88.0 (0.0/12.0) | 88.0 (0.0/12.0) | 16.0 (24.0/60.0) |
+| Part C (n = 4,500) | 23/25 (0/2) | 24/25 (0/1) | 24/25 (0/1) | 7/25 (5/13) |
+| Part D (n = 1,500 beneficiaries; microsimulation: audit sample of 5,000 PDEs) | 24/25 (0/1) | 24/25 (0/1) | 24/25 (1/0) | 8/25 (6/11) |
+| PERM overall (9 states × 25 audit years; n = 520 each) | 206/225 (3/16) | 205/225 (3/17) | 206/225 (3/16) | 52/225 (85/88) |
+| PERM eligibility (9 states × 25 audit years) | 200/225 (1/24) | 200/225 (1/24) | 200/225 (1/24) | 61/225 (74/90) |
+| EIPM (n = 2,000) | 22/25 (0/3) | 22/25 (0/3) | 22/25 (0/3) | 4/25 (6/15) |
 
-Every method is scored on the same 25 audit years (audit years 1–25 of the current runs; each audit year is an independent random sample). With 25 audit years, a coverage near 95% is measured to about ±4.4 points. The PERM rows pool the 9 states (225 audit years, about ±1.5 points). CERT (SRS of 30 claims, 12 populations, 25 audit years each) is in [`perm-cert/README.md`](perm-cert/README.md).
+Every method is scored on the same 25 audit years: audit years 1–25 of the current runs, each an independent random sample. The PERM rows add up the 9 states, so they count out of 225 (9 × 25). CERT (SRS of 30 claims, 12 populations, 25 audit years each) is in [`perm-cert/README.md`](perm-cert/README.md).
 
 | Program | Audit years reported (every method) | Microsimulation iterations per audit year |
 |---|---|---|
