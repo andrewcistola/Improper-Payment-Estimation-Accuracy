@@ -8,7 +8,10 @@ variables:
   - stratum: all
     n_h: 1500
   reps: 200
-  boot_reps: 500
+  sim_reps: 25
+  sim_iterations: 1000
+  sim_audit_size: 5000
+  sim_bene_size: 108000
   alpha: 0.05
   scenario: base
 steps:
@@ -17,5 +20,6 @@ steps:
 - sql: part-d-ipm/estimation/sql/10_expansion.sql
 - sql: part-d-ipm/estimation/sql/20_ratio.sql
 - sql: part-d-ipm/estimation/sql/30_regression.sql
-- sql: part-d-ipm/estimation/sql/40_simulation.sql
+- sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql
+- python: part-d-ipm/estimation/simulation.py
 - sql: part-d-ipm/estimation/sql/90_score.sql

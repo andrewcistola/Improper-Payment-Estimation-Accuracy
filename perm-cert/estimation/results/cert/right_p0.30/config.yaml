@@ -6,7 +6,8 @@ variables:
   population_dir: perm-cert/errors/output/cert/right_all_or_nothing_p0.30
   n: 30
   reps: 1000
-  boot_reps: 1000
+  sim_reps: 100
+  sim_iterations: 1000
   alpha: 0.05
   shape: right
   error_rate: 0.3
@@ -17,5 +18,6 @@ steps:
 - sql: perm-cert/estimation/sql/cert_10_expansion.sql
 - sql: perm-cert/estimation/sql/cert_20_ratio.sql
 - sql: perm-cert/estimation/sql/cert_30_regression.sql
-- sql: perm-cert/estimation/sql/cert_40_simulation.sql
+- sql: perm-cert/estimation/sql/cert_40_simulation_inputs.sql
+- python: perm-cert/estimation/cert_simulation.py
 - sql: perm-cert/estimation/sql/cert_90_score.sql

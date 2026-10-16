@@ -12,7 +12,8 @@ variables:
   - stratum: high
     n_h: 1500
   reps: 200
-  boot_reps: 500
+  sim_reps: 50
+  sim_iterations: 1000
   alpha: 0.05
   scenario: base
 steps:
@@ -21,5 +22,6 @@ steps:
 - sql: part-c-ipm/estimation/sql/10_expansion.sql
 - sql: part-c-ipm/estimation/sql/20_ratio.sql
 - sql: part-c-ipm/estimation/sql/30_regression.sql
-- sql: part-c-ipm/estimation/sql/40_simulation.sql
+- sql: part-c-ipm/estimation/sql/40_simulation_inputs.sql
+- python: part-c-ipm/estimation/simulation.py
 - sql: part-c-ipm/estimation/sql/90_score.sql

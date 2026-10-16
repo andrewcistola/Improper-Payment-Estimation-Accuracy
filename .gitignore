@@ -21,5 +21,6 @@ perm-cert/errors/output/perm/**/*.parquet
 # DuckDB spill files from large runs
 .tmp/
 
-# per-sample report as CSV is large (20 MB); the same rows are in by_sample.parquet
+# per-audit-year report as CSV is large; the same rows are in by_audit_year.parquet
 shared/results/report/by_sample.csv
+shared/results/report/by_audit_year.csv

@@ -6,9 +6,11 @@ output_dir: results
 steps:
   - sql: shared/sql/report.sql
 exports:
-  - {table: by_sample, order_by: "program, scenario, domain, method, interval, rep"}
+  - {table: by_audit_year, order_by: "program, scenario, domain, method, interval, audit_year"}
 csv:
   - {table: by_scenario, order_by: "program, scenario, domain, method, interval", file: by_scenario.csv}
-  - {table: by_sample, order_by: "program, scenario, domain, method, interval, rep", file: by_sample.csv}
+  - {table: by_audit_year, order_by: "program, scenario, domain, method, interval, audit_year", file: by_audit_year.csv}
+defaults:
+  audit_years: 25   # report audit years 1..25 for every method (the same audits)
 scenarios:
   - name: report
