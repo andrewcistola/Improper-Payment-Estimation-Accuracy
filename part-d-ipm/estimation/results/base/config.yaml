@@ -1,0 +1,22 @@
+program: partd_estimation
+scenario: base
+master_seed: 20261016
+scenario_seed: 2465714150538143158
+variables:
+  population_dir: part-d-ipm/errors/output/base
+  selection: srs
+  allocation:
+  - stratum: all
+    n_h: 1500
+  reps: 200
+  boot_reps: 500
+  alpha: 0.05
+  scenario: base
+steps:
+- sql: part-d-ipm/estimation/sql/01_frame.sql
+- sql: shared/sql/sample.sql
+- sql: part-d-ipm/estimation/sql/10_expansion.sql
+- sql: part-d-ipm/estimation/sql/20_ratio.sql
+- sql: part-d-ipm/estimation/sql/30_regression.sql
+- sql: part-d-ipm/estimation/sql/40_simulation.sql
+- sql: part-d-ipm/estimation/sql/90_score.sql
