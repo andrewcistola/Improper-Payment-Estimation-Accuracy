@@ -6,7 +6,7 @@ seed: 20261016
 output_dir: results/perm
 steps:
   - sql: perm-cert/estimation/sql/perm_01_frame.sql        # estimand + design
-  - sql: shared/sql/sample.sql                         # Monte Carlo samples
+  - sql: shared/sql/sample_systematic.sql                   # Monte Carlo samples
   - sql: perm-cert/estimation/sql/perm_10_expansion.sql
   - sql: perm-cert/estimation/sql/perm_20_ratio.sql
   - sql: perm-cert/estimation/sql/perm_30_regression.sql
@@ -19,12 +19,13 @@ json:
   - {table: frame_totals, order_by: domain, file: truth.json}
 defaults:
   population_dir: perm-cert/errors/output/perm/state_elig_grid
-  selection: systematic
   components: [overall, eligibility, claims]
   n_ffs_per_stratum: 20   # 400 FFS per state-year = 4 quarters x 5 strata x 20
   n_mc_per_stratum: 6     # 120 MC per state-year  = 4 quarters x 5 strata x 6
   reps: 200        # Monte Carlo samples (MC SE of 95% coverage ~ 1.5 pt)
   boot_reps: 500   # bootstrap replicates per sample
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
-scenarios:
-  - name: state_elig_grid
+grid:   # one scenario per state; true eligibility rates 2.00%..4.00%
+  name: "state_{state_id}"
+  vars:
+    state_id: [1, 2, 3, 4, 5, 6, 7, 8, 9]

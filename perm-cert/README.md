@@ -24,7 +24,7 @@ PERM details:
 
 | Run | Design | Output |
 |---|---|---|
-| `ipsim perm-cert/estimation/perm.yaml` | Per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 Monte Carlo samples | `estimation/results/perm/state_elig_grid/` (domain = `state\|component`) |
+| `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 Monte Carlo samples | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
 | `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 Monte Carlo samples per population | `estimation/results/cert/<shape>_p<rate>/` |
 
 Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, `*_40_simulation.sql` (bootstrap), scored in `*_90_score.sql`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.

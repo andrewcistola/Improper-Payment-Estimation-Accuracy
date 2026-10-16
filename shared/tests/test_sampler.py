@@ -1,4 +1,4 @@
-"""shared/sql/sample.sql takes exactly the allocated number of units."""
+"""shared/sql/sample_srs.sql and sample_systematic.sql take exactly the allocated number of units."""
 import sys
 from pathlib import Path
 
@@ -16,9 +16,9 @@ def test_exact_sample_sizes(selection):
               "FROM range(1, 1001) t(i), (VALUES ('a'), ('b')) d(domain)")
     c.execute("CREATE TABLE alloc AS SELECT d.domain, t.* FROM (VALUES ('S0', 17), ('S1', 40), ('S2', 333)) "
               "t(stratum, n_h), (VALUES ('a'), ('b')) d(domain)")
-    for k, v in dict(seed=3, reps=50, selection=selection).items():
+    for k, v in dict(seed=3, reps=50).items():
         c.execute(f"SET VARIABLE {k} = ?", [v])
-    c.execute((ROOT / "shared" / "sql" / "sample.sql").read_text())
+    c.execute((ROOT / "shared" / "sql" / f"sample_{selection}.sql").read_text())
     sizes = c.execute("SELECT stratum, min(n), max(n) FROM (SELECT rep, domain, stratum, count(*) n "
                       "FROM sample GROUP BY ALL) GROUP BY stratum ORDER BY stratum").fetchall()
     assert sizes == [("S0", 17, 17), ("S1", 40, 40), ("S2", 333, 333)]

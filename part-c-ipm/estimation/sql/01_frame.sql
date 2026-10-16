@@ -8,7 +8,7 @@
 -- (low / medium / high); stratum sample sizes from config (Part C IPM
 -- sizes are not public). Errors are taken from the errors/ population
 -- (in production they come from medical record review).
--- Output: pop, alloc  (input to shared/sql/sample.sql)
+-- Output: pop, alloc  (input to shared/sql/sample_srs.sql)
 -- =====================================================================
 CREATE OR REPLACE TABLE pop AS
 SELECT 'national' AS domain, stratum, unit_id,

@@ -6,7 +6,7 @@
 --   y = APTC paid - correct APTC, x = APTC paid.
 -- Design: stratified SRS of applications, ~2,000 in total; strata are
 -- income bands (EIPM strata are not public; illustrative).
--- Output: pop, alloc  (input to shared/sql/sample.sql)
+-- Output: pop, alloc  (input to shared/sql/sample_srs.sql)
 -- =====================================================================
 CREATE OR REPLACE TABLE pop AS
 SELECT 'national' AS domain, stratum, unit_id,

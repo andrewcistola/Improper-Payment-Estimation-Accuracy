@@ -8,7 +8,7 @@
 -- Design: simple random sample of beneficiaries (random selection since
 -- FY 2025); the beneficiary is the sampling unit and carries all of its
 -- PDEs. Sample size from config (not public).
--- Output: pop, alloc  (input to shared/sql/sample.sql)
+-- Output: pop, alloc  (input to shared/sql/sample_srs.sql)
 -- =====================================================================
 CREATE OR REPLACE TABLE pop AS
 SELECT 'national' AS domain, stratum, unit_id,

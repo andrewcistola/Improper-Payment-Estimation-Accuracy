@@ -17,7 +17,7 @@ Each of the four program folders has the same two parts:
 | [`part-d-ipm/`](part-d-ipm/) | Claim errors flowing through the benefit to reinsurance and subsidies | Beneficiaries, PDEs → PDE errors re-run through the post-IRA 2025 benefit | SRS of beneficiaries |
 | [`perm-cert/`](perm-cert/) | Individual claim or benefit errors | PERM: state payment universes → claims and eligibility errors (9 states, true eligibility rates 2.00–4.00%). CERT: three skewed payment shapes → all-or-nothing errors at 5–95% | PERM: systematic selection within strata. CERT: SRS of 30 claims |
 | [`eipm/`](eipm/) | Beneficiary subsidy eligibility (Marketplace APTC) | FFE applications and APTC → rare income, eligibility and documentation errors | Stratified SRS of ~2,000 |
-| [`shared/`](shared/) | Code used by all four | Runner, random numbers, sampler | **The four methods, written once**: expansion, ratio, regression (GREG), simulation (rescaled bootstrap: percentile, bootstrap-t, BCa); scoring |
+| [`shared/`](shared/) | Code used by all four | Runner, random numbers, samplers | **The four methods, written once**: expansion, ratio, regression (GREG), simulation (rescaled bootstrap: percentile, bootstrap-t, BCa); scoring |
 | [`literature-review/`](literature-review/) | Background, program methods, evidence, bibliography | | |
 | `aim-1/` … `aim-4/` | Specific Aims (to be defined) | | |
 

@@ -24,7 +24,7 @@ Run: `ipsim part-c-ipm/estimation/config.yaml` → `estimation/results/base/`
 | File | Method |
 |---|---|
 | `01_frame.sql` | Estimand (y = \|payment error\|, x = payment) and design: stratified SRS, 1,500 per risk tercile (sizes not public; illustrative) |
-| `shared/sql/sample.sql` | 200 Monte Carlo samples |
+| `shared/sql/sample_srs.sql` | 200 Monte Carlo samples |
 | `10_expansion.sql` | Expansion: T̂_y / X |
 | `20_ratio.sql` | Ratio: T̂_y / T̂_x, linearization SE |
 | `30_regression.sql` | Regression (GREG) on payment x |

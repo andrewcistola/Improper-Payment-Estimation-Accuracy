@@ -6,7 +6,7 @@
 -- Design: simple random sample of n claims (Edwards et al. use n = 30),
 -- the small-sample, skewed regime where normal intervals are known to
 -- fail.
--- Output: pop, alloc  (input to shared/sql/sample.sql)
+-- Output: pop, alloc  (input to shared/sql/sample_srs.sql)
 -- =====================================================================
 CREATE OR REPLACE TABLE pop AS
 SELECT 'national' AS domain, stratum, unit_id,

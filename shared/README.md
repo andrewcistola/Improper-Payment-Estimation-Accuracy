@@ -8,7 +8,7 @@ Code used by all four programs. Each program folder states *what* is estimated a
 | `sql/lib/00_rng.sql` | Counter-based random numbers: every draw is a hash of `(seed, stream, key)`, so results do not depend on thread scheduling or row order |
 | `sql/lib/01_stats.sql` | Normal CDF and quantile (DuckDB has none), list quantiles, and order-independent floating-point sums |
 | `sql/lib/02_estimators.sql` | **The four methods**: expansion, ratio, regression (GREG), simulation (rescaled bootstrap with percentile, bootstrap-t and BCa intervals), plus scoring. Formulas are written out in the file header. |
-| `sql/sample.sql` | Monte Carlo sampling: SRS without replacement or systematic-after-sort, within strata |
+| `sql/sample_srs.sql`, `sql/sample_systematic.sql` | Monte Carlo sampling within strata: SRS without replacement, or systematic selection after sorting by amount paid. Each program's config names the one its design uses. |
 | `tests/` | RNG independence, normal functions vs scipy, exact sample sizes, **estimators vs an independent numpy implementation**, byte-identical reruns |
 | `data_dictionary.md` | Every column of every output |
 
@@ -17,7 +17,7 @@ Code used by all four programs. Each program folder states *what* is estimated a
 ```
 <program>/errors/config.yaml       population SQL -> fake-error SQL -> truth -> checks
 <program>/estimation/config.yaml   01_frame.sql          estimand (y, x), strata, sample sizes
-                                   shared/sql/sample.sql Monte Carlo samples
+                                   shared/sql/sample_srs.sql (or sample_systematic.sql)  Monte Carlo samples
                                    10_expansion.sql      SELECT * FROM ipm_expansion(alpha)
                                    20_ratio.sql          SELECT * FROM ipm_ratio(alpha)
                                    30_regression.sql     SELECT * FROM ipm_regression(alpha)
