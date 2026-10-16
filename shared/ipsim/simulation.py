@@ -1,4 +1,4 @@
-"""Audit-finding simulation estimator: the shared loop.
+"""Audit-finding bootstrap simulation estimator: the shared loop.
 
 This is the one estimation method that runs in Python. It reruns each
 program's payment function over the whole population 1,000 times per

@@ -1,4 +1,4 @@
-"""CERT: payment function and audit-finding simulation kernel.
+"""CERT: payment function and audit-finding bootstrap simulation kernel.
 
 Payment function: a claim's improper amount is round(x x taint, cents),
 taint = improper share of the payment found on review.

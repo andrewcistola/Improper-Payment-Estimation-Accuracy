@@ -1,4 +1,4 @@
-"""Audit-finding simulation: payment functions and mechanics.
+"""Audit-finding bootstrap simulation: payment functions and mechanics.
 
 1. Exactness: each program's numpy payment function, given every unit's
    OWN audit finding, reproduces the improper payment computed by the SQL

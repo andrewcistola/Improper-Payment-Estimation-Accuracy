@@ -1,4 +1,4 @@
-"""Part C: payment function and audit-finding simulation kernel.
+"""Part C: payment function and audit-finding bootstrap simulation kernel.
 
 Payment function (same as errors/sql/04_apply_errors.sql), per enrollee:
   HCC error  = sum over HCCs of  coef (deleted) | severe - mild (moved) | 0

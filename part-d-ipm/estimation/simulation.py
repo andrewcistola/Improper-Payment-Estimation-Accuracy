@@ -1,4 +1,4 @@
-"""Part D: payment function and audit-finding simulation kernel.
+"""Part D: payment function and audit-finding bootstrap simulation kernel.
 
 Payment function (same as errors/sql/05_benefit.sql, CY 2025 post-IRA
 standard benefit), per beneficiary, PDEs in fill order:
