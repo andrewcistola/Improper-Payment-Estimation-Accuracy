@@ -10,3 +10,16 @@ __pycache__/
 # Never commit real claims/PHI data
 data/raw/
 *.sas7bdat
+
+# errors/ outputs: large populations are regenerated (hashes in manifest.json);
+# only the small populations are committed (Part C, EIPM, CERT)
+part-d-ipm/errors/output/**/*.parquet
+perm-cert/errors/output/perm/**/*.parquet
+*.egg-info/
+.pytest_cache/
+
+# DuckDB spill files from large runs
+.tmp/
+
+# per-sample report as CSV is large (20 MB); the same rows are in by_sample.parquet
+shared/results/report/by_sample.csv

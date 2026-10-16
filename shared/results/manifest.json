@@ -1,0 +1,12 @@
+{
+  "all": {
+    "config.yaml": "44c9dc4c215a1b32785cb717695c7e62d26ae4cf4581e8104c776082c4e567ea",
+    "summary.json": "37f48f91405f05063efc1f086ba7ad5ec16427b8804c14836dd98d0c3212f59f"
+  },
+  "report": {
+    "by_sample.csv": "208652625e8dbe175df4f0b3c8b29672a8300e4e34cd525c6ba58340d0472412",
+    "by_sample.parquet": "599ac6998e8feaa1925887811bbb50dd11c9a24966f2dc50efbd2d5a7eaf27d6",
+    "by_scenario.csv": "738248ebc585939a7fdb4ebd852ce181116f69a2cc2addbeb6b58fff8443d9b4",
+    "config.yaml": "f32995873122ec4537bcf86fc0fa7e0d3230efd817e24625aa4ae1d6af0a7df1"
+  }
+}

@@ -1,0 +1,43 @@
+# Part C IPM - errors: build an error-free enrollee population, then
+# apply fake errors. Scaled: 1 synthetic enrollee = 100 real enrollees.
+program: partc   # also the seed label: changing it changes every random draw
+seed: 20261016
+output_dir: output
+steps:
+  - sql: part-c-ipm/errors/sql/01_contracts.sql        # population
+  - sql: part-c-ipm/errors/sql/02_enrollees_hccs.sql   # population
+  - sql: part-c-ipm/errors/sql/03_payments.sql         # population (error-free payments)
+  - sql: part-c-ipm/errors/sql/04_apply_errors.sql     # fake errors
+  - sql: part-c-ipm/errors/sql/05_population_truth.sql # truth
+  - sql: part-c-ipm/errors/sql/06_checks.sql           # calibration checks
+exports:
+  - {table: population, order_by: unit_id}
+  - {table: hccs, file: hcc_detail, order_by: "enrollee_id, fam"}
+  - {table: contracts, order_by: contract_id}
+json:
+  - {table: checks, order_by: metric, file: checks.json}
+truth: true
+defaults:
+  n_contracts: 550
+  total_enrollees: 330000      # ~33M MA enrollees subject to risk adjustment, scaled 1:100
+  w_pop: 100.0
+  payment_target: 388720000000.0   # FY 2025 Part C payments subject to risk adjustment ($388.72B)
+  # Error targets as shares of payments (FY 2025 Part C IPM). Public total
+  # overpayment is 5.51% ($21.43B); read as 5.29% unsupported diagnoses +
+  # 0.22% missing documentation. Underpayments 0.57% ($2.23B).
+  target_unsup: 0.0529
+  target_md: 0.0022
+  target_under: 0.0057
+  p_md: 0.003     # base probabilities before the calibration multiplier
+  p_add: 0.03
+scenarios:
+  - name: base
+design:
+  unit: enrollee
+  frame: all enrollees subject to risk adjustment
+  selection: stratified_srs_without_replacement
+  strata:   # sample sizes are NOT public; illustrative equal allocation
+    - {stratum: low, n: 1500}
+    - {stratum: medium, n: 1500}
+    - {stratum: high, n: 1500}
+  estimand: gross improper payment rate = sum |y| / sum x

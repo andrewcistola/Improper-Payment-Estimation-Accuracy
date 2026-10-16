@@ -1,0 +1,40 @@
+{
+  "by": {
+    "calibration": {
+      "pass_0": {
+        "m": 0.0,
+        "realized_gross": 0.0
+      },
+      "pass_1": {
+        "m": 0.10349564,
+        "realized_gross": 8079321.46
+      },
+      "pass_2": {
+        "m": 0.10811591,
+        "realized_gross": 8405078.83
+      }
+    },
+    "error_type_share": {
+      "pde_count": {
+        "drug_discrepancy": 0.07116991258455016,
+        "missing_documentation": 0.7493721865344909,
+        "pricing": 0.17945790088095892
+      }
+    }
+  },
+  "overall": {
+    "direct_subsidy": 62733420000.0,
+    "gross_rate": 0.039811862098000084,
+    "lics": 11772939470.0,
+    "n_units": 108000.0,
+    "net_rate": 0.030123139172165452,
+    "overpayments": 3691168710.0,
+    "payments": 105559981210.0,
+    "reinsurance": 31053621740.0,
+    "share_catastrophic": 0.1323888888888889,
+    "underpayments": 511370705.0,
+    "unit_err_rate": 0.3023425925925926
+  },
+  "program": "partd",
+  "scenario": "base"
+}

@@ -1,0 +1,11 @@
+# Collect all estimation results into one table (run after the
+# estimation configs). Output: shared/results/all/summary.json
+program: summary
+seed: 0
+output_dir: results
+steps:
+  - sql: shared/sql/summary.sql
+json:
+  - {table: summary, order_by: "program_folder, scenario, domain, method, interval", file: summary.json}
+scenarios:
+  - name: all

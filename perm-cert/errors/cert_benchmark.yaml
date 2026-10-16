@@ -1,0 +1,19 @@
+# CERT - payment-shape check: rerun the Edwards, Liu & Delage (2023)
+# design (SRS of 30, one-sided 90% normal lower bound) on the cert
+# populations and compare coverage with the published pattern. This
+# validates the synthetic shapes only; it is not one of the study's
+# estimands. Run after cert.yaml.
+program: cert_benchmark
+seed: 7
+output_dir: output/cert_benchmark
+steps:
+  - sql: perm-cert/errors/sql/cert_benchmark.sql
+json:
+  - {table: benchmark, order_by: "shape, error_rate", file: benchmark.json}
+  - {table: checks, order_by: metric, file: checks.json}
+defaults:
+  reps: 4000
+  n: 30
+  pop_glob: perm-cert/errors/output/cert/*_all_or_nothing_*/population.parquet
+scenarios:
+  - name: edwards_fig_4_1

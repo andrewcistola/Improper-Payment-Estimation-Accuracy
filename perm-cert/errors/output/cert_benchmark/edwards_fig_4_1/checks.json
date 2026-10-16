@@ -1,0 +1,86 @@
+[
+  {
+    "metric": "left_all_or_nothing_p0.05",
+    "value": 0.959,
+    "target": null,
+    "expected": "no claim",
+    "status": "pass"
+  },
+  {
+    "metric": "left_all_or_nothing_p0.30",
+    "value": 0.91275,
+    "target": null,
+    "expected": "no claim",
+    "status": "pass"
+  },
+  {
+    "metric": "left_all_or_nothing_p0.70",
+    "value": 0.87525,
+    "target": 0.9,
+    "expected": "< 0.90",
+    "status": "pass"
+  },
+  {
+    "metric": "left_all_or_nothing_p0.95",
+    "value": 0.82175,
+    "target": 0.9,
+    "expected": "< 0.90",
+    "status": "pass"
+  },
+  {
+    "metric": "right_all_or_nothing_p0.05",
+    "value": 0.9875,
+    "target": 0.89,
+    "expected": ">= 0.89",
+    "status": "pass"
+  },
+  {
+    "metric": "right_all_or_nothing_p0.30",
+    "value": 0.9735,
+    "target": 0.89,
+    "expected": ">= 0.89",
+    "status": "pass"
+  },
+  {
+    "metric": "right_all_or_nothing_p0.70",
+    "value": 0.96825,
+    "target": 0.89,
+    "expected": ">= 0.89",
+    "status": "pass"
+  },
+  {
+    "metric": "right_all_or_nothing_p0.95",
+    "value": 0.9645,
+    "target": 0.89,
+    "expected": ">= 0.89",
+    "status": "pass"
+  },
+  {
+    "metric": "two_spike_all_or_nothing_p0.05",
+    "value": 0.97325,
+    "target": null,
+    "expected": "no claim",
+    "status": "pass"
+  },
+  {
+    "metric": "two_spike_all_or_nothing_p0.30",
+    "value": 0.92425,
+    "target": null,
+    "expected": "no claim",
+    "status": "pass"
+  },
+  {
+    "metric": "two_spike_all_or_nothing_p0.70",
+    "value": 0.89,
+    "target": 0.9,
+    "expected": "< 0.90",
+    "status": "pass"
+  },
+  {
+    "metric": "two_spike_all_or_nothing_p0.95",
+    "value": 0.8855,
+    "target": 0.9,
+    "expected": "< 0.90",
+    "status": "pass"
+  }
+]

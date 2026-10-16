@@ -1,0 +1,27 @@
+{
+  "config_file": "eipm/estimation/config.yaml",
+  "config_sha256": "c3b83a649461fe0ba2343be28b41188c98d2546df3d9b33161ddf11797e6f531",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 657,
+      "sha256": "72f47aaf86d1b1698d4c532de4c2a66ed4631534ec8c23394170fde4f07d3bf6"
+    },
+    "estimates.parquet": {
+      "bytes": 30995,
+      "rows": 1200,
+      "sha256": "9911da70c4a0d95bae128abdd49217f038a9b0ddaaad1a14e9c65aca419157ab"
+    },
+    "metrics.json": {
+      "bytes": 3270,
+      "sha256": "eff054b85ef07f4bf3ed49d0e2dfbe697a92c8c2fc1344ad36df93d55b4ff5c5"
+    },
+    "truth.json": {
+      "bytes": 115,
+      "sha256": "0bf07dd494e282160301110deef31f32a19dded73c0c557752118903b4203d70"
+    }
+  },
+  "program": "eipm_estimation",
+  "python": "3.13.16",
+  "scenario": "base"
+}

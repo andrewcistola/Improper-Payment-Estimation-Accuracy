@@ -1,0 +1,8 @@
+unit: beneficiary (cluster of PDEs)
+frame: all Part D beneficiaries with PDEs
+selection: srs_without_replacement
+strata:
+- stratum: all
+  n: 1500
+estimand: gross improper payment rate = sum |y| / sum x (y from re-running the benefit
+  on corrected PDEs)

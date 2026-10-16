@@ -1,0 +1,12 @@
+unit: FFE application (household receiving APTC)
+strata:
+- stratum: A_lt150
+  n: 500
+- stratum: B_150_250
+  n: 500
+- stratum: C_250_400
+  n: 500
+- stratum: D_ge400
+  n: 500
+selection: stratified_srs_without_replacement
+estimand: gross improper payment rate = sum |y| / sum x

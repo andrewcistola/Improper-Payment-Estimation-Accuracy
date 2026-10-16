@@ -1,0 +1,14 @@
+program: cert
+scenario: two_spike_all_or_nothing_p0.95
+master_seed: 20261016
+scenario_seed: 377493315635678550
+variables:
+  error_model: all_or_nothing
+  partial_share: 0.098
+  shape: two_spike
+  error_rate: 0.95
+  n_units: 249
+  scenario: two_spike_all_or_nothing_p0.95
+steps:
+- sql: perm-cert/errors/sql/cert_01_population.sql
+- sql: perm-cert/errors/sql/cert_02_apply_errors.sql

@@ -1,0 +1,52 @@
+# Part D IPM - errors: build an error-free beneficiary/PDE population,
+# then apply fake PDE errors and re-run the post-IRA benefit to get the
+# payment error. Scaled: 1 synthetic beneficiary = 500 real beneficiaries.
+program: partd   # also the seed label: changing it changes every random draw
+seed: 20261016
+output_dir: output
+steps:
+  - sql: part-d-ipm/errors/sql/01_population.sql        # population (error-free PDEs)
+  - sql: part-d-ipm/errors/sql/02_candidate_errors.sql  # fake errors: candidates
+  - sql: part-d-ipm/errors/sql/03_init_calibration.sql  # pass 0: no errors
+  - sql: part-d-ipm/errors/sql/04_apply_errors.sql
+  - sql: part-d-ipm/errors/sql/05_benefit.sql           # benefit run -> submitted payments
+  - sql: part-d-ipm/errors/sql/06_calibrate.sql         # -> pass 1 (linear expectation)
+  - sql: part-d-ipm/errors/sql/04_apply_errors.sql
+  - sql: part-d-ipm/errors/sql/05_benefit.sql
+  - sql: part-d-ipm/errors/sql/06_calibrate.sql         # -> pass 2 (one proportional refinement)
+  - sql: part-d-ipm/errors/sql/04_apply_errors.sql      # final errors at pass-2 multiplier
+  - sql: part-d-ipm/errors/sql/05_benefit.sql           # submitted vs corrected payments
+  - sql: part-d-ipm/errors/sql/07_population_truth.sql  # truth
+  - sql: part-d-ipm/errors/sql/08_checks.sql            # calibration checks
+exports:
+  - {table: population, order_by: unit_id}
+  - {table: pde_detail, order_by: pde_id}
+json:
+  - {table: checks, order_by: metric, file: checks.json}
+truth: true
+defaults:
+  n_benes: 108000          # ~54M Part D enrollees, scaled 1:500
+  w_pop: 500.0
+  lis_share: 0.25
+  specialty_share: 0.03
+  payment_target: 105560000000.0   # FY 2025 Part D payments ($105.56B)
+  target_over: 3700000000.0        # FY 2025 overpayments ($3.70B); gross = over + under is the calibration target
+  target_under: 520000000.0        # FY 2025 underpayments ($0.52B)
+  # CY 2025 standard benefit after the Inflation Reduction Act
+  deductible: 590.0
+  oop_threshold: 2000.0
+  init_enrollee_coins: 0.25
+  init_mfr_brand: 0.10
+  cat_mfr_brand: 0.20
+  cat_reins_brand: 0.20
+  cat_reins_generic: 0.40
+  lis_copay_generic: 4.90
+  lis_copay_brand: 12.15
+scenarios:
+  - name: base
+design:
+  unit: beneficiary (cluster of PDEs)
+  frame: all Part D beneficiaries with PDEs
+  selection: srs_without_replacement   # random beneficiary selection since FY 2025
+  strata: [{stratum: all, n: 1500}]    # sample size NOT public; illustrative
+  estimand: gross improper payment rate = sum |y| / sum x (y from re-running the benefit on corrected PDEs)

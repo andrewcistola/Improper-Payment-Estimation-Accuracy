@@ -1,0 +1,6 @@
+# Pinned: DuckDB's hash() is stable within a release, and every random
+# draw is a hash of (seed, stream, key). Changing this version changes data.
+duckdb==1.5.6
+pyarrow>=17
+numpy>=2.0
+pyyaml>=6.0

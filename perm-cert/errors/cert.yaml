@@ -1,0 +1,34 @@
+# CERT - errors: claim stress populations (Edwards, Liu & Delage 2023
+# payment shapes; synthetic, stylized), then fake claim errors on a grid
+# of error rates.
+program: cert   # also the seed label: changing it changes every random draw
+seed: 20261016
+output_dir: output/cert
+steps:
+  - sql: perm-cert/errors/sql/cert_01_population.sql    # population (error-free claims)
+  - sql: perm-cert/errors/sql/cert_02_apply_errors.sql  # fake errors + truth
+exports:
+  - {table: population, order_by: unit_id}
+truth: true
+defaults:
+  error_model: all_or_nothing
+  partial_share: 0.098   # 7.5 / (68.9 + 7.5): partial share among error units in real samples
+grid:
+  name: "{shape}_{error_model}_p{error_rate:.2f}"
+  vars:
+    shape: [right, two_spike, left]
+    error_rate: [0.05, 0.30, 0.70, 0.95]   # kept small for expert review; extend later if needed
+scenarios: []
+lookups:
+  n_units: {by: shape, map: {right: 59804, two_spike: 249, left: 570}}
+design:
+  unit: claim
+  frame: all units
+  selection: srs_without_replacement
+  strata: [{stratum: all, n: 30}]
+  estimand: improper payment rate = sum y / sum x
+  # cert_benchmark.yaml reruns the published Edwards et al. design (one-sided
+  # 90% normal bound) only to check that these payment shapes behave as published
+  shape: $shape
+  error_rate: $error_rate
+  error_model: $error_model

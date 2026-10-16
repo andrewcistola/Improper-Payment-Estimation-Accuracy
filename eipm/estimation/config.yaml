@@ -1,0 +1,31 @@
+# EIPM - estimation: draw production-design samples from the errors/
+# population and estimate the gross APTC improper payment rate with each
+# method (expansion, ratio, regression, simulation).
+program: eipm_estimation   # also the seed label for sampling and bootstrap
+seed: 20261016
+output_dir: results
+steps:
+  - sql: eipm/estimation/sql/01_frame.sql        # estimand + design
+  - sql: shared/sql/sample_srs.sql                          # Monte Carlo samples
+  - sql: eipm/estimation/sql/10_expansion.sql
+  - sql: eipm/estimation/sql/20_ratio.sql
+  - sql: eipm/estimation/sql/30_regression.sql
+  - sql: eipm/estimation/sql/40_simulation.sql
+  - sql: eipm/estimation/sql/90_score.sql
+exports:
+  - {table: estimates, order_by: "domain, method, interval, rep"}
+json:
+  - {table: metrics, order_by: "domain, method, interval", file: metrics.json}
+  - {table: frame_totals, order_by: domain, file: truth.json}
+defaults:
+  population_dir: eipm/errors/output/base
+  allocation:      # EIPM strata are not public; illustrative, ~2,000 total
+    - {stratum: A_lt150, n_h: 500}
+    - {stratum: B_150_250, n_h: 500}
+    - {stratum: C_250_400, n_h: 500}
+    - {stratum: D_ge400, n_h: 500}
+  reps: 200        # Monte Carlo samples (MC SE of 95% coverage ~ 1.5 pt)
+  boot_reps: 500   # bootstrap replicates per sample
+  alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
+scenarios:
+  - name: base

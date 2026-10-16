@@ -1,0 +1,13 @@
+{
+  "by": {},
+  "overall": {
+    "dollar_err_rate": 0.6962084456132658,
+    "n": 249.0,
+    "partial_rate": 0.0,
+    "unit_err_rate": 0.6987951807228916,
+    "x_tot": 2700772.02,
+    "y_tot": 1880300.29
+  },
+  "program": "cert",
+  "scenario": "two_spike_all_or_nothing_p0.70"
+}

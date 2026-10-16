@@ -1,0 +1,13 @@
+{
+  "by": {},
+  "overall": {
+    "dollar_err_rate": 0.6996825520820436,
+    "n": 570.0,
+    "partial_rate": 0.0,
+    "unit_err_rate": 0.7,
+    "x_tot": 3297110.93,
+    "y_tot": 2306930.99
+  },
+  "program": "cert",
+  "scenario": "left_all_or_nothing_p0.70"
+}

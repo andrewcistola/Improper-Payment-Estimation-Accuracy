@@ -1,0 +1,21 @@
+program: cert_estimation
+scenario: left_p0.30
+master_seed: 20261016
+scenario_seed: 1765512518914465002
+variables:
+  population_dir: perm-cert/errors/output/cert/left_all_or_nothing_p0.30
+  n: 30
+  reps: 1000
+  boot_reps: 1000
+  alpha: 0.05
+  shape: left
+  error_rate: 0.3
+  scenario: left_p0.30
+steps:
+- sql: perm-cert/estimation/sql/cert_01_frame.sql
+- sql: shared/sql/sample_srs.sql
+- sql: perm-cert/estimation/sql/cert_10_expansion.sql
+- sql: perm-cert/estimation/sql/cert_20_ratio.sql
+- sql: perm-cert/estimation/sql/cert_30_regression.sql
+- sql: perm-cert/estimation/sql/cert_40_simulation.sql
+- sql: perm-cert/estimation/sql/cert_90_score.sql
