@@ -26,11 +26,14 @@ String variables may reference other variables with {name} (str.format).
 """
 from __future__ import annotations
 
+import atexit
 import hashlib
 import itertools
 import json
 import platform
+import shutil
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -57,8 +60,15 @@ def sha256_file(path: Path) -> str:
 
 
 def connect(threads: int | None = None, memory_limit: str | None = None) -> duckdb.DuckDBPyConnection:
-    """DuckDB connection with the shared SQL library loaded (in file-name order)."""
+    """DuckDB connection with the shared SQL library loaded (in file-name order).
+
+    Each connection spills to its own temporary folder; DuckDB's default
+    (./.tmp) is shared, and parallel runs corrupt each other's spill files.
+    """
     con = duckdb.connect()
+    tmp = tempfile.mkdtemp(prefix="ipsim-duckdb-")
+    atexit.register(shutil.rmtree, tmp, True)
+    con.execute(f"SET temp_directory = '{tmp}'")
     if threads:
         con.execute(f"SET threads = {int(threads)}")
     if memory_limit:
