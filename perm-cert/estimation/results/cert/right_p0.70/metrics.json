@@ -14,6 +14,7 @@
     "below": 0.159,
     "n_undefined": 0,
     "rel_width": 1.232610698533706,
+    "median_rel_width": 1.0324203578775444,
     "mean_se": 0.22043678072479572,
     "empirical_se": 0.2589910093538386
   },
@@ -32,6 +33,7 @@
     "below": 0.035,
     "n_undefined": 0,
     "rel_width": 0.6533539695812438,
+    "median_rel_width": 0.6613127871748508,
     "mean_se": 0.1168440659322389,
     "empirical_se": 0.14177624770806915
   },
@@ -50,6 +52,7 @@
     "below": 0.088,
     "n_undefined": 0,
     "rel_width": 0.5779909249560251,
+    "median_rel_width": 0.543951873385222,
     "mean_se": 0.10336634181174857,
     "empirical_se": 0.14640680257277477
   },
@@ -68,6 +71,7 @@
     "below": 0.027,
     "n_undefined": 0,
     "rel_width": 0.659916166005301,
+    "median_rel_width": 0.6618587221914854,
     "mean_se": 0.1189947249462693,
     "empirical_se": 0.14177624770806915
   },
@@ -86,6 +90,7 @@
     "below": 0.005,
     "n_undefined": 0,
     "rel_width": 15.191753974368108,
+    "median_rel_width": 1.0802975094689777,
     "mean_se": 0.1189947249462693,
     "empirical_se": 0.14177624770806915
   },
@@ -104,6 +109,7 @@
     "below": 0.016,
     "n_undefined": 0,
     "rel_width": 0.6413018128484921,
+    "median_rel_width": 0.652789551250082,
     "mean_se": 0.1189947249462693,
     "empirical_se": 0.14177624770806915
   }
