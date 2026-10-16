@@ -1,0 +1,12 @@
+program: ffs_stress
+scenario: left_all_or_nothing_p0.95
+master_seed: 20261016
+scenario_seed: 1270403132306035667
+variables:
+  error_model: all_or_nothing
+  partial_share: 0.098
+  shape: left
+  error_rate: 0.95
+  n_units: 570
+steps:
+- sql: ffs_stress/generate.sql

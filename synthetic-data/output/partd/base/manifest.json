@@ -1,0 +1,32 @@
+{
+  "config_file": "partd.yaml",
+  "config_sha256": "319964a195e253e6417e686b8c1f7d63d8d81fc7becbe559861833d449f96c31",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 838,
+      "sha256": "f8cff6e66faa579971fce08a9166480326c9ffbcf4ea4feffd2dfd42500625cc"
+    },
+    "design.yaml": {
+      "bytes": 208,
+      "sha256": "a918aece4e0695661a48811ea76217f625fffada16f7c4b2cd40141c73510ae0"
+    },
+    "pde_detail.parquet": {
+      "bytes": 101021749,
+      "rows": 4349724,
+      "sha256": "e279dce64744d7cb6edddc764cc1acae2674321dc9becc9224a3e81bc15581b9"
+    },
+    "population.parquet": {
+      "bytes": 1647069,
+      "rows": 108000,
+      "sha256": "e1a01debd914c3e670c7013d7b62916c5b1ed52916b07941a742c81a99c16bbb"
+    },
+    "truth.json": {
+      "bytes": 951,
+      "sha256": "53a7d9e5bc64b866adf7d8726ba6696be1e414ef4f4e47cb303af8f7a1159a2c"
+    }
+  },
+  "program": "partd",
+  "python": "3.13.16",
+  "scenario": "base"
+}

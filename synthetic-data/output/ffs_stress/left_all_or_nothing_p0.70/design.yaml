@@ -1,0 +1,11 @@
+unit: claim
+frame: all units
+selection: srs_without_replacement
+strata:
+- stratum: all
+  n: 30
+estimator: expansion_total
+interval: one_sided_lower_90_normal
+shape: left
+error_rate: 0.7
+error_model: all_or_nothing

@@ -1,0 +1,74 @@
+{
+  "left_all_or_nothing_p0.05": {
+    "config.yaml": "45c6dc0a309b560132838ea815c5fbfad9db2919c9604958e48bcd8b5475b2ca",
+    "design.yaml": "4f79bb456096ff3474a80ddc7154c37340532640ec9f356e308d7197820fa793",
+    "population.parquet": "c5216e21c3905aca5664915a43936f14d23f5c4290ccd9f7a58153fa08e34d8b",
+    "truth.json": "fd880c4c98d668ecc0bf60f8ba1c5bedb085f75738bee046cca4eab0f4269fd5"
+  },
+  "left_all_or_nothing_p0.30": {
+    "config.yaml": "142b7aec5f08169becc866120d4432367bf812e9a740137a3d34b916c219ba0c",
+    "design.yaml": "7c42e9e5821733cd00047a0884f5319b695337ad804f02a3de23c8deb87f8100",
+    "population.parquet": "007659ccc7ce902c9c316277b482043198968e0f22365c4bfb920d774542555a",
+    "truth.json": "f525adb8c9af632e5929a0fde8f1ce406a45519861c565429f50bc344c09753d"
+  },
+  "left_all_or_nothing_p0.70": {
+    "config.yaml": "94c28bd77ebc92e6688eefa000ac759406a316aade433ce8a7fd2403d3e5fbc2",
+    "design.yaml": "275c0a371ce82c81315ea90eb8c0fb56bcf94e87d705ac431a5f319bf651307a",
+    "population.parquet": "d879be926193c0936b1db08f427b9c3856408585fac527190599b83851393971",
+    "truth.json": "1fb57dd820316b6a81a482d203d3d9fc96a2b23d6624b763eb2708c3b40abea1"
+  },
+  "left_all_or_nothing_p0.95": {
+    "config.yaml": "13c548ac3ed7c8d9e2f22ef10daffaf58de8c4406d26a1254baebcea61d0e1d1",
+    "design.yaml": "812b37aab0bdb492facbf40752cdc8746b701e83652f45d2a3958fd1c790dd33",
+    "population.parquet": "e5fc2fb5b8fb6e1e22a846307036acee5ba2a29369952e65020934f03a84244a",
+    "truth.json": "bce1bf11fe0d12a56782f62cd8986aa88c5f70118738c7631bece378a2caeba6"
+  },
+  "right_all_or_nothing_p0.05": {
+    "config.yaml": "1de6cf17371bc8227936b74352c34619a5eaa82dc807ddae6a21592716dcc0b5",
+    "design.yaml": "7c1ab7765dd098ca4ac057b8d517a1b3798390ea0b7eb703773db985ce02fc60",
+    "population.parquet": "fce3985045113fa8195c4552a414672511628ac9e3bbb6f229da6a08cc1d314d",
+    "truth.json": "51b2ee1dcc225cd83d49b7f7a89993f5d5ebc7c03d96f85e4ae2316bd6928644"
+  },
+  "right_all_or_nothing_p0.30": {
+    "config.yaml": "f34cfe2d649a425b8fdf8e65caede0ff8780344fce03c95cd83a6eb32a379c88",
+    "design.yaml": "c4c480e44dc7bf899bb7fb6f5c4bc1adc35504a9d50ca2b048067af5fc3577eb",
+    "population.parquet": "cfd8a2ad7d599378e8f3195ef4205f8c1d4da965d0bac28cf7f69bdc887870b3",
+    "truth.json": "197ae76921bd9fb7d953b894ab7cc22210debf5704f025e4a65a9f86cd4207f8"
+  },
+  "right_all_or_nothing_p0.70": {
+    "config.yaml": "9963cee1785056ac8647259de712b88873b1b9f09920c4ed96c3950ab8d3fe40",
+    "design.yaml": "04457afe4d94d522e58e3fca1be1e5119228a2b419b684ca80ce2a69d9efed21",
+    "population.parquet": "ca3d54de053c8665bdb85e8b7ef0fb538486c6dbe4c4117fe53dccb19dfa40d0",
+    "truth.json": "9766fad016f3fcf9d0387f297d17f1913678f4f4c319021e83e0f0cfaf64db4e"
+  },
+  "right_all_or_nothing_p0.95": {
+    "config.yaml": "b5d0b70305bc68da95cfa85eda3e894b621500f6864918efd7587dbc2eb2fc3c",
+    "design.yaml": "6ad24f126612912496a092427b6722242ffc438416b53b53b2a53967a8ca44cd",
+    "population.parquet": "d10db9e95234938bb36473a71a6c7d5e7b9229b192d4fcfdaffb8b6f6076bebd",
+    "truth.json": "5fc0897d66faf9e28064ff996003a54c4876ad24657319a369b88cee73a1370a"
+  },
+  "two_spike_all_or_nothing_p0.05": {
+    "config.yaml": "db79a1f0a108c3753e697be6e42524e0dac6e6d4ab494451363fd0d9708f79d3",
+    "design.yaml": "0a52ddd9e7efd17784e54880fbf695a4e2c94298c13c9cca68577d6fff4792bf",
+    "population.parquet": "e60a53ce82b6a804794de52fc2970f9cc845496a44fb2b5141e3a930f87f0bf2",
+    "truth.json": "0169d6d33baa7b44942cad9adedb42364aea48421841bddaed5239d53cbffa8e"
+  },
+  "two_spike_all_or_nothing_p0.30": {
+    "config.yaml": "f9f7b6bfe5b11c8de6ecd46bc977c049377f513ce0c65d4058805b180e13f222",
+    "design.yaml": "0641882c8d99489a6b19cdd20bdf6eb027736aed85588755b02537d7a1fde5c6",
+    "population.parquet": "34097b40cfbdbe9453092aa9c4ea5e52510f9b8e73bdca888367084ae6606e76",
+    "truth.json": "c4673752418a3632b3ea79eb6639036b2a8660084d8bf16d3d68012d5a5d51c5"
+  },
+  "two_spike_all_or_nothing_p0.70": {
+    "config.yaml": "b81f30befbedff5e9755ebfd18bcfdb12a87a5bb48cbf0ae394278905e1819c3",
+    "design.yaml": "847ed1ad84e6cc03f444bd984d51c0487e9ad8b8f381089d7a9bf94ef6f59194",
+    "population.parquet": "8f78f233749bcfa69437f98778464b774e806c6a7b62720cd7f8cc2c03eb9490",
+    "truth.json": "d6f88a0099636a161a59d59caecb151a8b43593bb18bc1ca20d1b5148ee57f4b"
+  },
+  "two_spike_all_or_nothing_p0.95": {
+    "config.yaml": "fb8c6492224aaf370c4035888faab84eaffd4015bcc407fb69c3be06e1475506",
+    "design.yaml": "ac5e6273842158f5180a5961a26c763daa5c384b536d007e3231b8000a20d473",
+    "population.parquet": "48d8ed7edf9731c7378b5a776e47a0b9bbcecad92b159de39b1cdbe60aac4c80",
+    "truth.json": "f2f6e3d304d2f2ac681c78bcc17af7661f8a47b089ad899016b94e0a7d931bef"
+  }
+}

@@ -10,3 +10,12 @@ __pycache__/
 # Never commit real claims/PHI data
 data/raw/
 *.sas7bdat
+
+# synthetic-data: large populations are regenerated (hashes in manifest.json);
+# only small reference populations are committed
+synthetic-data/output/*/**/*.parquet
+!synthetic-data/output/ffs_stress/**/*.parquet
+!synthetic-data/output/eipm/**/*.parquet
+!synthetic-data/output/partc/**/*.parquet
+*.egg-info/
+.pytest_cache/

@@ -1,0 +1,8 @@
+unit: beneficiary (cluster of PDEs)
+frame: all Part D beneficiaries with PDEs
+selection: srs_without_replacement
+strata:
+- stratum: all
+  n: 1500
+estimator: ratio_gross_rate
+interval: two_sided_95_simulation

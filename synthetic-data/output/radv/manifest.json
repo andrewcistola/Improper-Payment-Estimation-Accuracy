@@ -1,0 +1,12 @@
+{
+  "base": {
+    "calibration_log.json": "9b9548f689313ce1aceed6d9bf499744207f15b52a6a172cf6f26b21ab0eca0c",
+    "config.yaml": "38c6099f5959bbcf04318c46d947c5253aec1d769c42ab54ef54694813ead09f",
+    "contracts.parquet": "68ae5b96cf89a5d4fd143fb2777ca6c500305011bed638b0b96daecbd87a6f52",
+    "design.yaml": "de97059181e2b230c0e51bb5c720df40534517330559081b4d56f965231b3669",
+    "frames.parquet": "d94db80a8a9b40613c8f5332932e5c3ae5a6f26366b5053560e1ccac925a804c",
+    "hcc_detail.parquet": "444d16fd4c35e0b0c6ba5c3e00c46c1cf332e3224a227ddd49fa1edbdec04036",
+    "population.parquet": "8d073feed99e7a9d21045bdc1390d4478114189f67b85f13003358012a82d3c4",
+    "truth.json": "fb23ccd1dea4089ef0ad2d405cad01bb3da18d5c5bd19c6b17af594dc8a0447a"
+  }
+}

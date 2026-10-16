@@ -1,0 +1,41 @@
+# Application 3: PERM-like Medicaid measurement (claims + eligibility).
+# One scenario: 9 states whose TRUE eligibility rates are exactly
+# 2.00%..4.00% (0.25 steps), bracketing the 3% disallowance threshold
+# that applies from Oct 1, 2029 (P.L. 119-21 s.71106).
+# Scaled: 1 synthetic beneficiary = 200 real beneficiaries.
+program: perm
+seed: 20261016
+output_root: output
+steps:
+  - sql: perm/01_population.sql
+  - sql: perm/02_truth.sql
+exports:
+  - {table: population, order_by: unit_id}
+  - {table: states, order_by: state_id}
+defaults:
+  benes_per_state: 30000
+  w_pop: 200.0
+  mc_share: 0.70      # share of beneficiaries in managed care
+  p_ffs: 0.065        # FFS claims error probability; set so pooled overall ~6% (FY 2025 Medicaid 6.12%)
+  p_mc: 0.003         # MC capitation payment error probability (illustrative)
+  states:
+    - {state_id: 1, fmap: 0.5000, elig_rate: 0.0200}
+    - {state_id: 2, fmap: 0.5500, elig_rate: 0.0225}
+    - {state_id: 3, fmap: 0.6000, elig_rate: 0.0250}
+    - {state_id: 4, fmap: 0.6500, elig_rate: 0.0275}
+    - {state_id: 5, fmap: 0.7000, elig_rate: 0.0300}
+    - {state_id: 6, fmap: 0.7500, elig_rate: 0.0325}
+    - {state_id: 7, fmap: 0.5800, elig_rate: 0.0350}
+    - {state_id: 8, fmap: 0.6200, elig_rate: 0.0375}
+    - {state_id: 9, fmap: 0.7700, elig_rate: 0.0400}
+scenarios:
+  - name: state_elig_grid
+design:
+  unit: payment (FFS claim or MC capitation); eligibility case = beneficiary attached to a sampled payment
+  frame: state x quarter universes (July-June year)
+  strata: stratum column = state_Qq_type_Sk, 5 equal-dollar payment-size strata per state x quarter x type
+  selection: systematic_after_sort_by_x within stratum, random start
+  sample_sizes_per_state_year: {FFS: 400, MC: 120, eligibility: 200}   # within public historical ranges
+  allocation: equal across quarters and strata
+  estimator: ratio_at_federal_share   # sum w*y*fmap / sum w*x*fmap; overall = claims + elig - overlap
+  decision: state eligibility rate vs 3% threshold

@@ -1,0 +1,52 @@
+{
+  "by": {
+    "calibration": {
+      "multiplier": {
+        "m": 0.01503469
+      }
+    },
+    "stratum": {
+      "A_lt150": {
+        "gross_rate": 0.0082559116530486,
+        "n_units": 26767.0,
+        "overpayments": 154942892.0,
+        "payments": 18767508485.0,
+        "unit_err_rate": 0.010572720140471475
+      },
+      "B_150_250": {
+        "gross_rate": 0.009055365468044056,
+        "n_units": 79469.0,
+        "overpayments": 440099872.0,
+        "payments": 50283273227.0,
+        "underpayments": 15233544.0,
+        "unit_err_rate": 0.015817488580452756
+      },
+      "C_250_400": {
+        "gross_rate": 0.011585860088357776,
+        "n_units": 32059.0,
+        "overpayments": 116449034.00000001,
+        "payments": 12047274517.0,
+        "underpayments": 23129003.0,
+        "unit_err_rate": 0.016126516734770266
+      },
+      "D_ge400": {
+        "gross_rate": 0.017232196726657965,
+        "n_units": 3857.0,
+        "overpayments": 5146969.0,
+        "payments": 570780682.0,
+        "underpayments": 4688836.0,
+        "unit_err_rate": 0.015037593984962405
+      }
+    }
+  },
+  "overall": {
+    "gross_rate": 0.009302081169931259,
+    "n_units": 142152.0,
+    "overpayments": 716638767.0,
+    "payments": 81668836911.0,
+    "underpayments": 43051383.0,
+    "unit_err_rate": 0.014878439979739996
+  },
+  "program": "eipm",
+  "scenario": "base"
+}

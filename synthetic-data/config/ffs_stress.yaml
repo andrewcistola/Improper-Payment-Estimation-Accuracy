@@ -1,0 +1,30 @@
+# Application 3 benchmark: CERT/PIM-style claim stress populations
+# (Edwards, Liu & Delage 2023 payment shapes; synthetic, stylized).
+program: ffs_stress
+seed: 20261016
+output_root: output
+steps:
+  - sql: ffs_stress/generate.sql
+exports:
+  - {table: population, order_by: unit_id}
+defaults:
+  error_model: all_or_nothing
+  partial_share: 0.098   # 7.5 / (68.9 + 7.5): partial share among error units in real samples
+grid:
+  name: "{shape}_{error_model}_p{error_rate:.2f}"
+  vars:
+    shape: [right, two_spike, left]
+    error_rate: [0.05, 0.30, 0.70, 0.95]   # kept small for expert review; extend later if needed
+scenarios: []
+lookups:
+  n_units: {by: shape, map: {right: 59804, two_spike: 249, left: 570}}
+design:
+  unit: claim
+  frame: all units
+  selection: srs_without_replacement
+  strata: [{stratum: all, n: 30}]
+  estimator: expansion_total          # T_hat = N * ybar
+  interval: one_sided_lower_90_normal # LB = T_hat - z_0.90 * N * s / sqrt(n) * sqrt(1 - n/N)
+  shape: $shape
+  error_rate: $error_rate
+  error_model: $error_model

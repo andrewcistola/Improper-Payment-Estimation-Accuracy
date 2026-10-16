@@ -1,0 +1,13 @@
+unit: FFE application (household receiving APTC)
+strata:
+- stratum: A_lt150
+  n: 500
+- stratum: B_150_250
+  n: 500
+- stratum: C_250_400
+  n: 500
+- stratum: D_ge400
+  n: 500
+selection: stratified_srs_without_replacement
+estimator: ratio_gross_rate
+interval: two_sided_95

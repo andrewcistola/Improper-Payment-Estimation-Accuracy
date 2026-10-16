@@ -1,0 +1,13 @@
+{
+  "by": {},
+  "overall": {
+    "dollar_err_rate": 0.3024522043998193,
+    "n": 249.0,
+    "partial_rate": 0.0,
+    "unit_err_rate": 0.30120481927710846,
+    "x_tot": 2668275.94,
+    "y_tot": 807025.94
+  },
+  "program": "ffs_stress",
+  "scenario": "two_spike_all_or_nothing_p0.30"
+}

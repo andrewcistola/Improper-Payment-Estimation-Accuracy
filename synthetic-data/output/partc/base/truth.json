@@ -1,0 +1,63 @@
+{
+  "by": {
+    "calibration": {
+      "multipliers": {
+        "m_add": 0.90765429,
+        "m_md": 1.58345311,
+        "m_unsup": 1.1758826
+      }
+    },
+    "stratum": {
+      "high": {
+        "gross_rate": 0.08474701586604921,
+        "md_rate": 0.003402628149704723,
+        "n_units": 110084.0,
+        "net_rate": 0.08076096858536327,
+        "overpayments": 18454861509.0,
+        "payments": 223008715503.00003,
+        "under_rate": 0.0019930236403429753,
+        "underpayments": 444461642.0,
+        "unit_err_rate": 0.3087642164165546,
+        "unsupported_rate": 0.07935136407600152
+      },
+      "low": {
+        "gross_rate": 0.015132120562213658,
+        "md_rate": 3.867192527686408e-05,
+        "n_units": 110085.0,
+        "net_rate": -0.014056179659051989,
+        "overpayments": 35596040.0,
+        "payments": 66167277209.0,
+        "under_rate": 0.014594150110632823,
+        "underpayments": 965655176.0,
+        "unit_err_rate": 0.03030385611118681,
+        "unsupported_rate": 0.0004992985263039706
+      },
+      "medium": {
+        "gross_rate": 0.03681632111886548,
+        "md_rate": 0.0014616871837142037,
+        "n_units": 110084.0,
+        "net_rate": 0.020336091754941804,
+        "overpayments": 2844589991.0,
+        "payments": 99544003410.0,
+        "under_rate": 0.008240114681961836,
+        "underpayments": 820254004.0,
+        "unit_err_rate": 0.10552850550488718,
+        "unsupported_rate": 0.02711451925318944
+      }
+    }
+  },
+  "overall": {
+    "gross_rate": 0.060623118432538724,
+    "md_rate": 0.0023329819717207863,
+    "n_units": 330253.0,
+    "net_rate": 0.04914765617563956,
+    "overpayments": 21335047540.0,
+    "payments": 388719996122.0,
+    "under_rate": 0.005737731128449581,
+    "underpayments": 2230370822.0,
+    "unit_err_rate": 0.14819850236031165,
+    "unsupported_rate": 0.05255240533236836
+  },
+  "program": "partc",
+  "scenario": "base"
+}

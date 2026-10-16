@@ -1,0 +1,44 @@
+[
+  {
+    "step": "radv_prediction_model",
+    "model": "sklearn HistGradientBoostingClassifier",
+    "params": {
+      "max_iter": 200,
+      "learning_rate": 0.05,
+      "max_leaf_nodes": 31,
+      "l2_regularization": 1.0,
+      "random_state": 0
+    },
+    "features": [
+      "risk_orig",
+      "demo_score",
+      "n_hcc",
+      "months",
+      "n_severe",
+      "n_chart_review",
+      "fam_A",
+      "fam_B",
+      "fam_C",
+      "fam_D",
+      "fam_E",
+      "fam_F",
+      "fam_G",
+      "fam_H",
+      "fam_I",
+      "fam_J",
+      "contract_mean_risk",
+      "contract_chart_rate"
+    ],
+    "train": {
+      "population": "prior year (same generator, seed label 'prior_year')",
+      "seed": 4014175714917318780,
+      "n": 945000,
+      "positives": 96798
+    },
+    "score_population": {
+      "n": 945000,
+      "positives": 96650,
+      "auc_current_year": 0.7127414697243615
+    }
+  }
+]

@@ -1,0 +1,33 @@
+program: partd
+scenario: base
+master_seed: 20261016
+scenario_seed: 2744605309791670622
+variables:
+  n_benes: 108000
+  w_pop: 500.0
+  lis_share: 0.25
+  specialty_share: 0.03
+  payment_target: 105560000000.0
+  target_over: 3700000000.0
+  target_under: 520000000.0
+  deductible: 590.0
+  oop_threshold: 2000.0
+  init_enrollee_coins: 0.25
+  init_mfr_brand: 0.1
+  cat_mfr_brand: 0.2
+  cat_reins_brand: 0.2
+  cat_reins_generic: 0.4
+  lis_copay_generic: 4.9
+  lis_copay_brand: 12.15
+steps:
+- sql: partd/01_beneficiaries_pdes.sql
+- sql: partd/02_init_calibration.sql
+- sql: partd/03_apply_errors.sql
+- sql: partd/04_benefit.sql
+- sql: partd/05_calibrate.sql
+- sql: partd/03_apply_errors.sql
+- sql: partd/04_benefit.sql
+- sql: partd/05_calibrate.sql
+- sql: partd/03_apply_errors.sql
+- sql: partd/04_benefit.sql
+- sql: partd/06_population_truth.sql

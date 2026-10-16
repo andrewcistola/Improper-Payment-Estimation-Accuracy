@@ -1,0 +1,27 @@
+{
+  "config_file": "ffs_stress.yaml",
+  "config_sha256": "347e67f7e3a436a152d3f333a7608a99717bbca9a881849204c76b11c916a07d",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 262,
+      "sha256": "45c6dc0a309b560132838ea815c5fbfad9db2919c9604958e48bcd8b5475b2ca"
+    },
+    "design.yaml": {
+      "bytes": 215,
+      "sha256": "4f79bb456096ff3474a80ddc7154c37340532640ec9f356e308d7197820fa793"
+    },
+    "population.parquet": {
+      "bytes": 4297,
+      "rows": 570,
+      "sha256": "c5216e21c3905aca5664915a43936f14d23f5c4290ccd9f7a58153fa08e34d8b"
+    },
+    "truth.json": {
+      "bytes": 281,
+      "sha256": "fd880c4c98d668ecc0bf60f8ba1c5bedb085f75738bee046cca4eab0f4269fd5"
+    }
+  },
+  "program": "ffs_stress",
+  "python": "3.13.16",
+  "scenario": "left_all_or_nothing_p0.05"
+}

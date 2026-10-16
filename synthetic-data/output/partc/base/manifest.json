@@ -1,0 +1,37 @@
+{
+  "config_file": "partc.yaml",
+  "config_sha256": "46c26f76980ddc8747f4561d41eed1d8efe7b019b8399cf9454f63899f0213b8",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 563,
+      "sha256": "b293e9cdcdc3397a5cacf914a9712c9863e3bc8914ba27475d31a16f61a5ed53"
+    },
+    "contracts.parquet": {
+      "bytes": 10917,
+      "rows": 550,
+      "sha256": "aae9a6d1b2d3c276a6cacee765c91148f6b00141841f89813f796e611b936a38"
+    },
+    "design.yaml": {
+      "bytes": 266,
+      "sha256": "182554cba91b8524a67f9688d7c070ec5902ae02384364a9e07f5c6e9b08eb05"
+    },
+    "hcc_detail.parquet": {
+      "bytes": 1694531,
+      "rows": 402098,
+      "sha256": "6072562c3238b4c0b20ce65c7a4b0076a9104aa0718d0522264a312b499276e7"
+    },
+    "population.parquet": {
+      "bytes": 4621278,
+      "rows": 330253,
+      "sha256": "2804f9b074cc2421e3685fc420818a9dc0c57590f2acf55b645f083d43e998b8"
+    },
+    "truth.json": {
+      "bytes": 1914,
+      "sha256": "b99873e8ed2b811a0d36809e118f0bf94e9cd3d2d60822d1da8444e83148d889"
+    }
+  },
+  "program": "partc",
+  "python": "3.13.16",
+  "scenario": "base"
+}

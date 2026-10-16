@@ -1,0 +1,27 @@
+{
+  "config_file": "ffs_stress.yaml",
+  "config_sha256": "347e67f7e3a436a152d3f333a7608a99717bbca9a881849204c76b11c916a07d",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 272,
+      "sha256": "f9f7b6bfe5b11c8de6ecd46bc977c049377f513ce0c65d4058805b180e13f222"
+    },
+    "design.yaml": {
+      "bytes": 219,
+      "sha256": "0641882c8d99489a6b19cdd20bdf6eb027736aed85588755b02537d7a1fde5c6"
+    },
+    "population.parquet": {
+      "bytes": 2755,
+      "rows": 249,
+      "sha256": "34097b40cfbdbe9453092aa9c4ea5e52510f9b8e73bdca888367084ae6606e76"
+    },
+    "truth.json": {
+      "bytes": 284,
+      "sha256": "c4673752418a3632b3ea79eb6639036b2a8660084d8bf16d3d68012d5a5d51c5"
+    }
+  },
+  "program": "ffs_stress",
+  "python": "3.13.16",
+  "scenario": "two_spike_all_or_nothing_p0.30"
+}

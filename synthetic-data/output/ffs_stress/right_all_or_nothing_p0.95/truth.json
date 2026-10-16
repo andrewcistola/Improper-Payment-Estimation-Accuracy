@@ -1,0 +1,13 @@
+{
+  "by": {},
+  "overall": {
+    "dollar_err_rate": 0.950051261577059,
+    "n": 59804.0,
+    "partial_rate": 0.0,
+    "unit_err_rate": 0.9500033442579092,
+    "x_tot": 231652734.49,
+    "y_tot": 220081972.65
+  },
+  "program": "ffs_stress",
+  "scenario": "right_all_or_nothing_p0.95"
+}

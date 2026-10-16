@@ -1,0 +1,262 @@
+{
+  "by": {
+    "state": {
+      "1": {
+        "claims_rate": 0.03119721710493189,
+        "elig_rate": 0.019944401393891018,
+        "fed_paid_national_scale": 12400318070.0,
+        "n_benes": 29397.0,
+        "n_payments": 342727.0,
+        "overall_rate": 0.050620863066297137,
+        "overlap_rate": 0.0005207554325257723
+      },
+      "2": {
+        "claims_rate": 0.031840936021060084,
+        "elig_rate": 0.022449780902524193,
+        "fed_paid_national_scale": 13777788511.300001,
+        "n_benes": 29373.0,
+        "n_payments": 346920.0,
+        "overall_rate": 0.05361690253077473,
+        "overlap_rate": 0.0006738143928095497
+      },
+      "3": {
+        "claims_rate": 0.03224336182944342,
+        "elig_rate": 0.02496616290524894,
+        "fed_paid_national_scale": 14903514433.199999,
+        "n_benes": 29375.0,
+        "n_payments": 343331.0,
+        "overall_rate": 0.05648842901943881,
+        "overlap_rate": 0.0007210957152535528
+      },
+      "4": {
+        "claims_rate": 0.03239299171940346,
+        "elig_rate": 0.02745928003697692,
+        "fed_paid_national_scale": 16193860898.800001,
+        "n_benes": 29434.0,
+        "n_payments": 344218.0,
+        "overall_rate": 0.0590564513846644,
+        "overlap_rate": 0.0007958203717159867
+      },
+      "5": {
+        "claims_rate": 0.031110002389076585,
+        "elig_rate": 0.029990466449496427,
+        "fed_paid_national_scale": 17360463128.4,
+        "n_benes": 29418.0,
+        "n_payments": 342538.0,
+        "overall_rate": 0.06026309867785313,
+        "overlap_rate": 0.0008373701607198881
+      },
+      "6": {
+        "claims_rate": 0.031237534347344414,
+        "elig_rate": 0.03243160226323308,
+        "fed_paid_national_scale": 18518152699.5,
+        "n_benes": 29374.0,
+        "n_payments": 341985.0,
+        "overall_rate": 0.06264478948439184,
+        "overlap_rate": 0.0010243471261856575
+      },
+      "7": {
+        "claims_rate": 0.03226465343964522,
+        "elig_rate": 0.03498010108701076,
+        "fed_paid_national_scale": 14452347198.840002,
+        "n_benes": 29441.0,
+        "n_payments": 342691.0,
+        "overall_rate": 0.0662688470642936,
+        "overlap_rate": 0.0009759074623623802
+      },
+      "8": {
+        "claims_rate": 0.030497069453401027,
+        "elig_rate": 0.03749200875428987,
+        "fed_paid_national_scale": 15341085351.0,
+        "n_benes": 29394.0,
+        "n_payments": 341051.0,
+        "overall_rate": 0.06696815093157876,
+        "overlap_rate": 0.0010209272761121217
+      },
+      "9": {
+        "claims_rate": 0.031596256142959044,
+        "elig_rate": 0.03999964583591072,
+        "fed_paid_national_scale": 19194641709.32,
+        "n_benes": 29359.0,
+        "n_payments": 343452.0,
+        "overall_rate": 0.0704122336382949,
+        "overlap_rate": 0.0011836683405748705
+      }
+    },
+    "state_payment_type": {
+      "1_FFS": {
+        "claims_rate": 0.055042253845862976,
+        "elig_rate": 0.019947008248842244,
+        "fed_paid_national_scale": 6740378873.999999,
+        "n_benes": 27992.0,
+        "n_payments": 207461.0,
+        "overall_rate": 0.07408647219019814,
+        "overlap_rate": 0.0009027899045070801
+      },
+      "1_MC": {
+        "claims_rate": 0.0028003428042480336,
+        "elig_rate": 0.01994129691000306,
+        "fed_paid_national_scale": 5659939196.0,
+        "n_benes": 20859.0,
+        "n_payments": 135266.0,
+        "overall_rate": 0.022675846251264217,
+        "overlap_rate": 6.579346298687693e-05
+      },
+      "2_FFS": {
+        "claims_rate": 0.05599937713172085,
+        "elig_rate": 0.022320307973659775,
+        "fed_paid_national_scale": 7493788584.700001,
+        "n_benes": 27902.0,
+        "n_payments": 210445.0,
+        "overall_rate": 0.07711890860918058,
+        "overlap_rate": 0.0012007764962000502
+      },
+      "2_MC": {
+        "claims_rate": 0.0030315387687006594,
+        "elig_rate": 0.022604179815268424,
+        "fed_paid_national_scale": 6283999926.6,
+        "n_benes": 20997.0,
+        "n_payments": 136475.0,
+        "overall_rate": 0.02559031645103902,
+        "overlap_rate": 4.5402132930063106e-05
+      },
+      "3_FFS": {
+        "claims_rate": 0.057410599179699574,
+        "elig_rate": 0.024347774999016532,
+        "fed_paid_national_scale": 8021891528.4,
+        "n_benes": 27959.0,
+        "n_payments": 206188.0,
+        "overall_rate": 0.08051131857286759,
+        "overlap_rate": 0.0012470556058485236
+      },
+      "3_MC": {
+        "claims_rate": 0.0029059728317939845,
+        "elig_rate": 0.02568701622355714,
+        "fed_paid_national_scale": 6881622904.799999,
+        "n_benes": 21091.0,
+        "n_payments": 137143.0,
+        "overall_rate": 0.02848500353939359,
+        "overlap_rate": 0.00010798551595753229
+      },
+      "4_FFS": {
+        "claims_rate": 0.057409684079222395,
+        "elig_rate": 0.026370296035247064,
+        "fed_paid_national_scale": 8726001334.7,
+        "n_benes": 28037.0,
+        "n_payments": 207581.0,
+        "overall_rate": 0.08242043924976389,
+        "overlap_rate": 0.0013595408647055704
+      },
+      "4_MC": {
+        "claims_rate": 0.0031616317764600957,
+        "elig_rate": 0.028731729762497018,
+        "fed_paid_national_scale": 7467859564.1,
+        "n_benes": 20966.0,
+        "n_payments": 136637.0,
+        "overall_rate": 0.03175623402722365,
+        "overlap_rate": 0.0001371275117334661
+      },
+      "5_FFS": {
+        "claims_rate": 0.05521777133459553,
+        "elig_rate": 0.03186624854926026,
+        "fed_paid_national_scale": 9336225264.8,
+        "n_benes": 28030.0,
+        "n_payments": 205928.0,
+        "overall_rate": 0.08560588858254388,
+        "overlap_rate": 0.0014781313013119148
+      },
+      "5_MC": {
+        "claims_rate": 0.003060539582382476,
+        "elig_rate": 0.027807988246735648,
+        "fed_paid_national_scale": 8024237863.6,
+        "n_benes": 21016.0,
+        "n_payments": 136610.0,
+        "overall_rate": 0.030776685212719243,
+        "overlap_rate": 9.184261639888208e-05
+      },
+      "6_FFS": {
+        "claims_rate": 0.05528180363151453,
+        "elig_rate": 0.03168312735336848,
+        "fed_paid_national_scale": 10007517486.0,
+        "n_benes": 27954.0,
+        "n_payments": 205720.0,
+        "overall_rate": 0.08517735079578756,
+        "overlap_rate": 0.0017875801890954598
+      },
+      "6_MC": {
+        "claims_rate": 0.0029642692780419448,
+        "elig_rate": 0.03331172173262599,
+        "fed_paid_national_scale": 8510635213.500001,
+        "n_benes": 20946.0,
+        "n_payments": 136265.0,
+        "overall_rate": 0.03614911722593713,
+        "overlap_rate": 0.00012687378473080408
+      },
+      "7_FFS": {
+        "claims_rate": 0.05717443683459372,
+        "elig_rate": 0.035350110988968966,
+        "fed_paid_national_scale": 7824646323.92,
+        "n_benes": 28001.0,
+        "n_payments": 207072.0,
+        "overall_rate": 0.09081569793483042,
+        "overlap_rate": 0.0017088498887322626
+      },
+      "7_MC": {
+        "claims_rate": 0.002856228293529994,
+        "elig_rate": 0.03454326836419929,
+        "fed_paid_national_scale": 6627700874.92,
+        "n_benes": 20949.0,
+        "n_payments": 135619.0,
+        "overall_rate": 0.03728889910756317,
+        "overlap_rate": 0.00011059755016611968
+      },
+      "8_FFS": {
+        "claims_rate": 0.05453107704115937,
+        "elig_rate": 0.03733939137111149,
+        "fed_paid_national_scale": 8196709408.5199995,
+        "n_benes": 28006.0,
+        "n_payments": 203786.0,
+        "overall_rate": 0.09006496001830278,
+        "overlap_rate": 0.0018055083939680805
+      },
+      "8_MC": {
+        "claims_rate": 0.0029229639324874403,
+        "elig_rate": 0.03766710597071206,
+        "fed_paid_national_scale": 7144375942.48,
+        "n_benes": 21085.0,
+        "n_payments": 137265.0,
+        "overall_rate": 0.040469288907497805,
+        "overlap_rate": 0.0001207809957016992
+      },
+      "9_FFS": {
+        "claims_rate": 0.056000979803684625,
+        "elig_rate": 0.03880020044364779,
+        "fed_paid_national_scale": 10328064365.08,
+        "n_benes": 27978.0,
+        "n_payments": 206467.0,
+        "overall_rate": 0.09268381794913275,
+        "overlap_rate": 0.002117362298199679
+      },
+      "9_MC": {
+        "claims_rate": 0.0031688768968166424,
+        "elig_rate": 0.04139679704011668,
+        "fed_paid_national_scale": 8866577344.24,
+        "n_benes": 21008.0,
+        "n_payments": 136985.0,
+        "overall_rate": 0.04446960128489094,
+        "overlap_rate": 9.607265204237783e-05
+      }
+    }
+  },
+  "overall": {
+    "claims_rate": 0.03158698407611662,
+    "elig_rate": 0.030554576564715788,
+    "fed_paid_national_scale": 142142172000.36,
+    "n_benes": 264565.0,
+    "n_payments": 3088913.0,
+    "overall_rate": 0.06125957048832733,
+    "overlap_rate": 0.0008819901525050742
+  },
+  "program": "perm",
+  "scenario": "state_elig_grid"
+}

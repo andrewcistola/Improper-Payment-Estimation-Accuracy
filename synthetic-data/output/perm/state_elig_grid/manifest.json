@@ -1,0 +1,32 @@
+{
+  "config_file": "perm.yaml",
+  "config_sha256": "eaa05f0382125deb5e5f58fbff2b7cfb4ab029a073be8209680b9ebc41f1d22e",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 731,
+      "sha256": "e7e32311480a16f57bd72bb9ffd6e6ea75bb3e0d7a6a8a50a632cef92e1e9883"
+    },
+    "design.yaml": {
+      "bytes": 528,
+      "sha256": "357cacd1900849f4c97d0b26827a82173dffb80f79f8c00d02dbcae39d1e275a"
+    },
+    "population.parquet": {
+      "bytes": 18640623,
+      "rows": 3088913,
+      "sha256": "7fc19438c78f3bbee8ebd055525a7b320d15160c4ebc868d19b7284371c6fdf0"
+    },
+    "states.parquet": {
+      "bytes": 568,
+      "rows": 9,
+      "sha256": "de2353947e736da961df545ed0943ca36d2857b5f87a03b4f6f4624744f4692b"
+    },
+    "truth.json": {
+      "bytes": 8892,
+      "sha256": "4aac32209449fba5e1929130bb1fd3ecf4e77efc7cc695a8b6fb4cc51bac4274"
+    }
+  },
+  "program": "perm",
+  "python": "3.13.16",
+  "scenario": "state_elig_grid"
+}
