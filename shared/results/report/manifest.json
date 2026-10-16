@@ -1,24 +1,24 @@
 {
   "config_file": "shared/report.yaml",
-  "config_sha256": "df4330afcf44e58cd1bc754ca4914877baa35f82f0fab6c36aef3aa25d1ee270",
+  "config_sha256": "5f3f48cac9cc9321c1bd15275de29ea3f7c26289dc176ce22e215738d4097418",
   "duckdb": "1.5.6",
   "files": {
-    "by_sample.csv": {
-      "bytes": 20142118,
-      "sha256": "208652625e8dbe175df4f0b3c8b29672a8300e4e34cd525c6ba58340d0472412"
+    "by_audit_year.csv": {
+      "bytes": 795804,
+      "sha256": "17cdaab892809a016b4a72c6dcdc1054410d6f0357942282279005ace0d0e295"
     },
-    "by_sample.parquet": {
-      "bytes": 3433436,
-      "rows": 108000,
-      "sha256": "599ac6998e8feaa1925887811bbb50dd11c9a24966f2dc50efbd2d5a7eaf27d6"
+    "by_audit_year.parquet": {
+      "bytes": 182686,
+      "rows": 4200,
+      "sha256": "bfb34f1559aa21aa87b0f9df599702f282b608302796975fad780187c4226c78"
     },
     "by_scenario.csv": {
-      "bytes": 57954,
-      "sha256": "738248ebc585939a7fdb4ebd852ce181116f69a2cc2addbeb6b58fff8443d9b4"
+      "bytes": 38085,
+      "sha256": "ea03e4742d96256fcf4890900ca08437e3eb983e2a5b04849f87576fdcf923e0"
     },
     "config.yaml": {
-      "bytes": 149,
-      "sha256": "f32995873122ec4537bcf86fc0fa7e0d3230efd817e24625aa4ae1d6af0a7df1"
+      "bytes": 167,
+      "sha256": "e58b4e08787048fd0755f79ea0ad924b25db3bede35268044dbde413392560ed"
     }
   },
   "program": "report",

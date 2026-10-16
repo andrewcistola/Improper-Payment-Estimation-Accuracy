@@ -157,12 +157,15 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 
 ## shared/results/report/
 
-`by_sample.parquet` (and `by_sample.csv` when regenerated) has one row per program × scenario × domain × method × interval × sample:
+The report covers audit years 1 to `audit_years` (25, set in `shared/report.yaml`), the same audit years for every method.
+
+`by_audit_year.parquet` (and `by_audit_year.csv` when regenerated) has one row per program × scenario × domain × method × interval × audit year:
 
 | Column | Meaning |
 |---|---|
 | `true_rate` | Fabricated improper payment rate in the population |
-| `estimate`, `lower`, `upper` | Point estimate and 95% CI from this sample |
+| `audit_year` | Audit year (Monte Carlo replicate) number |
+| `estimate`, `lower`, `upper` | Point estimate and 95% CI from this audit year |
 | `truth_in_ci` | `inside` (CI contains the truth), `above` (whole CI above it), `below`, or `undefined` |
 | `true_improper_usd`, `estimate_usd`, `lower_usd`, `upper_usd` | The same values in national dollars: rate × payments × `w_pop` |
 
@@ -171,7 +174,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 | Column | Meaning |
 |---|---|
 | `true_rate`, `true_improper_usd` | The fabricated truth |
-| `sample1_estimate`, `sample1_lower`, `sample1_upper`, `sample1_truth_in_ci` | One sample as a worked example |
-| `mean_estimate`, `mean_lower`, `mean_upper` | Averages over all samples |
-| `n_samples`, `n_truth_inside`, `n_ci_above_truth`, `n_ci_below_truth`, `n_undefined` | Counts over all samples |
-| `pct_truth_inside` | Share of samples whose CI contains the truth (= `coverage` in metrics.json) |
+| `year1_estimate`, `year1_lower`, `year1_upper`, `year1_truth_in_ci` | Audit year 1 as a worked example |
+| `mean_estimate`, `mean_lower`, `mean_upper` | Averages over the reported audit years |
+| `n_audit_years`, `n_truth_inside`, `n_ci_above_truth`, `n_ci_below_truth`, `n_undefined` | Counts over the reported audit years |
+| `pct_truth_inside` | % of reported audit years whose CI contains the truth (equals `coverage` in metrics.json when both cover the same audit years) |

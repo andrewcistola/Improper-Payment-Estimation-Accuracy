@@ -34,23 +34,23 @@ Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the 
 
 ## CERT results (SRS of 30 claims)
 
-> **Microsimulation runs in progress.** The microsimulation column will be filled in when the runs finish. The expansion, ratio and regression results are final (1,000 audit years per population; standard error of coverage about ±0.7 points).
+Every method is scored on the same 25 audit years per population (audit years 1–25; standard error of coverage about ±4.4 points), from [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).
 
 Coverage of two-sided 95% intervals: the % of audit years in which the interval contains the true rate; the parentheses show the % of audit years in which it lies entirely above / below.
 
 | Population | Expansion | Ratio | Regression | Microsimulation |
 |---|---|---|---|---|
-| right-skewed, 5% errors | 55.9 (0.0/44.1) | 57.8 (0.0/42.2) | 54.0 (1.9/44.1) | _pending_ |
-| right-skewed, 30% errors | 78.7 (0.0/21.3) | 82.8 (3.2/14.0) | 72.6 (8.2/19.2) | _pending_ |
-| right-skewed, 70% errors | 84.0 (0.1/15.9) | 82.2 (14.3/3.5) | 72.7 (18.5/8.8) | _pending_ |
-| right-skewed, 95% errors | 83.8 (0.4/15.8) | 58.0 (41.8/0.2) | 55.2 (43.2/1.6) | _pending_ |
-| two-spike, 5% errors | 74.8 (0.0/25.2) | 73.6 (0.0/26.4) | 66.6 (0.0/33.4) | _pending_ |
-| two-spike, 30% errors | 92.0 (1.3/6.7) | 92.7 (1.4/5.9) | 91.9 (1.8/6.3) | _pending_ |
-| two-spike, 70% errors | 94.4 (3.2/2.4) | 94.5 (4.1/1.4) | 94.4 (4.1/1.5) | _pending_ |
-| two-spike, 95% errors | 92.5 (4.5/3.0) | 74.3 (25.5/0.2) | 73.7 (25.5/0.8) | _pending_ |
-| left-skewed, 5% errors | 75.9 (0.2/23.9) | 75.9 (0.2/23.9) | 75.7 (0.4/23.9) | _pending_ |
-| left-skewed, 30% errors | 92.1 (1.9/6.0) | 91.7 (2.1/6.2) | 91.7 (2.2/6.1) | _pending_ |
-| left-skewed, 70% errors | 94.1 (4.4/1.5) | 93.4 (5.4/1.2) | 92.5 (6.0/1.5) | _pending_ |
-| left-skewed, 95% errors | 89.7 (9.8/0.5) | 78.8 (21.1/0.1) | 78.0 (21.9/0.1) | _pending_ |
+| right-skewed, 5% errors | 48.0 (0.0/52.0) | 52.0 (0.0/48.0) | 48.0 (0.0/52.0) | 0.0 (36.0/64.0) |
+| right-skewed, 30% errors | 80.0 (0.0/20.0) | 80.0 (4.0/16.0) | 76.0 (8.0/16.0) | 20.0 (60.0/20.0) |
+| right-skewed, 70% errors | 84.0 (0.0/16.0) | 80.0 (20.0/0.0) | 76.0 (16.0/8.0) | 12.0 (48.0/40.0) |
+| right-skewed, 95% errors | 100.0 (0.0/0.0) | 40.0 (60.0/0.0) | 36.0 (64.0/0.0) | 0.0 (72.0/28.0) |
+| two-spike, 5% errors | 76.0 (0.0/24.0) | 80.0 (0.0/20.0) | 76.0 (0.0/24.0) | 76.0 (4.0/20.0) |
+| two-spike, 30% errors | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 44.0 (24.0/32.0) |
+| two-spike, 70% errors | 92.0 (0.0/8.0) | 96.0 (4.0/0.0) | 92.0 (4.0/4.0) | 36.0 (28.0/36.0) |
+| two-spike, 95% errors | 100.0 (0.0/0.0) | 64.0 (36.0/0.0) | 64.0 (36.0/0.0) | 56.0 (32.0/12.0) |
+| left-skewed, 5% errors | 84.0 (0.0/16.0) | 84.0 (0.0/16.0) | 84.0 (0.0/16.0) | 28.0 (4.0/68.0) |
+| left-skewed, 30% errors | 96.0 (0.0/4.0) | 92.0 (4.0/4.0) | 92.0 (4.0/4.0) | 52.0 (28.0/20.0) |
+| left-skewed, 70% errors | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 36.0 (40.0/24.0) |
+| left-skewed, 95% errors | 96.0 (4.0/0.0) | 84.0 (16.0/0.0) | 84.0 (16.0/0.0) | 48.0 (32.0/20.0) |
 
 All 12 populations are in `estimation/results/cert/`.

@@ -1,12 +1,12 @@
 {
   "all": {
     "config.yaml": "44c9dc4c215a1b32785cb717695c7e62d26ae4cf4581e8104c776082c4e567ea",
-    "summary.json": "37f48f91405f05063efc1f086ba7ad5ec16427b8804c14836dd98d0c3212f59f"
+    "summary.json": "471782d42fbfa44d9d472b6ff7c904ce096971a38f179adeee4e488917bd04ce"
   },
   "report": {
-    "by_sample.csv": "208652625e8dbe175df4f0b3c8b29672a8300e4e34cd525c6ba58340d0472412",
-    "by_sample.parquet": "599ac6998e8feaa1925887811bbb50dd11c9a24966f2dc50efbd2d5a7eaf27d6",
-    "by_scenario.csv": "738248ebc585939a7fdb4ebd852ce181116f69a2cc2addbeb6b58fff8443d9b4",
-    "config.yaml": "f32995873122ec4537bcf86fc0fa7e0d3230efd817e24625aa4ae1d6af0a7df1"
+    "by_audit_year.csv": "17cdaab892809a016b4a72c6dcdc1054410d6f0357942282279005ace0d0e295",
+    "by_audit_year.parquet": "bfb34f1559aa21aa87b0f9df599702f282b608302796975fad780187c4226c78",
+    "by_scenario.csv": "ea03e4742d96256fcf4890900ca08437e3eb983e2a5b04849f87576fdcf923e0",
+    "config.yaml": "e58b4e08787048fd0755f79ea0ad924b25db3bede35268044dbde413392560ed"
   }
 }
