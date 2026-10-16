@@ -1,0 +1,22 @@
+{
+  "config_file": "perm-cert/errors/cert_benchmark.yaml",
+  "config_sha256": "5478160a94c74555807369d8b0c2b0ceda3b446176f63eb1b88adaba1b736f5c",
+  "duckdb": "1.5.6",
+  "files": {
+    "benchmark.json": {
+      "bytes": 2571,
+      "sha256": "db63547c551407136d1ecd097ac388fe288c19bb74b1824d987a4796a55a24d0"
+    },
+    "checks.json": {
+      "bytes": 1718,
+      "sha256": "853207734a922a0a0264a5b483d7eb9a7e39bd09a2e03b9901aed6d237585736"
+    },
+    "config.yaml": {
+      "bytes": 293,
+      "sha256": "ee66d7fa5c23b2eec02f3d7b5ddd5257f0a8225672c1d6c8911b3904698a30c8"
+    }
+  },
+  "program": "cert_benchmark",
+  "python": "3.13.16",
+  "scenario": "edwards_fig_4_1"
+}

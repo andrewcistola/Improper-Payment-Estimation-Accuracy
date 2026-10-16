@@ -1,0 +1,10 @@
+unit: claim
+frame: all units
+selection: srs_without_replacement
+strata:
+- stratum: all
+  n: 30
+estimand: improper payment rate = sum y / sum x
+shape: two_spike
+error_rate: 0.7
+error_model: all_or_nothing

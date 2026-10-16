@@ -1,0 +1,30 @@
+# PERM - estimation: draw state samples (systematic selection within
+# strata) from the errors/ population and estimate each state's improper
+# payment rates with each method (expansion, ratio, regression, simulation).
+program: perm_estimation   # also the seed label for sampling and bootstrap
+seed: 20261016
+output_dir: results/perm
+steps:
+  - sql: perm-cert/estimation/sql/perm_01_frame.sql        # estimand + design
+  - sql: shared/sql/sample.sql                         # Monte Carlo samples
+  - sql: perm-cert/estimation/sql/perm_10_expansion.sql
+  - sql: perm-cert/estimation/sql/perm_20_ratio.sql
+  - sql: perm-cert/estimation/sql/perm_30_regression.sql
+  - sql: perm-cert/estimation/sql/perm_40_simulation.sql
+  - sql: perm-cert/estimation/sql/perm_90_score.sql
+exports:
+  - {table: estimates, order_by: "domain, method, interval, rep"}
+json:
+  - {table: metrics, order_by: "domain, method, interval", file: metrics.json}
+  - {table: frame_totals, order_by: domain, file: truth.json}
+defaults:
+  population_dir: perm-cert/errors/output/perm/state_elig_grid
+  selection: systematic
+  components: [overall, eligibility, claims]
+  n_ffs_per_stratum: 20   # 400 FFS per state-year = 4 quarters x 5 strata x 20
+  n_mc_per_stratum: 6     # 120 MC per state-year  = 4 quarters x 5 strata x 6
+  reps: 200        # Monte Carlo samples (MC SE of 95% coverage ~ 1.5 pt)
+  boot_reps: 500   # bootstrap replicates per sample
+  alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
+scenarios:
+  - name: state_elig_grid

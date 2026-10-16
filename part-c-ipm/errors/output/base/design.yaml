@@ -1,0 +1,11 @@
+unit: enrollee
+frame: all enrollees subject to risk adjustment
+selection: stratified_srs_without_replacement
+strata:
+- stratum: low
+  n: 1500
+- stratum: medium
+  n: 1500
+- stratum: high
+  n: 1500
+estimand: gross improper payment rate = sum |y| / sum x

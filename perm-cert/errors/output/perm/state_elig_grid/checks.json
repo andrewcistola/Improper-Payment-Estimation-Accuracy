@@ -1,0 +1,112 @@
+[
+  {
+    "metric": "pooled overall_rate",
+    "value": 0.060900149846359504,
+    "target": 0.0612,
+    "diff": -0.0002998501536404935,
+    "tolerance": 0.003,
+    "rel": false,
+    "status": "pass",
+    "source": "Medicaid FY 2025 6.12% (pooled sanity check)"
+  },
+  {
+    "metric": "state 1 elig_rate",
+    "value": 0.019980828736945254,
+    "target": 0.02,
+    "diff": -1.9171263054746507e-05,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 2 elig_rate",
+    "value": 0.022461433231384987,
+    "target": 0.0225,
+    "diff": -3.856676861501221e-05,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 3 elig_rate",
+    "value": 0.024999151019465066,
+    "target": 0.025,
+    "diff": -8.48980534935706e-07,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 4 elig_rate",
+    "value": 0.027497033281509996,
+    "target": 0.0275,
+    "diff": -2.9667184900036836e-06,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 5 elig_rate",
+    "value": 0.02998905224267198,
+    "target": 0.03,
+    "diff": -1.0947757328020474e-05,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 6 elig_rate",
+    "value": 0.03245979714273566,
+    "target": 0.0325,
+    "diff": -4.0202857264338976e-05,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 7 elig_rate",
+    "value": 0.034987861638915804,
+    "target": 0.035,
+    "diff": -1.2138361084199079e-05,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 8 elig_rate",
+    "value": 0.03749370050139259,
+    "target": 0.0375,
+    "diff": -6.2994986074066395e-06,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "state 9 elig_rate",
+    "value": 0.03999740719213215,
+    "target": 0.04,
+    "diff": -2.592807867851654e-06,
+    "tolerance": 0.0002,
+    "rel": false,
+    "status": "pass",
+    "source": "grid value; never above, within 0.02 pt"
+  },
+  {
+    "metric": "unique ids: population",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  }
+]

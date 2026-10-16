@@ -1,0 +1,27 @@
+{
+  "config_file": "perm-cert/errors/cert.yaml",
+  "config_sha256": "ac91a03b6f5c25d3d611b3a5fc4f3825f94b09ab308f23975ec1e3f67f6881cc",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 381,
+      "sha256": "a4c3edd09dfbe45598df9e488662e2ac15db60a8c2c9168cdcb748a912a59811"
+    },
+    "design.yaml": {
+      "bytes": 204,
+      "sha256": "31e57ec44164a12a451657a85801e615961b2eccdd276184d6318d70b5e983eb"
+    },
+    "population.parquet": {
+      "bytes": 2754,
+      "rows": 249,
+      "sha256": "b3166829294f48bf569a4fcfb92553d814f799e3db5088d09405d64297277fc0"
+    },
+    "truth.json": {
+      "bytes": 279,
+      "sha256": "2cae2930324aed72f843725e0b94359ac858d9f9f6a717438b6f860af1640df2"
+    }
+  },
+  "program": "cert",
+  "python": "3.13.16",
+  "scenario": "two_spike_all_or_nothing_p0.30"
+}

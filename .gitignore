@@ -11,11 +11,12 @@ __pycache__/
 data/raw/
 *.sas7bdat
 
-# synthetic-data: large populations are regenerated (hashes in manifest.json);
-# only small reference populations are committed
-synthetic-data/output/*/**/*.parquet
-!synthetic-data/output/ffs_stress/**/*.parquet
-!synthetic-data/output/eipm/**/*.parquet
-!synthetic-data/output/partc/**/*.parquet
+# errors/ outputs: large populations are regenerated (hashes in manifest.json);
+# only the small populations are committed (Part C, EIPM, CERT)
+part-d-ipm/errors/output/**/*.parquet
+perm-cert/errors/output/perm/**/*.parquet
 *.egg-info/
 .pytest_cache/
+
+# DuckDB spill files from large runs
+.tmp/

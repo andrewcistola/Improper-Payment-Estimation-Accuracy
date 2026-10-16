@@ -1,0 +1,92 @@
+[
+  {
+    "metric": "gross_rate",
+    "value": 0.039811862098000084,
+    "target": 0.04,
+    "diff": -0.00018813790199991715,
+    "tolerance": 0.001,
+    "rel": false,
+    "status": "pass",
+    "source": "gross improper rate 4.00%"
+  },
+  {
+    "metric": "overpayments",
+    "value": 3691168710.0,
+    "target": 3700000000.0,
+    "diff": -0.002386835135135157,
+    "tolerance": 0.05,
+    "rel": true,
+    "status": "pass",
+    "source": "overpayments $3.70B"
+  },
+  {
+    "metric": "payments",
+    "value": 105559981210.0,
+    "target": 105560000000.0,
+    "diff": -1.7800303142578855e-07,
+    "tolerance": 0.001,
+    "rel": true,
+    "status": "pass",
+    "source": "Part D payments $105.56B"
+  },
+  {
+    "metric": "share_drug_discrepancy",
+    "value": 0.07116991258455016,
+    "target": 0.0714,
+    "diff": -0.000230087415449845,
+    "tolerance": 0.01,
+    "rel": false,
+    "status": "pass",
+    "source": "7.14% of errors"
+  },
+  {
+    "metric": "share_missing_documentation",
+    "value": 0.7493721865344909,
+    "target": 0.75,
+    "diff": -0.0006278134655091083,
+    "tolerance": 0.01,
+    "rel": false,
+    "status": "pass",
+    "source": "75.00% of errors"
+  },
+  {
+    "metric": "share_pricing",
+    "value": 0.17945790088095892,
+    "target": 0.1786,
+    "diff": 0.0008579008809589117,
+    "tolerance": 0.01,
+    "rel": false,
+    "status": "pass",
+    "source": "17.86% of errors"
+  },
+  {
+    "metric": "underpayments",
+    "value": 511370705.0,
+    "target": 520000000.0,
+    "diff": -0.0165947980769231,
+    "tolerance": 0.1,
+    "rel": true,
+    "status": "pass",
+    "source": "underpayments $0.52B"
+  },
+  {
+    "metric": "unique ids: pde_detail",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  },
+  {
+    "metric": "unique ids: population",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  }
+]

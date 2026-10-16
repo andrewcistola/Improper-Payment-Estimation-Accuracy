@@ -1,0 +1,14 @@
+program: cert
+scenario: right_all_or_nothing_p0.70
+master_seed: 20261016
+scenario_seed: 396367978369145968
+variables:
+  error_model: all_or_nothing
+  partial_share: 0.098
+  shape: right
+  error_rate: 0.7
+  n_units: 59804
+  scenario: right_all_or_nothing_p0.70
+steps:
+- sql: perm-cert/errors/sql/cert_01_population.sql
+- sql: perm-cert/errors/sql/cert_02_apply_errors.sql

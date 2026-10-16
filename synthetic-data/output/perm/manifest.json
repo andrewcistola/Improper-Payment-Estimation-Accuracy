@@ -1,9 +1,0 @@
-{
-  "state_elig_grid": {
-    "config.yaml": "e7e32311480a16f57bd72bb9ffd6e6ea75bb3e0d7a6a8a50a632cef92e1e9883",
-    "design.yaml": "357cacd1900849f4c97d0b26827a82173dffb80f79f8c00d02dbcae39d1e275a",
-    "population.parquet": "7fc19438c78f3bbee8ebd055525a7b320d15160c4ebc868d19b7284371c6fdf0",
-    "states.parquet": "de2353947e736da961df545ed0943ca36d2857b5f87a03b4f6f4624744f4692b",
-    "truth.json": "4aac32209449fba5e1929130bb1fd3ecf4e77efc7cc695a8b6fb4cc51bac4274"
-  }
-}
