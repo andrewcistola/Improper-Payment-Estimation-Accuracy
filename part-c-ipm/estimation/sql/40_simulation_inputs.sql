@@ -1,7 +1,7 @@
 -- =====================================================================
 -- partc estimation/40_simulation_inputs.sql : inputs for the simulation
 -- ---------------------------------------------------------------------
--- The audit-finding simulation (simulation.py) needs every enrollee and
+-- The audit-finding bootstrap simulation (simulation.py) needs every enrollee and
 -- every submitted HCC in the population, with -- for audited enrollees --
 -- what record review found:
 --   HCC level      : supported / deleted / hierarchy move (hcc_detail)

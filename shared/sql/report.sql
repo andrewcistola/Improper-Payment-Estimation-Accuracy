@@ -8,7 +8,7 @@
 --
 -- Audit years reported: 1 .. audit_years (report.yaml), the same years for
 -- every method. Each audit year is an independent random sample, so the
--- first audit_years are a random set of that many; the microsimulation
+-- first audit_years are a random set of that many; the bootstrap simulation
 -- runs on the first sim_reps years, so these are the years it has.
 --
 -- Outputs

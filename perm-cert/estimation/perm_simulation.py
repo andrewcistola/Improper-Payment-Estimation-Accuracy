@@ -1,4 +1,4 @@
-"""PERM: payment function and audit-finding simulation kernel (one state).
+"""PERM: payment function and audit-finding bootstrap simulation kernel (one state).
 
 Payment function (same as errors/sql/perm_02 and perm_03), per payment:
   claims error      y_claims = round(x x taint, cents)

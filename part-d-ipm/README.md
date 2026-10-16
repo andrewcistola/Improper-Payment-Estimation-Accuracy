@@ -26,7 +26,7 @@ Run: `ipsim part-d-ipm/estimation/config.yaml` → `estimation/results/base/`
 Two audit designs, as in production:
 
 - **Expansion, ratio, regression** (`10_`–`30_*.sql`): simple random sample of 1,500 beneficiaries (random selection since FY 2025; size not public), 200 audit years. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
-- **Audit-finding simulation** (`40_simulation_inputs.sql` + `simulation.py`). Each audit year has two samples, both drawn once in SQL and fixed for all of that year's iterations:
+- **Audit-finding bootstrap simulation** (`40_simulation_inputs.sql` + `simulation.py`). Each audit year has two samples, both drawn once in SQL and fixed for all of that year's iterations:
   - **Audit sample:** 5,000 PDEs drawn from all PDEs, independent of beneficiary (`sim_audit_sample`). Each finding is corrected ÷ submitted GDC.
   - **Beneficiary sample:** 108,000 beneficiaries drawn with replacement (`sim_bene_sample`; the population size, standing in for production's random 1 million).
 

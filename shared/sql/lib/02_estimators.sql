@@ -20,7 +20,7 @@
 --                s2_e = s2_y - 2 b s_xy + b^2 s2_x
 --                se = sqrt(sum_h N_h^2 (1 - f_h) s2_e / n_h) / X
 --    Methods 1-3 report a normal two-sided interval: theta +/- z se.
--- 4. simulation  NOT here: the audit-finding simulation reruns each
+-- 4. simulation  NOT here: the audit-finding bootstrap simulation reruns each
 --                program's payment function over the whole population,
 --                so it lives in shared/ipsim/simulation.py (the loop) and
 --                <program>/estimation/*simulation.py (payment function).

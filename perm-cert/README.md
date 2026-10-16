@@ -27,10 +27,10 @@ PERM details:
 | `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 audit years | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
 | `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 audit years per population | `estimation/results/cert/<shape>_p<rate>/` |
 
-Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding microsimulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
+Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding bootstrap simulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
 
-- **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Run on the first 25 audit years per state.
-- **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Run on the first 100 audit years per population; results are reported for audit years 1–25. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
+- **PERM bootstrap simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Run on the first 25 audit years per state.
+- **CERT bootstrap simulation:** each non-audited claim takes the improper share of a random audited claim. Run on the first 100 audit years per population; results are reported for audit years 1–25. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
 
 ## CERT results (SRS of 30 claims)
 
@@ -38,7 +38,7 @@ Every method is scored on the same 25 audit years per population (audit years 1�
 
 Each cell counts audit years out of 25: how many of the 95% intervals contain the true rate; the parentheses count the intervals entirely above / entirely below it. A valid 95% interval contains the truth in about 24 of 25.
 
-| Population | Expansion | Ratio | Regression | Microsimulation |
+| Population | Expansion | Ratio | Regression | Bootstrap simulation |
 |---|---|---|---|---|
 | right-skewed, 5% errors | 12/25 (0/13) | 13/25 (0/12) | 12/25 (0/13) | 0/25 (9/16) |
 | right-skewed, 30% errors | 20/25 (0/5) | 20/25 (1/4) | 19/25 (2/4) | 5/25 (15/5) |
@@ -55,7 +55,7 @@ Each cell counts audit years out of 25: how many of the 95% intervals contain th
 
 Average error of the point estimate over the 25 audit years, as a % of the true rate (in parentheses, the average signed error: + high, − low):
 
-| Population | True rate | Expansion | Ratio | Regression | Microsimulation |
+| Population | True rate | Expansion | Ratio | Regression | Bootstrap simulation |
 |---|---|---|---|---|---|
 | right-skewed, 5% errors | 4.82% | 66.9% (−47.1%) | 75.3% (−36.3%) | 70.1% (−44.0%) | 66.8% (−11.4%) |
 | right-skewed, 30% errors | 30.37% | 55.4% (+8.2%) | 37.7% (+2.7%) | 36.8% (+5.7%) | 20.0% (+8.5%) |

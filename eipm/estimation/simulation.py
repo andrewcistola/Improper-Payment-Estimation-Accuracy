@@ -1,4 +1,4 @@
-"""EIPM: payment function and audit-finding simulation kernel.
+"""EIPM: payment function and audit-finding bootstrap simulation kernel.
 
 Payment function (same as errors/sql/01_population.sql and 02):
   applicable % = linear within the configured %FPL bands (enhanced schedule)
