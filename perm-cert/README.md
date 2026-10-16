@@ -28,3 +28,24 @@ PERM details:
 | `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 Monte Carlo samples per population | `estimation/results/cert/<shape>_p<rate>/` |
 
 Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, `*_40_simulation.sql` (bootstrap), scored in `*_90_score.sql`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
+
+## CERT pilot results (SRS of 30 claims, 1,000 samples × 1,000 bootstrap replicates)
+
+Coverage of two-sided 95% intervals (%); the parentheses show the share of intervals entirely above / below the true rate.
+
+| Population | Expansion | Ratio | Percentile | BCa | Bootstrap-t (median width ÷ true rate) |
+|---|---|---|---|---|---|
+| right-skewed, 5% errors | 55.9 (0.0/44.1) | 57.8 (0.0/42.2) | 63.7 (0.0/36.3) | 68.9 (0.6/30.5) | 78.1 (0.0/21.9), width 8,883 |
+| right-skewed, 30% | 78.7 (0.0/21.3) | 82.8 (3.2/14.0) | 90.5 (1.4/8.1) | 91.2 (2.6/6.2) | 97.9 (0.5/1.6), width 2.4 |
+| right-skewed, 70% | 84.0 (0.1/15.9) | 82.2 (14.3/3.5) | 89.7 (8.7/1.6) | 90.9 (6.4/2.7) | 97.4 (2.1/0.5), width 1.1 |
+| right-skewed, 95% | 83.8 (0.4/15.8) | 58.0 (41.8/0.2) | 64.0 (36.0/0.0) | 70.0 (29.4/0.6) | 78.6 (21.4/0.0), width 470 |
+| two-spike, 30% | 92.0 (1.3/6.7) | 92.7 (1.4/5.9) | 94.7 (1.5/3.8) | 97.2 (1.4/1.4) | 99.0 (1.0/0.0), width 1.3 |
+| two-spike, 95% | 92.5 (4.5/3.0) | 74.3 (25.5/0.2) | 74.9 (24.5/0.6) | 79.0 (19.9/1.1) | 79.5 (19.8/0.7), width 12 |
+| left-skewed, 30% | 92.1 (1.9/6.0) | 91.7 (2.1/6.2) | 93.1 (2.2/4.7) | 94.6 (2.1/3.3) | 98.3 (1.7/0.0), width 1.2 |
+| left-skewed, 95% | 89.7 (9.8/0.5) | 78.8 (21.1/0.1) | 78.8 (21.1/0.1) | 78.0 (21.1/0.9) | 78.2 (21.1/0.7), width 67 |
+
+All 12 populations are in `estimation/results/cert/`. With 30 claims:
+
+- **Degenerate samples at the extremes:** at a 5% error rate about 21% of samples hold no errors, and at 95% about 21% hold only errors. These samples give a zero spread and an interval that cannot contain the truth, whatever the method.
+- **Middle error rates:** BCa and the percentile bootstrap improve on normal intervals, especially for right-skewed payments.
+- **Bootstrap-t:** it over-covers, and its width is unstable when some replicates have a near-zero standard error.
