@@ -4,7 +4,6 @@ master_seed: 20261016
 scenario_seed: 27494208292897757
 variables:
   population_dir: part-c-ipm/errors/output/base
-  selection: srs
   allocation:
   - stratum: low
     n_h: 1500
@@ -18,7 +17,7 @@ variables:
   scenario: base
 steps:
 - sql: part-c-ipm/estimation/sql/01_frame.sql
-- sql: shared/sql/sample.sql
+- sql: shared/sql/sample_srs.sql
 - sql: part-c-ipm/estimation/sql/10_expansion.sql
 - sql: part-c-ipm/estimation/sql/20_ratio.sql
 - sql: part-c-ipm/estimation/sql/30_regression.sql
