@@ -1,0 +1,14 @@
+# Fabricated truth vs every estimate and confidence interval, all
+# programs (run after the estimation configs). Output: shared/results/report/
+program: report
+seed: 0
+output_dir: results
+steps:
+  - sql: shared/sql/report.sql
+exports:
+  - {table: by_sample, order_by: "program, scenario, domain, method, interval, rep"}
+csv:
+  - {table: by_scenario, order_by: "program, scenario, domain, method, interval", file: by_scenario.csv}
+  - {table: by_sample, order_by: "program, scenario, domain, method, interval, rep", file: by_sample.csv}
+scenarios:
+  - name: report

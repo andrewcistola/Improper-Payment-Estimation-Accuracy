@@ -1,0 +1,8 @@
+program: report
+scenario: report
+master_seed: 0
+scenario_seed: 1695418296487618484
+variables:
+  scenario: report
+steps:
+- sql: shared/sql/report.sql

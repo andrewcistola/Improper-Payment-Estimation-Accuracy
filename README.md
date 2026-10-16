@@ -34,6 +34,7 @@ ipsim part-c-ipm/errors/config.yaml part-d-ipm/errors/config.yaml eipm/errors/co
 ipsim part-c-ipm/estimation/config.yaml part-d-ipm/estimation/config.yaml eipm/estimation/config.yaml \
       perm-cert/estimation/perm.yaml perm-cert/estimation/cert.yaml
 ipsim shared/summary.yaml                     # all metrics in one table
+ipsim shared/report.yaml                      # truth vs every estimate and CI (by_scenario.csv, by_sample)
 python -m pytest -q shared/tests              # tests
 ```
 
@@ -60,7 +61,7 @@ What the pilot shows:
 - **Rare errors defeat every method.** EIPM has about 30 errors per sample, and nothing reaches 95%.
 - **Small samples fail at the extremes.** In CERT (30 claims), samples with no errors (5% error rate) or only errors (95% error rate) give degenerate estimates. Every method fails there, and bootstrap-t intervals become extremely wide. See [`perm-cert/README.md`](perm-cert/README.md).
 
-Per-program details are in each `estimation/results/*/metrics.json`, and everything in one table is in [`shared/results/all/summary.json`](shared/results/all/summary.json). These are pilot runs on illustrative designs; the sample sizes are not CMS's, and the configs say which values are not public.
+Per-program details are in each `estimation/results/*/metrics.json`, and everything in one table is in [`shared/results/all/summary.json`](shared/results/all/summary.json). [`shared/results/report/by_scenario.csv`](shared/results/report/by_scenario.csv) puts the fabricated true improper payment next to each scenario's estimates and CIs; `by_sample.parquet` has every sample. These are pilot runs on illustrative designs; the sample sizes are not CMS's, and the configs say which values are not public.
 
 ## Design principles
 

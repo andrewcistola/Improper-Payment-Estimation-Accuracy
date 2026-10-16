@@ -9,6 +9,8 @@ Code used by all four programs. Each program folder states *what* is estimated a
 | `sql/lib/01_stats.sql` | Normal CDF and quantile (DuckDB has none), list quantiles, and order-independent floating-point sums |
 | `sql/lib/02_estimators.sql` | **The four methods**: expansion, ratio, regression (GREG), simulation (rescaled bootstrap with percentile, bootstrap-t and BCa intervals), plus scoring. Formulas are written out in the file header. |
 | `sql/sample_srs.sql`, `sql/sample_systematic.sql` | Monte Carlo sampling within strata: SRS without replacement, or systematic selection after sorting by amount paid. Each program's config names the one its design uses. |
+| `sql/report.sql`, `report.yaml` | Fabricated truth vs every estimate and CI: `results/report/by_scenario.csv` (one row per scenario × method, with sample 1 as a worked example and the count of CIs containing the truth) and `by_sample.parquet` (every sample) |
+| `sql/summary.sql`, `summary.yaml` | All `metrics.json` files in one table |
 | `tests/` | RNG independence, normal functions vs scipy, exact sample sizes, **estimators vs an independent numpy implementation**, byte-identical reruns |
 | `data_dictionary.md` | Every column of every output |
 

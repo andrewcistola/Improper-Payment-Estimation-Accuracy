@@ -16,6 +16,7 @@ Config keys
   lookups      optional derived variables: {var: {by: other_var, map: {value: result}}}
   exports      Parquet outputs: [{table, order_by, file?}]
   json         JSON outputs (list of records): [{table, order_by, file}]
+  csv          CSV outputs with a header row: [{table, order_by, file}]
   truth        true -> write truth.json from table truth(level, key, metric, value)
   design       production design metadata written to design.yaml ($var substitutes)
 
@@ -147,6 +148,11 @@ class Engine:
             path = outdir / f"{spec.get('file', spec['table'])}.parquet"
             con.execute(f"COPY (SELECT * FROM {spec['table']} ORDER BY {spec['order_by']}) "
                         f"TO '{path}' (FORMAT parquet, COMPRESSION zstd, ROW_GROUP_SIZE 122880)")
+            files.append(path)
+        for spec in self.config.get("csv") or []:
+            path = outdir / spec["file"]
+            con.execute(f"COPY (SELECT * FROM {spec['table']} ORDER BY {spec['order_by']}) "
+                        f"TO '{path}' (FORMAT csv, HEADER true)")
             files.append(path)
         for spec in self.config.get("json") or []:
             cur = con.execute(f"SELECT * FROM {spec['table']} ORDER BY {spec['order_by']}")

@@ -154,3 +154,24 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 | `mean_se`, `empirical_se` | Average reported SE vs the standard deviation of the estimates across samples |
 
 `truth.json` (estimation) gives the frame totals per domain: X (paid), Y (improper) and theta = Y / X.
+
+## shared/results/report/
+
+`by_sample.parquet` (and `by_sample.csv` when regenerated) has one row per program × scenario × domain × method × interval × sample:
+
+| Column | Meaning |
+|---|---|
+| `true_rate` | Fabricated improper payment rate in the population |
+| `estimate`, `lower`, `upper` | Point estimate and 95% CI from this sample |
+| `truth_in_ci` | `inside` (CI contains the truth), `above` (whole CI above it), `below`, or `undefined` |
+| `true_improper_usd`, `estimate_usd`, `lower_usd`, `upper_usd` | The same values in national dollars: rate × payments × `w_pop` |
+
+`by_scenario.csv` has one row per program × scenario × domain × method × interval:
+
+| Column | Meaning |
+|---|---|
+| `true_rate`, `true_improper_usd` | The fabricated truth |
+| `sample1_estimate`, `sample1_lower`, `sample1_upper`, `sample1_truth_in_ci` | One sample as a worked example |
+| `mean_estimate`, `mean_lower`, `mean_upper` | Averages over all samples |
+| `n_samples`, `n_truth_inside`, `n_ci_above_truth`, `n_ci_below_truth`, `n_undefined` | Counts over all samples |
+| `pct_truth_inside` | Share of samples whose CI contains the truth (= `coverage` in metrics.json) |
