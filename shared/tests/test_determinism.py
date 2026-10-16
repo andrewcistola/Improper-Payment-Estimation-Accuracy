@@ -33,7 +33,7 @@ def test_estimation_outputs_identical(tmp_path):
     for threads in (1, 4):
         out = tmp_path / f"t{threads}"
         e = Engine(cfg, out, threads)
-        e.config["defaults"].update(reps=40, boot_reps=100)
+        e.config["defaults"].update(reps=40, sim_reps=3, sim_iterations=100)
         e.run(["left_p0.70"])
         man = json.loads((out / "left_p0.70" / "manifest.json").read_text())
         hashes.append({k: v["sha256"] for k, v in man["files"].items()})

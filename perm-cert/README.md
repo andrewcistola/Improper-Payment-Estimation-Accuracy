@@ -27,7 +27,10 @@ PERM details:
 | `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 Monte Carlo samples | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
 | `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 Monte Carlo samples per population | `estimation/results/cert/<shape>_p<rate>/` |
 
-Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, `*_40_simulation.sql` (bootstrap), scored in `*_90_score.sql`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
+Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding simulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
+
+- **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Scored on 25 audited samples per state.
+- **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Scored on 100 audited samples per population. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
 
 ## CERT pilot results (SRS of 30 claims, 1,000 samples × 1,000 bootstrap replicates)
 

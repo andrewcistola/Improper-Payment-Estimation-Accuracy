@@ -180,7 +180,9 @@ def load_kernel(path):
 def run(con, v, kernel_module):
     """Engine entry point: run the simulation for the first sim_reps samples.
 
-    kernel_module.Kernel(con, v) must provide:
+    kernel_module.Kernel(con, v) gets the population's own variables
+  (errors/output/<scenario>/config.yaml, e.g. benefit parameters) merged
+  with this run's, and must provide:
       units          : number of population units
       audited(rep)   : (unit indices of the audited sample, their strata)
       prepare(audited_mask) : called once per audited sample
@@ -188,7 +190,12 @@ def run(con, v, kernel_module):
     Writes table est_simulation(method, interval, rep, domain, estimate,
     se, lower, upper).
     """
-    kernel = kernel_module.Kernel(con, v)
+    # payment-function parameters: exactly those that built the population
+    # (errors/output/<scenario>/config.yaml), then this run's variables
+    import yaml
+    from .engine import ROOT
+    pop_cfg = yaml.safe_load((ROOT / v["population_dir"] / "config.yaml").read_text())["variables"]
+    kernel = kernel_module.Kernel(con, {**pop_cfg, **v})
     n_iter, alpha = int(v["sim_iterations"]), float(v["alpha"])
     reps = sorted(r for (r,) in con.execute("SELECT DISTINCT rep FROM sample ORDER BY rep").fetchall())
     reps = reps[: int(v["sim_reps"])]

@@ -56,11 +56,13 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def connect(threads: int | None = None) -> duckdb.DuckDBPyConnection:
+def connect(threads: int | None = None, memory_limit: str | None = None) -> duckdb.DuckDBPyConnection:
     """DuckDB connection with the shared SQL library loaded (in file-name order)."""
     con = duckdb.connect()
     if threads:
         con.execute(f"SET threads = {int(threads)}")
+    if memory_limit:
+        con.execute(f"SET memory_limit = '{memory_limit}'")
     con.execute("SET preserve_insertion_order = true")
     for lib in sorted(LIB.glob("*.sql")):
         con.execute(lib.read_text())
@@ -87,6 +89,7 @@ class Engine:
         self.output_dir = (Path(output_dir).resolve() if output_dir
                            else (base / self.config.get("output_dir", "output")).resolve())
         self.threads = threads or self.config.get("threads")
+        self.memory_limit = None
         self.timing = False
 
     # ------------------------------------------------------------------ #
@@ -124,7 +127,7 @@ class Engine:
 
     # ------------------------------------------------------------------ #
     def run_scenario(self, name: str, v: dict) -> Path:
-        con = connect(self.threads)
+        con = connect(self.threads, self.memory_limit)
         outdir = self.output_dir / name
         outdir.mkdir(parents=True, exist_ok=True)
         v = dict(v)
@@ -231,12 +234,14 @@ def main(argv=None):
     ap.add_argument("--out", help="output folder (default: the config's output_dir)")
     ap.add_argument("--threads", type=int)
     ap.add_argument("--timing", action="store_true", help="print the run time of each SQL step")
+    ap.add_argument("--memory-limit", help="DuckDB memory limit, e.g. 2GB (when running configs in parallel)")
     ap.add_argument("--set", nargs="*", default=[], metavar="VAR=VALUE",
                     help="override a default variable for this run, e.g. --set reps=20")
     a = ap.parse_args(argv)
     for c in a.config:
         e = Engine(c, a.out, a.threads)
         e.timing = a.timing
+        e.memory_limit = a.memory_limit
         for kv in a.set:
             k, v = kv.split("=", 1)
             e.config.setdefault("defaults", {})[k] = yaml.safe_load(v)

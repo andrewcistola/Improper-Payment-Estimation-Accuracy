@@ -17,6 +17,6 @@ Run: `ipsim eipm/errors/config.yaml` → `errors/output/base/`
 
 Run: `ipsim eipm/estimation/config.yaml` → `estimation/results/base/`
 
-Design: stratified SRS of 2,000 applications, 500 per income band (EIPM strata not public; illustrative), 200 Monte Carlo samples. Methods: `10_expansion.sql`, `20_ratio.sql`, `30_regression.sql`, `40_simulation.sql` (bootstrap), scored in `90_score.sql`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
+Design: stratified SRS of 2,000 applications, 500 per income band (EIPM strata not public; illustrative), 200 Monte Carlo samples. Methods: `10_expansion.sql`, `20_ratio.sql`, `30_regression.sql`, and the audit-finding simulation (`40_simulation_inputs.sql` + `simulation.py`: each application takes the finding of a random audited application in its income band (error type and supported ÷ reported income), APTC is recomputed, 1,000 iterations; scored on 100 audited samples), all scored in `90_score.sql`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
 
 With roughly 1.5% of applications in error, each sample holds only about 30 errors, the regime where normal intervals are least reliable.
