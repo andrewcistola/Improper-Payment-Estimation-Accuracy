@@ -26,9 +26,9 @@
       "sha256": "6072562c3238b4c0b20ce65c7a4b0076a9104aa0718d0522264a312b499276e7"
     },
     "population.parquet": {
-      "bytes": 4621298,
+      "bytes": 4657360,
       "rows": 330253,
-      "sha256": "a67a2e4728dd2582d35ddaa369296f4bd89802a939b5e58a1998c5571eb6c604"
+      "sha256": "1f5b6f42db5c1c532cdf92b7c4ba820ae5ebc65c47e58480c0a33e9382f55556"
     },
     "truth.json": {
       "bytes": 1914,

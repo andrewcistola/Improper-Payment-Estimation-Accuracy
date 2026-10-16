@@ -46,9 +46,11 @@ CREATE OR REPLACE TABLE population AS
 SELECT h.unit_id,
        CASE WHEN h.fpl_pct < 150 THEN 'A_lt150' WHEN h.fpl_pct < 250 THEN 'B_150_250'
             WHEN h.fpl_pct < 400 THEN 'C_250_400' ELSE 'D_ge400' END AS stratum,
-       h.region, h.hh_size, h.age, round(h.fpl_pct, 1) AS fpl_pct, h.months,
+       h.region, h.hh_size, h.age, h.fpl_pct, h.months,
        h.benchmark_month, h.aptc_month, h.x,
        CASE WHEN h.u_act < least(0.95, c.m) THEN (h.x - h.cand_correct_aptc)::DECIMAL(18, 2) ELSE usd(0) END AS y,
        CASE WHEN h.u_act < least(0.95, c.m) THEN h.cand_type ELSE 'none' END AS error_type,
-       getvariable('w_pop')::DOUBLE AS w_pop
+       getvariable('w_pop')::DOUBLE AS w_pop,
+       CASE WHEN h.u_act < least(0.95, c.m) AND h.cand_type = 'income_misstatement'
+            THEN h.true_fpl_pct END AS true_fpl_pct   -- audit finding: income the record supports
 FROM hh h, calib c;

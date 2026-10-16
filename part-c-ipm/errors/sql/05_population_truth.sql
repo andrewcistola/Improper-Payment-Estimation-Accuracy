@@ -12,7 +12,8 @@ SELECT unit_id, contract_id,
        CASE ntile(3) OVER (ORDER BY risk_orig, unit_id)
             WHEN 1 THEN 'low' WHEN 2 THEN 'medium' ELSE 'high' END AS stratum,
        months, county_rate, demo_score, n_hcc, risk_orig, risk_validated, delta_r,
-       x, y, error_type, w_pop
+       x, y, error_type, w_pop,
+       missing_doc, add_fam, add_coef   -- enrollee-level audit findings (HCC-level: hcc_detail)
 FROM capitation_units;
 
 CREATE OR REPLACE TABLE truth AS

@@ -8,7 +8,9 @@ generation, error injection, estimation and scoring live in SQL files.
 Config keys
   program      name used in logs and manifests
   seed         master seed; each scenario gets child_seed(seed, program, scenario)
-  steps        list of {sql: <path relative to the repo root>}
+  steps        list of {sql: <path relative to the repo root>}, or
+               {python: <estimation/simulation.py>} for the simulation
+               estimator's numpy loop (see shared/ipsim/simulation.py)
   output_dir   folder for outputs, relative to the config file (default: output)
   defaults     variables shared by all scenarios
   scenarios    list of {name: ..., <variable overrides>}
@@ -133,9 +135,13 @@ class Engine:
             con.execute(f"SET VARIABLE {k} = ?", [json.dumps(val) if isinstance(val, (list, dict)) else val])
         for step in self.config["steps"]:
             t0 = time.time()
-            con.execute((ROOT / step["sql"]).read_text())
+            if "python" in step:  # only the simulation estimator
+                from . import simulation
+                simulation.run(con, v, simulation.load_kernel(ROOT / step["python"]))
+            else:
+                con.execute((ROOT / step["sql"]).read_text())
             if self.timing:
-                print(f"  {time.time() - t0:7.1f}s  {step['sql']}", file=sys.stderr)
+                print(f"  {time.time() - t0:7.1f}s  {step.get('sql') or step.get('python')}", file=sys.stderr)
         files = self._export(con, name, v, outdir)
         self._scenario_manifest(con, name, outdir, files)
         con.close()

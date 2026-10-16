@@ -70,7 +70,7 @@ CREATE OR REPLACE MACRO expit(z) AS 1.0 / (1.0 + exp(-z));
 -- thread-order independent (a requirement for identical file hashes).
 CREATE OR REPLACE MACRO usd(v) AS round(v, 2)::DECIMAL(18, 2);
 
--- Fast stream for high-volume draws (bootstrap resamples, SRS keys).
+-- Fast stream for high-volume draws (SRS keys, claim samples).
 -- base = hash of ONE string key (e.g. 'seed|boot|stratum|rep') computed
 -- once per stream; each draw then hashes a single 64-bit integer,
 -- base XOR k, which is ~10x faster than hashing a string per draw and

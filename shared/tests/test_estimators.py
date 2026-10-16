@@ -85,40 +85,6 @@ def test_analytic_estimators_match_numpy(method, macro):
     assert hi == pytest.approx(ref[method][0] + Z * ref[method][1], rel=1e-7)
 
 
-def test_bootstrap_matches_independent_numpy_bootstrap():
-    """Rao-Wu rescaled bootstrap, written separately in numpy with its own
-    RNG; the SQL and numpy bootstrap distributions must agree within Monte
-    Carlo error (B = 4000 each)."""
-    rows, X = toy()
-    con = load(rows, X)
-    B = 4000
-    res = {r[0]: r[1:] for r in con.execute(
-        f"SELECT interval, estimate, se, lower, upper FROM ipm_bootstrap({B}, 0.05)").fetchall()}
-    ref, strata, R = numpy_reference(rows, X)
-    rng = np.random.default_rng(11)
-    th = np.empty(B)
-    for b in range(B):
-        ty = tx = 0.0
-        for s in strata.values():
-            N, n = s["N"], s["n"]
-            m, lam = n - 1, np.sqrt(1 - n / N)
-            c = np.bincount(rng.integers(0, n, m), minlength=n)
-            wstar = (N / n) * (1 - lam + lam * (n / m) * c)
-            ty += np.sum(wstar * s["y"])
-            tx += np.sum(wstar * s["x"])
-        th[b] = ty / tx
-    pct = res["percentile"]
-    assert pct[0] == pytest.approx(R, rel=1e-10)                 # point estimate = ratio
-    assert pct[1] == pytest.approx(th.std(ddof=1), rel=0.06)     # bootstrap SE
-    assert pct[1] == pytest.approx(ref["ratio"][1], rel=0.08)    # ~ linearization SE
-    assert pct[2] == pytest.approx(np.quantile(th, 0.025), abs=0.25 * th.std())
-    assert pct[3] == pytest.approx(np.quantile(th, 0.975), abs=0.25 * th.std())
-    for interval in ("bootstrap_t", "bca"):
-        lo, hi = res[interval][2], res[interval][3]
-        assert lo < R < hi
-        assert (hi - lo) == pytest.approx(pct[3] - pct[2], rel=0.25)
-
-
 def test_census_has_zero_variance():
     """Sampling every unit (f = 1): all standard errors are 0 and every
     interval collapses to the true rate."""
@@ -126,7 +92,7 @@ def test_census_has_zero_variance():
     X = sum(r[7] for r in rows)
     con = load(rows, X)
     theta = sum(r[6] for r in rows) / X
-    for macro in ("ipm_expansion(0.05)", "ipm_ratio(0.05)", "ipm_regression(0.05)", "ipm_bootstrap(200, 0.05)"):
+    for macro in ("ipm_expansion(0.05)", "ipm_ratio(0.05)", "ipm_regression(0.05)"):
         for est, se, lo, hi in con.execute(f"SELECT estimate, se, lower, upper FROM {macro}").fetchall():
             assert est == pytest.approx(theta, rel=1e-10)
             assert se == pytest.approx(0, abs=1e-12)
