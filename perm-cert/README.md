@@ -29,28 +29,28 @@ PERM details:
 
 Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding microsimulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
 
-- **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Scored on the first 25 audit years per state.
-- **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Scored on the first 100 audit years per population. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
+- **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Run on the first 25 audit years per state.
+- **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Run on the first 100 audit years per population; results are reported for audit years 1–25. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
 
 ## CERT results (SRS of 30 claims)
 
-Every method is scored on the same 25 audit years per population (audit years 1–25; standard error of coverage about ±4.4 points), from [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).
+Every method is scored on the same 25 audit years per population (audit years 1–25), from [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).
 
-Coverage of two-sided 95% intervals: the % of audit years in which the interval contains the true rate; the parentheses show the % of audit years in which it lies entirely above / below.
+Each cell counts audit years out of 25: how many of the 95% intervals contain the true rate; the parentheses count the intervals entirely above / entirely below it. A valid 95% interval contains the truth in about 24 of 25.
 
 | Population | Expansion | Ratio | Regression | Microsimulation |
 |---|---|---|---|---|
-| right-skewed, 5% errors | 48.0 (0.0/52.0) | 52.0 (0.0/48.0) | 48.0 (0.0/52.0) | 0.0 (36.0/64.0) |
-| right-skewed, 30% errors | 80.0 (0.0/20.0) | 80.0 (4.0/16.0) | 76.0 (8.0/16.0) | 20.0 (60.0/20.0) |
-| right-skewed, 70% errors | 84.0 (0.0/16.0) | 80.0 (20.0/0.0) | 76.0 (16.0/8.0) | 12.0 (48.0/40.0) |
-| right-skewed, 95% errors | 100.0 (0.0/0.0) | 40.0 (60.0/0.0) | 36.0 (64.0/0.0) | 0.0 (72.0/28.0) |
-| two-spike, 5% errors | 76.0 (0.0/24.0) | 80.0 (0.0/20.0) | 76.0 (0.0/24.0) | 76.0 (4.0/20.0) |
-| two-spike, 30% errors | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 44.0 (24.0/32.0) |
-| two-spike, 70% errors | 92.0 (0.0/8.0) | 96.0 (4.0/0.0) | 92.0 (4.0/4.0) | 36.0 (28.0/36.0) |
-| two-spike, 95% errors | 100.0 (0.0/0.0) | 64.0 (36.0/0.0) | 64.0 (36.0/0.0) | 56.0 (32.0/12.0) |
-| left-skewed, 5% errors | 84.0 (0.0/16.0) | 84.0 (0.0/16.0) | 84.0 (0.0/16.0) | 28.0 (4.0/68.0) |
-| left-skewed, 30% errors | 96.0 (0.0/4.0) | 92.0 (4.0/4.0) | 92.0 (4.0/4.0) | 52.0 (28.0/20.0) |
-| left-skewed, 70% errors | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 96.0 (4.0/0.0) | 36.0 (40.0/24.0) |
-| left-skewed, 95% errors | 96.0 (4.0/0.0) | 84.0 (16.0/0.0) | 84.0 (16.0/0.0) | 48.0 (32.0/20.0) |
+| right-skewed, 5% errors | 12/25 (0/13) | 13/25 (0/12) | 12/25 (0/13) | 0/25 (9/16) |
+| right-skewed, 30% errors | 20/25 (0/5) | 20/25 (1/4) | 19/25 (2/4) | 5/25 (15/5) |
+| right-skewed, 70% errors | 21/25 (0/4) | 20/25 (5/0) | 19/25 (4/2) | 3/25 (12/10) |
+| right-skewed, 95% errors | 25/25 (0/0) | 10/25 (15/0) | 9/25 (16/0) | 0/25 (18/7) |
+| two-spike, 5% errors | 19/25 (0/6) | 20/25 (0/5) | 19/25 (0/6) | 19/25 (1/5) |
+| two-spike, 30% errors | 24/25 (1/0) | 24/25 (1/0) | 24/25 (1/0) | 11/25 (6/8) |
+| two-spike, 70% errors | 23/25 (0/2) | 24/25 (1/0) | 23/25 (1/1) | 9/25 (7/9) |
+| two-spike, 95% errors | 25/25 (0/0) | 16/25 (9/0) | 16/25 (9/0) | 14/25 (8/3) |
+| left-skewed, 5% errors | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 7/25 (1/17) |
+| left-skewed, 30% errors | 24/25 (0/1) | 23/25 (1/1) | 23/25 (1/1) | 13/25 (7/5) |
+| left-skewed, 70% errors | 24/25 (1/0) | 24/25 (1/0) | 24/25 (1/0) | 9/25 (10/6) |
+| left-skewed, 95% errors | 24/25 (1/0) | 21/25 (4/0) | 21/25 (4/0) | 12/25 (8/5) |
 
 All 12 populations are in `estimation/results/cert/`.

@@ -30,6 +30,6 @@ Two audit designs, as in production:
   - **Audit sample:** 5,000 PDEs drawn from all PDEs, independent of beneficiary (`sim_audit_sample`). Each finding is corrected ÷ submitted GDC.
   - **Beneficiary sample:** 108,000 beneficiaries drawn with replacement (`sim_bene_sample`; the population size, standing in for production's random 1 million).
 
-  In each of 1,000 iterations, every PDE of a beneficiary-sample beneficiary takes the finding of a random audit-sample PDE of the same kind (brand or generic); audited PDEs keep their own finding. The CY 2025 benefit is then rerun. The iteration's rate is Σ|y| ÷ Σx over the beneficiary sample; the estimate is the mean over iterations and the interval the 2.5th–97.5th percentiles. Scored on the first 25 audit years.
+  In each of 1,000 iterations, every PDE of a beneficiary-sample beneficiary takes the finding of a random audit-sample PDE of the same kind (brand or generic); audited PDEs keep their own finding. The CY 2025 benefit is then rerun. The iteration's rate is Σ|y| ÷ Σx over the beneficiary sample; the estimate is the mean over iterations and the interval the 2.5th–97.5th percentiles. Run on the first 25 audit years; results are reported for audit years 1–25.
 
 All methods are scored in `90_score.sql`.

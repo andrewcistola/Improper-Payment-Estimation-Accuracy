@@ -28,7 +28,7 @@ Run: `ipsim part-c-ipm/estimation/config.yaml` → `estimation/results/base/`
 | `10_expansion.sql` | Expansion: T̂_y / X |
 | `20_ratio.sql` | Ratio: T̂_y / T̂_x, linearization SE |
 | `30_regression.sql` | Regression (GREG) on payment x |
-| `40_simulation_inputs.sql` + `simulation.py` | Audit-finding simulation: the audited enrollees' findings are assigned to every other enrollee (HCC level: supported / deleted / hierarchy move, from audited HCCs of the same risk stratum, family and severity; enrollee level: missing documentation and additional HCCs), the risk-score payment is recomputed, 1,000 iterations; mean and 2.5th–97.5th percentiles. The audit is used exactly as audited (never resampled). Scored on the first 50 audit years. |
+| `40_simulation_inputs.sql` + `simulation.py` | Audit-finding simulation: the audited enrollees' findings are assigned to every other enrollee (HCC level: supported / deleted / hierarchy move, from audited HCCs of the same risk stratum, family and severity; enrollee level: missing documentation and additional HCCs), the risk-score payment is recomputed, 1,000 iterations; mean and 2.5th–97.5th percentiles. The audit is used exactly as audited (never resampled). Run on the first 50 audit years; results are reported for audit years 1–25. |
 | `90_score.sql` | Coverage, tail balance, bias, RMSE and width against the truth |
 
 Outputs: `estimates.parquet` (every audit year × method × interval), `metrics.json`, `truth.json`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
