@@ -11,7 +11,8 @@ variables:
   n_ffs_per_stratum: 20
   n_mc_per_stratum: 6
   reps: 200
-  boot_reps: 500
+  sim_reps: 25
+  sim_iterations: 1000
   alpha: 0.05
   state_id: 3
   scenario: state_3
@@ -21,5 +22,6 @@ steps:
 - sql: perm-cert/estimation/sql/perm_10_expansion.sql
 - sql: perm-cert/estimation/sql/perm_20_ratio.sql
 - sql: perm-cert/estimation/sql/perm_30_regression.sql
-- sql: perm-cert/estimation/sql/perm_40_simulation.sql
+- sql: perm-cert/estimation/sql/perm_40_simulation_inputs.sql
+- python: perm-cert/estimation/perm_simulation.py
 - sql: perm-cert/estimation/sql/perm_90_score.sql
