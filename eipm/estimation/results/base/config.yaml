@@ -14,7 +14,8 @@ variables:
   - stratum: D_ge400
     n_h: 500
   reps: 200
-  boot_reps: 500
+  sim_reps: 100
+  sim_iterations: 1000
   alpha: 0.05
   scenario: base
 steps:
@@ -23,5 +24,6 @@ steps:
 - sql: eipm/estimation/sql/10_expansion.sql
 - sql: eipm/estimation/sql/20_ratio.sql
 - sql: eipm/estimation/sql/30_regression.sql
-- sql: eipm/estimation/sql/40_simulation.sql
+- sql: eipm/estimation/sql/40_simulation_inputs.sql
+- python: eipm/estimation/simulation.py
 - sql: eipm/estimation/sql/90_score.sql
