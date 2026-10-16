@@ -25,7 +25,11 @@ Run: `ipsim part-d-ipm/estimation/config.yaml` → `estimation/results/base/`
 
 Two audit designs, as in production:
 
-- **Expansion, ratio, regression** (`10_`–`30_*.sql`): simple random sample of 1,500 beneficiaries (random selection since FY 2025; size not public), 200 Monte Carlo samples. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
-- **Audit-finding simulation** (`40_simulation_inputs.sql` + `simulation.py`): a claim-level audit of 5,000 PDEs drawn independent of beneficiary. In each of 1,000 iterations, 108,000 beneficiaries are drawn with replacement (the whole population, standing in for production's random 1 million), each of their PDEs takes the finding (corrected ÷ submitted GDC) of a random audited PDE of the same kind (brand or generic), and the CY 2025 benefit is rerun. The iteration's rate is Σ|y| ÷ Σx over the drawn beneficiaries; the estimate is the mean over iterations and the interval the 2.5th–97.5th percentiles. The 5,000 audited claims are used exactly as audited (never resampled); only the beneficiaries are redrawn each iteration. Scored on 25 audited samples.
+- **Expansion, ratio, regression** (`10_`–`30_*.sql`): simple random sample of 1,500 beneficiaries (random selection since FY 2025; size not public), 200 audit years. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
+- **Audit-finding simulation** (`40_simulation_inputs.sql` + `simulation.py`). Each audit year has two samples, both drawn once in SQL and fixed for all of that year's iterations:
+  - **Audit sample:** 5,000 PDEs drawn from all PDEs, independent of beneficiary (`sim_audit_sample`). Each finding is corrected ÷ submitted GDC.
+  - **Beneficiary sample:** 108,000 beneficiaries drawn with replacement (`sim_bene_sample`; the population size, standing in for production's random 1 million).
+
+  In each of 1,000 iterations, every PDE of a beneficiary-sample beneficiary takes the finding of a random audit-sample PDE of the same kind (brand or generic); audited PDEs keep their own finding. The CY 2025 benefit is then rerun. The iteration's rate is Σ|y| ÷ Σx over the beneficiary sample; the estimate is the mean over iterations and the interval the 2.5th–97.5th percentiles. Scored on the first 25 audit years.
 
 All methods are scored in `90_score.sql`.

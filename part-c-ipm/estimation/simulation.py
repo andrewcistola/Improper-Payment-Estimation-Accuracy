@@ -71,7 +71,7 @@ class Kernel:
                              "ORDER BY unit_id", [rep]).fetchnumpy()
         return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
-    def prepare(self, audited_mask):
+    def prepare(self, rep, audited_mask):
         self.hccs.prepare(audited_mask)
         self.enrollees.prepare(audited_mask)
         own_h = audited_mask[self.row_unit]

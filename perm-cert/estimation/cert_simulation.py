@@ -28,7 +28,7 @@ class Kernel:
                              "ORDER BY unit_id", [rep]).fetchnumpy()
         return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
-    def prepare(self, audited_mask):
+    def prepare(self, rep, audited_mask):
         self.claims.prepare(audited_mask)
         self._y = np.where(audited_mask, self.y, 0)
 

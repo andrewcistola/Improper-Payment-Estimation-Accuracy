@@ -55,7 +55,7 @@ class Kernel:
                              "ORDER BY unit_id", [rep, f"{self.state}|overall"]).fetchnumpy()
         return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
-    def prepare(self, audited_mask):
+    def prepare(self, rep, audited_mask):
         self.claims.prepare(audited_mask)
         self._yc = np.where(audited_mask, self.yc, 0)
         aud_bene = np.zeros(self.n_benes, dtype=bool)

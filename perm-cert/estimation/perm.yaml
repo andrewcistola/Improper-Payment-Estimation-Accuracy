@@ -6,7 +6,7 @@ seed: 20261016
 output_dir: results/perm
 steps:
   - sql: perm-cert/estimation/sql/perm_01_frame.sql        # estimand + design
-  - sql: shared/sql/sample_systematic.sql                   # Monte Carlo samples
+  - sql: shared/sql/sample_systematic.sql                   # audit years (Monte Carlo replicates)
   - sql: perm-cert/estimation/sql/perm_10_expansion.sql
   - sql: perm-cert/estimation/sql/perm_20_ratio.sql
   - sql: perm-cert/estimation/sql/perm_30_regression.sql
@@ -23,9 +23,9 @@ defaults:
   components: [overall, eligibility, claims]
   n_ffs_per_stratum: 20   # 400 FFS per state-year = 4 quarters x 5 strata x 20
   n_mc_per_stratum: 6     # 120 MC per state-year  = 4 quarters x 5 strata x 6
-  reps: 200        # Monte Carlo samples (MC SE of 95% coverage ~ 1.5 pt)
-  sim_reps: 25       # audited samples scored for the simulation method (first 25 of reps)
-  sim_iterations: 1000  # simulation iterations per audited sample
+  reps: 200        # audit years (Monte Carlo replicates; MC SE of 95% coverage ~ 1.5 pt)
+  sim_reps: 25       # audit years scored for the simulation method (first 25 of reps)
+  sim_iterations: 1000  # simulation iterations per audit year
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 grid:   # one scenario per state; true eligibility rates 2.00%..4.00%
   name: "state_{state_id}"

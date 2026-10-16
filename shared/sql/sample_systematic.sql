@@ -1,5 +1,5 @@
 -- =====================================================================
--- shared/sql/sample_systematic.sql : Monte Carlo samples, systematic
+-- shared/sql/sample_systematic.sql : audit years (Monte Carlo replicates), systematic
 -- ---------------------------------------------------------------------
 -- Rule: within each stratum, units sorted by amount paid x (ties by
 -- unit_id); random start s in [0, k), k = pop_h / samp_h; units at sorted

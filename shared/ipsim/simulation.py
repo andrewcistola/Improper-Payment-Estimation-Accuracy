@@ -2,14 +2,14 @@
 
 This is the one estimation method that runs in Python. It reruns each
 program's payment function over the whole population 1,000 times per
-Monte Carlo sample, which is about 20x too slow in SQL (Part D: ~1 s per
+audit year, which is about 20x too slow in SQL (Part D: ~1 s per
 iteration in DuckDB). Everything around it -- frames, samples, findings,
 scoring -- stays in SQL. Each program's payment function lives in its
 estimation/simulation.py and is tested to reproduce the SQL (errors/)
 result to the cent on every unit (shared/tests/test_simulation.py).
 
-Method. Each Monte Carlo sample is one year's audit: the only audit the
-estimator gets. For each audit and each of sim_iterations iterations:
+Method. Each Monte Carlo replicate is one audit year: the year's audit
+is the only audit the estimator gets. For each audit and each of sim_iterations iterations:
   1. Donor findings. Every audited unit's row-level findings (PDEs, HCCs,
      payments, applications) form the donor pool, exactly as audited.
   2. Assignment. Every row of every NON-audited unit receives the finding
@@ -24,7 +24,8 @@ estimator gets. For each audit and each of sim_iterations iterations:
   The estimate is the mean of the iteration rates; the interval is their
   alpha/2 and 1 - alpha/2 quantiles (linear interpolation, numpy default).
   The audit itself is never resampled, so the interval reflects only the
-  randomness of the assignment (and, in Part D, of the beneficiary draw).
+  randomness of the assignment. (Part D also fixes a beneficiary sample
+  per audit year; see part-d-ipm/estimation/simulation.py.)
 
 Randomness: numpy PCG64 seeded from SeedSequence([scenario seed, rep]),
 so every run reproduces exactly.
@@ -161,14 +162,14 @@ def load_kernel(path):
 
 
 def run(con, v, kernel_module):
-    """Engine entry point: run the simulation for the first sim_reps samples.
+    """Engine entry point: run the simulation for the first sim_reps audit years.
 
     kernel_module.Kernel(con, v) gets the population's own variables
   (errors/output/<scenario>/config.yaml, e.g. benefit parameters) merged
   with this run's, and must provide:
       units          : number of population units
-      audited(rep)   : unit indices of the audited sample
-      prepare(audited_mask) : called once per audited sample
+      audited(rep)   : unit indices of the audit year's audit sample
+      prepare(rep, audited_mask) : called once per audit year, before its iterations
       iterate(donor_units, rng) -> {domain: rate}
     Writes table est_simulation(method, interval, rep, domain, estimate,
     se, lower, upper).
@@ -187,7 +188,7 @@ def run(con, v, kernel_module):
         audited = kernel.audited(rep)
         audited_mask = np.zeros(kernel.units, dtype=bool)
         audited_mask[audited] = True
-        kernel.prepare(audited_mask)
+        kernel.prepare(rep, audited_mask)
         rng = np.random.Generator(np.random.PCG64(np.random.SeedSequence([int(v["seed"]), rep])))
         draws = {}
         for _ in range(n_iter):

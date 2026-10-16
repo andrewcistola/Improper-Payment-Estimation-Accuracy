@@ -127,13 +127,13 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 
 ## estimation/ outputs
 
-`estimates.parquet` has one row per Monte Carlo sample × domain × method × interval:
+`estimates.parquet` has one row per audit year × domain × method × interval:
 
 | Column | Meaning |
 |---|---|
 | `method` | `expansion`, `ratio`, `regression` or `simulation` |
 | `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
-| `rep` | Monte Carlo sample number |
+| `rep` | Audit year (Monte Carlo replicate) number |
 | `domain` | What is estimated: `national`, or `<state>\|<component>` for PERM |
 | `estimate` | Estimated improper payment rate (simulation: mean of the 1,000 iteration rates) |
 | `se` | Standard error: analytic for expansion, ratio and regression; standard deviation of the 1,000 iteration rates for simulation |
@@ -145,7 +145,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 |---|---|
 | `theta` | True rate in the population |
 | `coverage` | Share of samples whose interval contains `theta` (target 0.95) |
-| `mc_se_coverage` | Monte Carlo standard error of `coverage` |
+| `mc_se_coverage` | Standard error of `coverage` from the number of audit years |
 | `above`, `below` | Share of intervals entirely above / below `theta` (target 0.025 each) |
 | `n_undefined` | Intervals that could not be formed (counted as not covering) |
 | `rel_bias`, `rel_rmse` | Bias and RMSE of the point estimate, relative to `theta` |

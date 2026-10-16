@@ -24,19 +24,19 @@ PERM details:
 
 | Run | Design | Output |
 |---|---|---|
-| `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 Monte Carlo samples | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
-| `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 Monte Carlo samples per population | `estimation/results/cert/<shape>_p<rate>/` |
+| `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 audit years | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
+| `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 audit years per population | `estimation/results/cert/<shape>_p<rate>/` |
 
 Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding microsimulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
 
-- **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Scored on 25 audited samples per state.
-- **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Scored on 100 audited samples per population. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
+- **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Scored on the first 25 audit years per state.
+- **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Scored on the first 100 audit years per population. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
 
 ## CERT results (SRS of 30 claims)
 
-> **Microsimulation runs in progress.** The microsimulation column will be filled in when the runs finish. The expansion, ratio and regression results are final (1,000 audits per population; Monte Carlo standard error of coverage about ±0.7 points).
+> **Microsimulation runs in progress.** The microsimulation column will be filled in when the runs finish. The expansion, ratio and regression results are final (1,000 audit years per population; standard error of coverage about ±0.7 points).
 
-Coverage of two-sided 95% intervals (%); the parentheses show the share of intervals entirely above / below the true rate.
+Coverage of two-sided 95% intervals: the % of audit years in which the interval contains the true rate; the parentheses show the % of audit years in which it lies entirely above / below.
 
 | Population | Expansion | Ratio | Regression | Microsimulation |
 |---|---|---|---|---|
