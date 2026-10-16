@@ -1,6 +1,6 @@
 # CERT - estimation: draw simple random samples of claims from each
 # errors/ stress population and estimate the claim improper payment rate
-# with each method (expansion, ratio, regression, simulation).
+# with each method (expansion, ratio, regression, and the audit-finding simulation).
 program: cert_estimation   # also the seed label for sampling and bootstrap
 seed: 20261016
 output_dir: results/cert
@@ -10,7 +10,8 @@ steps:
   - sql: perm-cert/estimation/sql/cert_10_expansion.sql
   - sql: perm-cert/estimation/sql/cert_20_ratio.sql
   - sql: perm-cert/estimation/sql/cert_30_regression.sql
-  - sql: perm-cert/estimation/sql/cert_40_simulation.sql
+  - sql: perm-cert/estimation/sql/cert_40_simulation_inputs.sql   # audit findings + population rows
+  - python: perm-cert/estimation/cert_simulation.py # simulation: payment function rerun 1,000x (numpy)
   - sql: perm-cert/estimation/sql/cert_90_score.sql
 exports:
   - {table: estimates, order_by: "domain, method, interval, rep"}
@@ -21,7 +22,8 @@ defaults:
   population_dir: "perm-cert/errors/output/cert/{shape}_all_or_nothing_p{error_rate:.2f}"
   n: 30            # claims per sample (Edwards et al. design)
   reps: 1000       # Monte Carlo samples (MC SE of 95% coverage ~ 0.7 pt)
-  boot_reps: 1000  # bootstrap replicates per sample
+  sim_reps: 100       # audited samples scored for the simulation method (first 100 of reps)
+  sim_iterations: 1000  # simulation iterations per audited sample
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 grid:
   name: "{shape}_p{error_rate:.2f}"

@@ -136,7 +136,10 @@ SELECT enrollee_id AS unit_id, contract_id, months, county_rate, demo_score, n_h
             WHEN n_deleted > 0 THEN 'unsupported_hcc'
             WHEN n_moved > 0 THEN 'hierarchy_move'
             WHEN add_coef > 0 THEN 'additional_hcc'
-            ELSE 'none' END AS error_type
+            ELSE 'none' END AS error_type,
+       missing_doc,                                         -- enrollee-level finding
+       CASE WHEN add_coef > 0 THEN add_fam END AS add_fam,  -- additional HCC found (family)
+       add_coef::DECIMAL(4, 3) AS add_coef
 FROM enr_err;
 
 CREATE OR REPLACE TABLE capitation_units AS

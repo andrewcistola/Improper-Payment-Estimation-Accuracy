@@ -131,12 +131,12 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 
 | Column | Meaning |
 |---|---|
-| `method` | `expansion`, `ratio`, `regression` or `simulation` |
-| `interval` | `normal` (methods 1–3), or `percentile`, `bootstrap_t`, `bca` (simulation) |
+| `method` | `expansion`, `ratio`, `regression`, `simulation_assign` or `simulation_resample` |
+| `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
 | `rep` | Monte Carlo sample number |
 | `domain` | What is estimated: `national`, or `<state>\|<component>` for PERM |
-| `estimate` | Estimated improper payment rate |
-| `se` | Standard error: analytic for methods 1–3, standard deviation of the bootstrap replicates for simulation |
+| `estimate` | Estimated improper payment rate (simulation: mean of the 1,000 iteration rates) |
+| `se` | Standard error: analytic for expansion, ratio and regression; standard deviation of the 1,000 iteration rates for simulation |
 | `lower`, `upper` | Two-sided 95% interval |
 
 `metrics.json` has one record per domain × method × interval:

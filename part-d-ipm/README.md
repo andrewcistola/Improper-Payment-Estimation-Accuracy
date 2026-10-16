@@ -23,4 +23,9 @@ Outputs: `population.parquet` (one row per beneficiary), `pde_detail.parquet` (e
 
 Run: `ipsim part-d-ipm/estimation/config.yaml` → `estimation/results/base/`
 
-Design: simple random sample of 1,500 beneficiaries (random selection since FY 2025; size not public), 200 Monte Carlo samples. Methods: `10_expansion.sql`, `20_ratio.sql`, `30_regression.sql`, `40_simulation.sql` (bootstrap), scored in `90_score.sql`. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
+Two audit designs, as in production:
+
+- **Expansion, ratio, regression** (`10_`–`30_*.sql`): simple random sample of 1,500 beneficiaries (random selection since FY 2025; size not public), 200 Monte Carlo samples. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
+- **Audit-finding simulation** (`40_simulation_inputs.sql` + `simulation.py`): a claim-level audit of 5,000 PDEs drawn independent of beneficiary. In each of 1,000 iterations, 108,000 beneficiaries are drawn with replacement (the whole population, standing in for production's random 1 million), each of their PDEs takes the finding (corrected ÷ submitted GDC) of a random audited PDE of the same kind (brand or generic), and the CY 2025 benefit is rerun. The iteration's rate is Σ|y| ÷ Σx over the drawn beneficiaries; the estimate is the mean over iterations and the interval the 2.5th–97.5th percentiles. Two variants: the 5,000 claims as audited (`simulation_assign`), or the claims resampled each iteration too (`simulation_resample`, a two-sample bootstrap). Scored on 25 audited samples.
+
+All methods are scored in `90_score.sql`.

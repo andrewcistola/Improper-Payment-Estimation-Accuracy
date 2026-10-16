@@ -1,0 +1,165 @@
+"""Part D: payment function and audit-finding simulation kernel.
+
+Payment function (same as errors/sql/05_benefit.sql, CY 2025 post-IRA
+standard benefit), per beneficiary, PDEs in fill order:
+  deductible [0, D), initial [D, I), catastrophic [I, inf) in cumulative GDC
+  reinsurance = round(share * catastrophic GDC), share 0.20 brand / 0.40 generic
+  LICS (LIS only) = round(enrollee share - min(enrollee share, copay)),
+      enrollee share = deductible GDC + 0.25 * initial GDC
+  Medicare (PDE-driven) = sum over PDEs of reinsurance + LICS
+  improper payment y = Medicare(submitted PDEs) - Medicare(corrected PDEs)
+Amounts follow the SQL arithmetic exactly (cents; DOUBLE shares; round
+half away from zero); shared/tests/test_simulation.py checks that applying
+each PDE's own finding reproduces errors/ y to the cent.
+
+Audit and projection (claim-level design, as in production; two-sample):
+  audit      : sim_claims PDEs sampled from all PDEs, independent of
+               beneficiary (sim_claim_sample). Finding = corrected GDC /
+               submitted GDC (0 = missing documentation; 1 = no error).
+  each iteration:
+    1. donor claims = the audited claims ('assign') or a resample of them
+       with replacement ('resample')
+    2. draw sim_bene_draws beneficiaries with replacement from the
+       population (108,000 = all, standing in for production's random
+       1 million beneficiaries)
+    3. every PDE of a drawn beneficiary takes the finding of a random
+       donor claim of the same kind (brand vs generic); audited PDEs keep
+       their own finding; corrected GDC = round(submitted x ratio)
+    4. rerun the benefit for each drawn beneficiary; the iteration's rate
+       is sum |y| / sum x over the drawn beneficiaries
+"""
+import numpy as np
+from numba import njit
+
+from ipsim.simulation import RowSet, round_half_away, round_half_away_scalar
+
+
+def benefit_params(v):
+    D = round(float(v["deductible"]) * 100)
+    I = round((float(v["deductible"]) + (float(v["oop_threshold"]) - float(v["deductible"]))
+               / float(v["init_enrollee_coins"])) * 100)
+    return (D, I, float(v["init_enrollee_coins"]), float(v["cat_reins_brand"]), float(v["cat_reins_generic"]),
+            float(v["lis_copay_brand"]), float(v["lis_copay_generic"]))
+
+
+@njit
+def medicare_cents(g, row_unit, lis, brand, n_units, D, I, coins, reins_brand, reins_generic,
+                   copay_brand, copay_generic):
+    """Medicare PDE-driven payment per beneficiary (cents).
+    g = GDC cents per PDE; rows sorted by beneficiary, then fill order."""
+    out = np.zeros(n_units)
+    pre = 0
+    last = -1
+    for i in range(len(g)):
+        u = row_unit[i]
+        if u != last:                     # new beneficiary: benefit year starts at 0
+            pre = 0
+            last = u
+        post = pre + g[i]
+        ded = max(0, min(post, D) - min(pre, D))          # deductible phase GDC
+        ini = max(0, min(post, I) - max(pre, D))          # initial coverage GDC
+        cat = max(0, post - max(pre, I))                  # catastrophic GDC
+        share = reins_brand if brand[i] else reins_generic
+        reins = round_half_away_scalar(share * (cat / 100.0) * 100.0)
+        lics = 0.0
+        if lis[i]:
+            std = ded / 100.0 + coins * (ini / 100.0)     # standard enrollee share
+            copay = copay_brand if brand[i] else copay_generic
+            lics = round_half_away_scalar((std - min(std, copay)) * 100.0)
+        out[u] += reins + lics
+        pre = post
+    return out
+
+
+@njit
+def drawn_medicare(drawn, start, count, sub, cor, audited, brand, lis, u, p_err, err_off, err_ratio,
+                   D, I, coins, reins_brand, reins_generic, copay_brand, copay_generic):
+    """Corrected Medicare payment for each drawn beneficiary (cents).
+    u: one uniform per PDE of the drawn beneficiaries, in order. A PDE of
+    kind k gets an error when u < p_err[k]; its donor is then
+    err_ratio[err_off[k] + floor(u / p_err[k] * n_err[k])] (u / p_err[k] is
+    uniform on (0, 1) given the error, so no second draw is needed)."""
+    out = np.zeros(len(drawn))
+    pos = 0
+    for j in range(len(drawn)):
+        b = drawn[j]
+        pre = 0
+        m = 0.0
+        for r in range(start[b], start[b] + count[b]):
+            k = 1 if brand[r] else 0
+            if audited[r]:
+                g = cor[r]                                     # own finding
+            elif u[pos] < p_err[k]:
+                n_err = err_off[k + 1] - err_off[k]
+                idx = err_off[k] + min(int(u[pos] / p_err[k] * n_err), n_err - 1)
+                g = np.int64(round_half_away_scalar(sub[r] * err_ratio[idx]))
+            else:
+                g = sub[r]                                     # no error
+            pos += 1
+            post = pre + g
+            ded = max(0, min(post, D) - min(pre, D))
+            ini = max(0, min(post, I) - max(pre, D))
+            cat = max(0, post - max(pre, I))
+            share = reins_brand if brand[r] else reins_generic
+            reins = round_half_away_scalar(share * (cat / 100.0) * 100.0)
+            lics = 0.0
+            if lis[r]:
+                std = ded / 100.0 + coins * (ini / 100.0)
+                copay = copay_brand if brand[r] else copay_generic
+                lics = round_half_away_scalar((std - min(std, copay)) * 100.0)
+            m += reins + lics
+            pre = post
+        out[j] = m
+    return out
+
+
+class Kernel:
+    """Audit units are PDE claims; projection units are beneficiaries."""
+
+    def __init__(self, con, v):
+        self.con = con
+        u = con.execute("SELECT unit_idx, x_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()
+        r = con.execute("SELECT unit_idx, brand, lis, sub_cents, cor_cents FROM sim_rows "
+                        "ORDER BY row_idx").fetchnumpy()
+        self.n_benes = len(u["unit_idx"])
+        self.x = np.asarray(u["x_cents"], dtype=np.int64)
+        self.row_unit = np.asarray(r["unit_idx"], dtype=np.int64)
+        self.brand = np.asarray(r["brand"], dtype=np.bool_)
+        self.lis = np.asarray(r["lis"], dtype=np.bool_)
+        self.sub = np.asarray(r["sub_cents"], dtype=np.int64)
+        self.cor = np.asarray(r["cor_cents"], dtype=np.int64)
+        self.ratio = self.cor / self.sub
+        self.p = benefit_params(v)
+        self.units = len(self.sub)                      # audit units = claims
+        counts = np.bincount(self.row_unit, minlength=self.n_benes)
+        self.start = np.concatenate([[0], np.cumsum(counts)[:-1]]).astype(np.int64)
+        self.count = counts.astype(np.int64)
+        self.n_draws = int(v["sim_bene_draws"])
+        self.m_sub = medicare_cents(self.sub, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
+
+    def improper_cents(self, g_corrected):
+        """y per beneficiary for a corrected GDC vector (all beneficiaries)."""
+        return self.m_sub - medicare_cents(g_corrected, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
+
+    def audited(self, rep):
+        s = self.con.execute("SELECT row_idx FROM sim_claim_sample WHERE rep = ? ORDER BY row_idx",
+                             [rep]).fetchnumpy()
+        idx = np.asarray(s["row_idx"], dtype=np.int64)
+        return idx, np.zeros(len(idx), dtype=np.int64)       # one stratum: SRS of claims
+
+    def prepare(self, audited_mask):
+        self._audited = audited_mask
+
+    def iterate(self, donors, rng):
+        kind = self.brand[donors].astype(np.int64)
+        err = self.cor[donors] != self.sub[donors]
+        p_err = np.array([err[kind == k].mean() if (kind == k).any() else 0.0 for k in (0, 1)])
+        order = np.argsort(kind[err], kind="stable")
+        err_ratio = self.ratio[donors[err]][order]
+        err_off = np.searchsorted(kind[err][order], np.arange(3)).astype(np.int64)
+        drawn = np.sort(rng.integers(0, self.n_benes, self.n_draws))   # order is irrelevant; sorted is faster
+        u = rng.random(int(self.count[drawn].sum()))
+        m_cor = drawn_medicare(drawn, self.start, self.count, self.sub, self.cor, self._audited,
+                               self.brand, self.lis, u, p_err, err_off, err_ratio, *self.p)
+        y = self.m_sub[drawn] - m_cor
+        return {"national": float(np.abs(y).sum()) / float(self.x[drawn].sum())}

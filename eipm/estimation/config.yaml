@@ -10,7 +10,8 @@ steps:
   - sql: eipm/estimation/sql/10_expansion.sql
   - sql: eipm/estimation/sql/20_ratio.sql
   - sql: eipm/estimation/sql/30_regression.sql
-  - sql: eipm/estimation/sql/40_simulation.sql
+  - sql: eipm/estimation/sql/40_simulation_inputs.sql   # audit findings + population rows
+  - python: eipm/estimation/simulation.py      # simulation: payment function rerun 1,000x (numpy)
   - sql: eipm/estimation/sql/90_score.sql
 exports:
   - {table: estimates, order_by: "domain, method, interval, rep"}
@@ -25,7 +26,8 @@ defaults:
     - {stratum: C_250_400, n_h: 500}
     - {stratum: D_ge400, n_h: 500}
   reps: 200        # Monte Carlo samples (MC SE of 95% coverage ~ 1.5 pt)
-  boot_reps: 500   # bootstrap replicates per sample
+  sim_reps: 100       # audited samples scored for the simulation method (first 100 of reps)
+  sim_iterations: 1000  # simulation iterations per audited sample
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 scenarios:
   - name: base

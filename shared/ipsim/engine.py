@@ -8,7 +8,9 @@ generation, error injection, estimation and scoring live in SQL files.
 Config keys
   program      name used in logs and manifests
   seed         master seed; each scenario gets child_seed(seed, program, scenario)
-  steps        list of {sql: <path relative to the repo root>}
+  steps        list of {sql: <path relative to the repo root>}, or
+               {python: <estimation/simulation.py>} for the simulation
+               estimator's numpy loop (see shared/ipsim/simulation.py)
   output_dir   folder for outputs, relative to the config file (default: output)
   defaults     variables shared by all scenarios
   scenarios    list of {name: ..., <variable overrides>}
@@ -24,11 +26,14 @@ String variables may reference other variables with {name} (str.format).
 """
 from __future__ import annotations
 
+import atexit
 import hashlib
 import itertools
 import json
 import platform
+import shutil
 import sys
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -54,11 +59,20 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def connect(threads: int | None = None) -> duckdb.DuckDBPyConnection:
-    """DuckDB connection with the shared SQL library loaded (in file-name order)."""
+def connect(threads: int | None = None, memory_limit: str | None = None) -> duckdb.DuckDBPyConnection:
+    """DuckDB connection with the shared SQL library loaded (in file-name order).
+
+    Each connection spills to its own temporary folder; DuckDB's default
+    (./.tmp) is shared, and parallel runs corrupt each other's spill files.
+    """
     con = duckdb.connect()
+    tmp = tempfile.mkdtemp(prefix="ipsim-duckdb-")
+    atexit.register(shutil.rmtree, tmp, True)
+    con.execute(f"SET temp_directory = '{tmp}'")
     if threads:
         con.execute(f"SET threads = {int(threads)}")
+    if memory_limit:
+        con.execute(f"SET memory_limit = '{memory_limit}'")
     con.execute("SET preserve_insertion_order = true")
     for lib in sorted(LIB.glob("*.sql")):
         con.execute(lib.read_text())
@@ -85,6 +99,7 @@ class Engine:
         self.output_dir = (Path(output_dir).resolve() if output_dir
                            else (base / self.config.get("output_dir", "output")).resolve())
         self.threads = threads or self.config.get("threads")
+        self.memory_limit = None
         self.timing = False
 
     # ------------------------------------------------------------------ #
@@ -122,7 +137,7 @@ class Engine:
 
     # ------------------------------------------------------------------ #
     def run_scenario(self, name: str, v: dict) -> Path:
-        con = connect(self.threads)
+        con = connect(self.threads, self.memory_limit)
         outdir = self.output_dir / name
         outdir.mkdir(parents=True, exist_ok=True)
         v = dict(v)
@@ -133,9 +148,13 @@ class Engine:
             con.execute(f"SET VARIABLE {k} = ?", [json.dumps(val) if isinstance(val, (list, dict)) else val])
         for step in self.config["steps"]:
             t0 = time.time()
-            con.execute((ROOT / step["sql"]).read_text())
+            if "python" in step:  # only the simulation estimator
+                from . import simulation
+                simulation.run(con, v, simulation.load_kernel(ROOT / step["python"]))
+            else:
+                con.execute((ROOT / step["sql"]).read_text())
             if self.timing:
-                print(f"  {time.time() - t0:7.1f}s  {step['sql']}", file=sys.stderr)
+                print(f"  {time.time() - t0:7.1f}s  {step.get('sql') or step.get('python')}", file=sys.stderr)
         files = self._export(con, name, v, outdir)
         self._scenario_manifest(con, name, outdir, files)
         con.close()
@@ -225,12 +244,14 @@ def main(argv=None):
     ap.add_argument("--out", help="output folder (default: the config's output_dir)")
     ap.add_argument("--threads", type=int)
     ap.add_argument("--timing", action="store_true", help="print the run time of each SQL step")
+    ap.add_argument("--memory-limit", help="DuckDB memory limit, e.g. 2GB (when running configs in parallel)")
     ap.add_argument("--set", nargs="*", default=[], metavar="VAR=VALUE",
                     help="override a default variable for this run, e.g. --set reps=20")
     a = ap.parse_args(argv)
     for c in a.config:
         e = Engine(c, a.out, a.threads)
         e.timing = a.timing
+        e.memory_limit = a.memory_limit
         for kv in a.set:
             k, v = kv.split("=", 1)
             e.config.setdefault("defaults", {})[k] = yaml.safe_load(v)
