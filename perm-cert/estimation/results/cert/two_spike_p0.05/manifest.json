@@ -1,20 +1,20 @@
 {
   "config_file": "perm-cert/estimation/cert.yaml",
-  "config_sha256": "78b24ed7a9879a52bddf74dc1ce82b2f8e04be3ae769f361a926d3eb52ec8c8f",
+  "config_sha256": "f8b57efb20c60e15311211a1e89f0f43b48438fc2252f42b636176c866f9b5a5",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 669,
-      "sha256": "4909dc20e6e6e20759a8dead798828ae509c7d07f7ee3ad70abbf2290e60044a"
+      "bytes": 747,
+      "sha256": "94c180a5bd5d23fc010bc9f9300dcae112d30069021f36d2708bda2eb5cca8f2"
     },
     "estimates.parquet": {
-      "bytes": 110758,
-      "rows": 6000,
-      "sha256": "e8d67165dcb113a4ea1da4a07737728db818b6d48724abdca8e9117c25f35b73"
+      "bytes": 65791,
+      "rows": 3100,
+      "sha256": "0e25816515d83a37bac71b692c46f7f363ab852aaa4d5d2009cd94198d284d80"
     },
     "metrics.json": {
-      "bytes": 3253,
-      "sha256": "9ec9468b34dcd281f15317c3cf5ccd6efc62bf62bdfabcc9521afa6ebc692f7b"
+      "bytes": 2166,
+      "sha256": "068b4fa57b13590e5580b8cdbd23c0872beb5bfb435b902411a6d7b27549c823"
     },
     "truth.json": {
       "bytes": 113,
