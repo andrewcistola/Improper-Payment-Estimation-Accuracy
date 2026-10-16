@@ -62,7 +62,17 @@ Each cell counts audit years out of 25: how many of the 95% intervals contain th
 | PERM eligibility (9 states × 25 audit years) | 200/225 (1/24) | 200/225 (1/24) | 200/225 (1/24) | 61/225 (74/90) |
 | EIPM (n = 2,000) | 22/25 (0/3) | 22/25 (0/3) | 22/25 (0/3) | 4/25 (6/15) |
 
-Every method is scored on the same 25 audit years: audit years 1–25 of the current runs, each an independent random sample. The PERM rows add up the 9 states, so they count out of 225 (9 × 25). CERT (SRS of 30 claims, 12 populations, 25 audit years each) is in [`perm-cert/README.md`](perm-cert/README.md).
+**How close the point estimates get.** Each cell is the average error of the point estimate over the 25 audit years, as a % of the true rate: how far a year's estimate typically lands from the truth. The parentheses give the average signed error (bias): + means estimates run high, − low. Example: Part C expansion is 3.8% of a 6.06% true rate, so a year's estimate is typically about 0.23 percentage points off.
+
+| Program | True rate | Expansion | Ratio | Regression | Microsimulation |
+|---|---|---|---|---|---|
+| Part C | 6.06% | 3.8% (−0.1%) | 3.7% (−0.1%) | 3.7% (−0.1%) | 3.2% (−1.7%) |
+| Part D | 3.98% | 15.6% (+6.5%) | 11.5% (+4.9%) | 9.8% (+5.7%) | 4.6% (−1.2%) |
+| PERM overall (9 states) | 5.07–6.99% | 14.8% (−0.3%) | 14.8% (−0.3%) | 14.9% (−0.3%) | 12.5% (−0.1%) |
+| PERM eligibility (9 states) | 2.00–4.00% | 25.7% (−0.3%) | 25.8% (−0.3%) | 25.8% (−0.2%) | 19.6% (−0.1%) |
+| EIPM | 0.93% | 25.0% (−9.1%) | 25.3% (−9.1%) | 25.6% (−8.9%) | 23.3% (−5.7%) |
+
+Every method is scored on the same 25 audit years: audit years 1–25 of the current runs, each an independent random sample. The PERM rows add up the 9 states, so coverage counts are out of 225 (9 × 25) and errors average over those 225 state-years. CERT (SRS of 30 claims, 12 populations, 25 audit years each) is in [`perm-cert/README.md`](perm-cert/README.md).
 
 | Program | Audit years reported (every method) | Microsimulation iterations per audit year |
 |---|---|---|

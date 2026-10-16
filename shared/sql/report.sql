@@ -13,14 +13,16 @@
 --
 -- Outputs
 --   by_audit_year : one row per audit year: true rate, point estimate,
---                   CI, and whether the CI contains the truth (inside /
---                   above / below / undefined). Dollars are on the
---                   national scale.
+--                   its error (estimate - true rate, also relative to the
+--                   true rate), CI, and whether the CI contains the truth
+--                   (inside / above / below / undefined). Dollars are on
+--                   the national scale.
 --   by_scenario   : one row per program x scenario x domain x method x
 --                   interval: the truth, audit year 1's estimate and CI as
 --                   a worked example, the average estimate and CI over the
---                   reported audit years, and how many CIs contain the
---                   truth.
+--                   reported audit years, the average error of the point
+--                   estimate (signed and absolute), and how many CIs
+--                   contain the truth.
 -- National dollars = rate x frame payments (X) x w_pop, where w_pop is the
 -- number of real units each synthetic unit stands for (from each
 -- errors/config.yaml): Part C 100, Part D 500, EIPM 100, PERM 200
@@ -51,7 +53,10 @@ FROM (SELECT DISTINCT program, scenario FROM truth_rates);
 
 CREATE OR REPLACE TABLE by_audit_year AS
 SELECT e.program, e.scenario, e.domain, e.method, e."interval", e.rep AS audit_year,
-       t.true_rate, e.estimate, e.lower, e.upper,
+       t.true_rate, e.estimate,
+       e.estimate - t.true_rate AS error,
+       (e.estimate - t.true_rate) / t.true_rate AS rel_error,
+       e.lower, e.upper,
        CASE WHEN e.lower IS NULL OR e.upper IS NULL THEN 'undefined'
             WHEN t.true_rate < e.lower THEN 'above'      -- whole CI above the truth
             WHEN t.true_rate > e.upper THEN 'below'      -- whole CI below the truth
@@ -75,6 +80,10 @@ SELECT program, scenario, domain, method, "interval",
        favg(estimate) AS mean_estimate,
        favg(lower) AS mean_lower,
        favg(upper) AS mean_upper,
+       favg(error) AS mean_error,                   -- average signed error (bias)
+       favg(abs(error)) AS mean_abs_error,          -- average distance from the truth
+       favg(rel_error) AS mean_rel_error,           -- the same, relative to the true rate
+       favg(abs(rel_error)) AS mean_abs_rel_error,
        count(*) AS n_audit_years,
        count(*) FILTER (WHERE truth_in_ci = 'inside') AS n_truth_inside,
        count(*) FILTER (WHERE truth_in_ci = 'above') AS n_ci_above_truth,
