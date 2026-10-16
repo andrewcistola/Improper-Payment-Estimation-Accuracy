@@ -121,3 +121,6 @@ def test_simulation_reproducible(tmp_path):
         e.run(["left_p0.30"])
         out.append((tmp_path / f"r{i}" / "left_p0.30" / "estimates.parquet").read_bytes())
     assert out[0] == out[1]
+    import duckdb
+    methods = {m for (m,) in duckdb.sql(f"SELECT DISTINCT method FROM '{tmp_path}/r0/left_p0.30/estimates.parquet'").fetchall()}
+    assert methods == {"expansion", "ratio", "regression", "simulation"}    # one simulation: the audit as audited

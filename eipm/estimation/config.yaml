@@ -1,7 +1,7 @@
 # EIPM - estimation: draw production-design samples from the errors/
 # population and estimate the gross APTC improper payment rate with each
 # method (expansion, ratio, regression, simulation).
-program: eipm_estimation   # also the seed label for sampling and bootstrap
+program: eipm_estimation   # also the seed label for sampling and simulation
 seed: 20261016
 output_dir: results
 steps:

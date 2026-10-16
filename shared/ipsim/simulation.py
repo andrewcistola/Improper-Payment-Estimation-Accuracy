@@ -8,15 +8,10 @@ scoring -- stays in SQL. Each program's payment function lives in its
 estimation/simulation.py and is tested to reproduce the SQL (errors/)
 result to the cent on every unit (shared/tests/test_simulation.py).
 
-Method, for each Monte Carlo sample (the "audit") and each iteration:
+Method. Each Monte Carlo sample is one year's audit: the only audit the
+estimator gets. For each audit and each of sim_iterations iterations:
   1. Donor findings. Every audited unit's row-level findings (PDEs, HCCs,
-     payments, applications) form the donor pool.
-       variant 'assign'   : the pool is the audited sample as observed
-       variant 'resample' : the audited units are first resampled with
-                            replacement within strata (n_h draws), and
-                            the pool is built from that resample
-                            (approximate Bayesian bootstrap; Rubin &
-                            Schenker 1986)
+     payments, applications) form the donor pool, exactly as audited.
   2. Assignment. Every row of every NON-audited unit receives the finding
      of a donor row of the same kind (e.g. brand vs generic PDE; HCC
      family and severity within risk stratum), drawn uniformly at random
@@ -28,9 +23,11 @@ Method, for each Monte Carlo sample (the "audit") and each iteration:
      and the improper payment rate for each domain.
   The estimate is the mean of the iteration rates; the interval is their
   alpha/2 and 1 - alpha/2 quantiles (linear interpolation, numpy default).
+  The audit itself is never resampled, so the interval reflects only the
+  randomness of the assignment (and, in Part D, of the beneficiary draw).
 
-Randomness: numpy PCG64 seeded from SeedSequence([scenario seed, rep,
-variant]), so every run reproduces exactly.
+Randomness: numpy PCG64 seeded from SeedSequence([scenario seed, rep]),
+so every run reproduces exactly.
 """
 from __future__ import annotations
 
@@ -40,9 +37,6 @@ from pathlib import Path
 import numpy as np
 import pyarrow as pa
 from numba import njit
-
-VARIANTS = {"assign": 1, "resample": 2}
-
 
 class RowSet:
     """Rows (PDEs, HCCs, payments, ...) sorted by unit, with donor kinds.
@@ -149,17 +143,6 @@ def bernoulli_positions(n, p, rng):
         last = pos[-1]
 
 
-def resample_within_strata(units, strata, rng):
-    """Draw n_h units with replacement within each stratum."""
-    units = np.asarray(units)
-    strata = np.asarray(strata)
-    out = []
-    for s in np.unique(strata):
-        members = units[strata == s]
-        out.append(members[rng.integers(0, len(members), len(members))])
-    return np.concatenate(out)
-
-
 def round_half_away(x):
     """Round to the nearest integer, halves away from zero (SQL ROUND)."""
     return np.where(x >= 0, np.floor(x + 0.5), np.ceil(x - 0.5))
@@ -184,7 +167,7 @@ def run(con, v, kernel_module):
   (errors/output/<scenario>/config.yaml, e.g. benefit parameters) merged
   with this run's, and must provide:
       units          : number of population units
-      audited(rep)   : (unit indices of the audited sample, their strata)
+      audited(rep)   : unit indices of the audited sample
       prepare(audited_mask) : called once per audited sample
       iterate(donor_units, rng) -> {domain: rate}
     Writes table est_simulation(method, interval, rep, domain, estimate,
@@ -201,22 +184,20 @@ def run(con, v, kernel_module):
     reps = reps[: int(v["sim_reps"])]
     rows = []
     for rep in reps:
-        audited, strata = kernel.audited(rep)
+        audited = kernel.audited(rep)
         audited_mask = np.zeros(kernel.units, dtype=bool)
         audited_mask[audited] = True
         kernel.prepare(audited_mask)
-        for name, code in VARIANTS.items():
-            rng = np.random.Generator(np.random.PCG64(np.random.SeedSequence([int(v["seed"]), rep, code])))
-            draws = {}
-            for _ in range(n_iter):
-                donors = audited if name == "assign" else resample_within_strata(audited, strata, rng)
-                for domain, rate in kernel.iterate(donors, rng).items():
-                    draws.setdefault(domain, []).append(rate)
-            for domain, rates in draws.items():
-                rates = np.asarray(rates)
-                lo, hi = np.quantile(rates, [alpha / 2, 1 - alpha / 2])
-                rows.append(("simulation_" + name, "percentile", rep, domain, float(rates.mean()),
-                             float(rates.std(ddof=1)), float(lo), float(hi)))
+        rng = np.random.Generator(np.random.PCG64(np.random.SeedSequence([int(v["seed"]), rep])))
+        draws = {}
+        for _ in range(n_iter):
+            for domain, rate in kernel.iterate(audited, rng).items():
+                draws.setdefault(domain, []).append(rate)
+        for domain, rates in draws.items():
+            rates = np.asarray(rates)
+            lo, hi = np.quantile(rates, [alpha / 2, 1 - alpha / 2])
+            rows.append(("simulation", "percentile", rep, domain, float(rates.mean()),
+                         float(rates.std(ddof=1)), float(lo), float(hi)))
     cols = list(zip(*rows)) if rows else [[]] * 8
     tbl = pa.table({"method": pa.array(cols[0], pa.string()), "interval": pa.array(cols[1], pa.string()),
                     "rep": pa.array(cols[2], pa.int32()), "domain": pa.array(cols[3], pa.string()),

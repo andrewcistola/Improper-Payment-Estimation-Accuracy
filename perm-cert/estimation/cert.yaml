@@ -1,7 +1,7 @@
 # CERT - estimation: draw simple random samples of claims from each
 # errors/ stress population and estimate the claim improper payment rate
 # with each method (expansion, ratio, regression, and the audit-finding simulation).
-program: cert_estimation   # also the seed label for sampling and bootstrap
+program: cert_estimation   # also the seed label for sampling and simulation
 seed: 20261016
 output_dir: results/cert
 steps:

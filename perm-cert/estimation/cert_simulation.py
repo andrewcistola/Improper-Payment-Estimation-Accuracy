@@ -24,9 +24,9 @@ class Kernel:
                              identity=(self.y == 0))
 
     def audited(self, rep):
-        s = self.con.execute("SELECT unit_id, stratum FROM sample WHERE rep = ? AND domain = 'national' "
+        s = self.con.execute("SELECT unit_id FROM sample WHERE rep = ? AND domain = 'national' "
                              "ORDER BY unit_id", [rep]).fetchnumpy()
-        return np.searchsorted(self.unit_id, np.asarray(s["unit_id"])), np.asarray(s["stratum"])
+        return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
     def prepare(self, audited_mask):
         self.claims.prepare(audited_mask)

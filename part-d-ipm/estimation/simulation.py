@@ -17,8 +17,7 @@ Audit and projection (claim-level design, as in production; two-sample):
                beneficiary (sim_claim_sample). Finding = corrected GDC /
                submitted GDC (0 = missing documentation; 1 = no error).
   each iteration:
-    1. donor claims = the audited claims ('assign') or a resample of them
-       with replacement ('resample')
+    1. donor claims = the audited claims, as audited (never resampled)
     2. draw sim_bene_draws beneficiaries with replacement from the
        population (108,000 = all, standing in for production's random
        1 million beneficiaries)
@@ -145,7 +144,7 @@ class Kernel:
         s = self.con.execute("SELECT row_idx FROM sim_claim_sample WHERE rep = ? ORDER BY row_idx",
                              [rep]).fetchnumpy()
         idx = np.asarray(s["row_idx"], dtype=np.int64)
-        return idx, np.zeros(len(idx), dtype=np.int64)       # one stratum: SRS of claims
+        return idx
 
     def prepare(self, audited_mask):
         self._audited = audited_mask

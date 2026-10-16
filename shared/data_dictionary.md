@@ -131,7 +131,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 
 | Column | Meaning |
 |---|---|
-| `method` | `expansion`, `ratio`, `regression`, `simulation_assign` or `simulation_resample` |
+| `method` | `expansion`, `ratio`, `regression` or `simulation` |
 | `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
 | `rep` | Monte Carlo sample number |
 | `domain` | What is estimated: `national`, or `<state>\|<component>` for PERM |

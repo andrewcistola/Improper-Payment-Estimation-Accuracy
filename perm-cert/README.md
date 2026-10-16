@@ -27,30 +27,30 @@ PERM details:
 | `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 Monte Carlo samples | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
 | `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 Monte Carlo samples per population | `estimation/results/cert/<shape>_p<rate>/` |
 
-Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding simulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
+Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding microsimulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
 
 - **PERM simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Scored on 25 audited samples per state.
 - **CERT simulation:** each non-audited claim takes the improper share of a random audited claim. Scored on 100 audited samples per population. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
 
 ## CERT results (SRS of 30 claims)
 
-> **Placeholder.** The CERT runs with the audit-finding microsimulation are in progress; this table will be filled in when they finish.
+> **Microsimulation runs in progress.** The microsimulation column will be filled in when the runs finish. The expansion, ratio and regression results are final (1,000 audits per population; Monte Carlo standard error of coverage about ±0.7 points).
 
-Coverage of two-sided 95% intervals (%); the parentheses will show the share of intervals entirely above / below the true rate.
+Coverage of two-sided 95% intervals (%); the parentheses show the share of intervals entirely above / below the true rate.
 
-| Population | Expansion | Ratio | Regression | Microsimulation (assign) | Microsimulation (resample) |
-|---|---|---|---|---|---|
-| right-skewed, 5% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| right-skewed, 30% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| right-skewed, 70% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| right-skewed, 95% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| two-spike, 5% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| two-spike, 30% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| two-spike, 70% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| two-spike, 95% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| left-skewed, 5% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| left-skewed, 30% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| left-skewed, 70% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
-| left-skewed, 95% errors | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
+| Population | Expansion | Ratio | Regression | Microsimulation |
+|---|---|---|---|---|
+| right-skewed, 5% errors | 55.9 (0.0/44.1) | 57.8 (0.0/42.2) | 54.0 (1.9/44.1) | _pending_ |
+| right-skewed, 30% errors | 78.7 (0.0/21.3) | 82.8 (3.2/14.0) | 72.6 (8.2/19.2) | _pending_ |
+| right-skewed, 70% errors | 84.0 (0.1/15.9) | 82.2 (14.3/3.5) | 72.7 (18.5/8.8) | _pending_ |
+| right-skewed, 95% errors | 83.8 (0.4/15.8) | 58.0 (41.8/0.2) | 55.2 (43.2/1.6) | _pending_ |
+| two-spike, 5% errors | 74.8 (0.0/25.2) | 73.6 (0.0/26.4) | 66.6 (0.0/33.4) | _pending_ |
+| two-spike, 30% errors | 92.0 (1.3/6.7) | 92.7 (1.4/5.9) | 91.9 (1.8/6.3) | _pending_ |
+| two-spike, 70% errors | 94.4 (3.2/2.4) | 94.5 (4.1/1.4) | 94.4 (4.1/1.5) | _pending_ |
+| two-spike, 95% errors | 92.5 (4.5/3.0) | 74.3 (25.5/0.2) | 73.7 (25.5/0.8) | _pending_ |
+| left-skewed, 5% errors | 75.9 (0.2/23.9) | 75.9 (0.2/23.9) | 75.7 (0.4/23.9) | _pending_ |
+| left-skewed, 30% errors | 92.1 (1.9/6.0) | 91.7 (2.1/6.2) | 91.7 (2.2/6.1) | _pending_ |
+| left-skewed, 70% errors | 94.1 (4.4/1.5) | 93.4 (5.4/1.2) | 92.5 (6.0/1.5) | _pending_ |
+| left-skewed, 95% errors | 89.7 (9.8/0.5) | 78.8 (21.1/0.1) | 78.0 (21.9/0.1) | _pending_ |
 
-All 12 populations will be in `estimation/results/cert/`.
+All 12 populations are in `estimation/results/cert/`.

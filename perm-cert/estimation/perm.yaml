@@ -1,7 +1,7 @@
 # PERM - estimation: draw state samples (systematic selection within
 # strata) from the errors/ population and estimate each state's improper
 # payment rates with each method (expansion, ratio, regression, and the audit-finding simulation).
-program: perm_estimation   # also the seed label for sampling and bootstrap
+program: perm_estimation   # also the seed label for sampling and simulation
 seed: 20261016
 output_dir: results/perm
 steps:
