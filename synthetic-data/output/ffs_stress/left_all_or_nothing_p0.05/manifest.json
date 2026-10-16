@@ -1,6 +1,6 @@
 {
   "config_file": "ffs_stress.yaml",
-  "config_sha256": "347e67f7e3a436a152d3f333a7608a99717bbca9a881849204c76b11c916a07d",
+  "config_sha256": "9490eb585c662c4c1c9270e80b910bdc64b4387a4c5b6bbced34cfbe68b07092",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
@@ -8,8 +8,8 @@
       "sha256": "45c6dc0a309b560132838ea815c5fbfad9db2919c9604958e48bcd8b5475b2ca"
     },
     "design.yaml": {
-      "bytes": 215,
-      "sha256": "4f79bb456096ff3474a80ddc7154c37340532640ec9f356e308d7197820fa793"
+      "bytes": 202,
+      "sha256": "fe3a812007a594fe12a47f21d911e69da1fa03e9de941a435d6e44ff55ec8c83"
     },
     "population.parquet": {
       "bytes": 4297,

@@ -1,12 +1,14 @@
 # Synthetic Data
 
-Synthetic finite populations with **known true improper payments**, for testing whether improper payment estimates (expansion, ratio, regression/GREG, model-assisted and bootstrap) hold their stated accuracy under each CMS program's sampling design. This implements step 1 ("Build populations") of the study pipeline in [`../literature-review/`](../literature-review/bootstrap-simulation-for-improper-payment-estimation-in-cms-programs.md).
+Synthetic finite populations with **known true improper payments**, for testing whether improper payment estimates (expansion, ratio, regression/GREG and bootstrap) hold their stated accuracy under each CMS program's sampling design. This implements step 1 ("Build populations") of the study pipeline in [`../literature-review/`](../literature-review/bootstrap-simulation-for-improper-payment-estimation-in-cms-programs.md).
+
+**Scope: improper payment rate estimation for PIIA reporting only.** Recovery and extrapolation uses (contract-level RADV audits, provider overpayment demands) are out of scope.
 
 No PHI, no unit-level data from any source, and nothing non-public. Every number is drawn from stated distributions and calibrated only to public aggregate results.
 
 ## Design principles (for expert review)
 
-1. **SQL does the work.** Generation, error injection, the Part D benefit, RADV frames, sampling, estimators and truth are DuckDB SQL in `src/sql/`. Python only orchestrates, plus one model fit (RADV prediction model) that SQL cannot do.
+1. **SQL does the work.** Generation, error injection, the Part D benefit, calibration, sampling, estimators and truth are DuckDB SQL in `src/sql/`. Python only reads configs, runs the SQL files in order and writes the outputs.
 2. **Few scenarios, each named.** One base scenario per program, plus the published FFS stress grid and the PERM 3% grid.
 3. **Errors are stated probabilities.** Each error is a Bernoulli draw whose probability is written in the SQL header and config. Calibration to a public rate is one closed-form multiplier, `m = target $ / expected $ at m = 1`, logged in `truth.json`.
 4. **Every dollar is traceable.** Unit-level detail (HCCs, PDEs, payments) is exported, so any enrollee's or beneficiary's error can be recomputed by hand from its rows.
@@ -16,8 +18,8 @@ No PHI, no unit-level data from any source, and nothing non-public. Every number
 
 ```bash
 cd synthetic-data
-pip install -e .                       # duckdb (pinned), pyarrow, numpy, scikit-learn, pyyaml
-ipsim config/*.yaml                    # build all populations into output/  (~2.5 min)
+pip install -e .                       # duckdb (pinned), pyarrow, numpy, pyyaml
+ipsim config/*.yaml                    # build all populations into output/  (~1 min)
 python -m ipsim.validate all           # calibration, benchmark, smoke tests -> output/validation/report.md
 python -m pytest -q tests              # RNG, sampler and determinism tests
 ```
@@ -27,8 +29,7 @@ python -m pytest -q tests              # RNG, sampler and determinism tests
 | # | Application | Config | Unit | Error mechanism | Calibrated to (public) |
 |---|---|---|---|---|---|
 | 1 | Claim errors flowing through a benefit to reinsurance/subsidy (**Part D**) | `partd.yaml` | Beneficiary (cluster of PDEs) | PDE-level: missing documentation (GDC → 0), pricing (±~12%), drug discrepancy (cheaper/costlier drug); corrected PDEs re-run through the **CY 2025 post-IRA benefit**; error = Δ(reinsurance + LICS) | Gross 4.00%; over $3.70B / under $0.52B; type shares 75.00 / 17.86 / 7.14 |
-| 2a | Risk-score errors on capitated payments (**Part C IPM**) | `partc.yaml` | Enrollee | HCC unsupported (deletion, or severe→mild hierarchy move); missing documentation (all HCCs deleted); additional HCC (underpayment) | Gross 6.09%; over $21.43B / under $2.23B; missing doc 0.22% |
-| 2b | Contract-level RADV (PY 2021 method) | `radv.yaml` | Enrollee in a contract frame | Same error process as Part C; 24 explicit contracts (6 sizes × 4 coding intensities); **frame = top quartile by an ML prediction model** trained on a prior year | Error process copied from the Part C calibration |
+| 2 | Risk-score errors on capitated payments (**Part C IPM**) | `partc.yaml` | Enrollee | HCC unsupported (deletion, or severe→mild hierarchy move); missing documentation (all HCCs deleted); additional HCC (underpayment) | Gross 6.09%; over $21.43B / under $2.23B; missing doc 0.22% |
 | 3 | Claim/benefit errors (**CERT/PIM** stress, **PERM**) | `ffs_stress.yaml`, `perm.yaml` | Claim / payment | FFS: all-or-nothing on exactly round(p·N) claims. PERM: claims errors per payment plus beneficiary eligibility errors (all of that beneficiary's payments) | Edwards et al. (2023) payment shapes; Medicaid overall 6.12%; nine states at true eligibility rates 2.00–4.00% |
 | 4 | Beneficiary subsidy eligibility (**Marketplace APTC / EIPM**) | `eipm.yaml` | FFE application | Income misstatement (APTC recomputed, two-sided), eligibility failure and missing documentation (all-or-nothing) | Gross 0.89% |
 
@@ -58,10 +59,9 @@ config/<program>.yaml ──► src/ipsim/engine.py (sets variables, runs steps 
    │
    ├─ src/sql/lib/rng.sql             hash-based RNG macros (uniform, normal, lognormal, Kumaraswamy, weighted keys)
    ├─ src/sql/<program>/NN_*.sql      numbered generation steps (headers explain each mechanism)
-   ├─ src/ipsim/ml.py                 RADV only: prior-year model -> pred_score
    └─ output/<program>/<scenario>/
          population.parquet           one row per sampling unit: unit_id, stratum, x (paid), y (true error), error_type, program fields
-         <detail>.parquet             hcc_detail / pde_detail / frames / contracts / states
+         <detail>.parquet             hcc_detail / pde_detail / contracts / states
          truth.json                   true totals, rates, component rates, calibration multipliers
          design.yaml                  production design: strata, sample sizes, selection rule, estimator
          config.yaml                  every variable and the scenario seed
@@ -76,8 +76,8 @@ src/sql/validate/ffs_benchmark.sql    Edwards et al. Fig. 4.1 replication
 ## Validation (current results: `output/validation/report.md`)
 
 - **Calibration:** 23 of 23 checks within tolerance. For example, Part C gross is 6.06% (target 6.09%), Part D 3.98% (target 4.00%), EIPM 0.93% (target 0.89%). Every PERM state's true eligibility rate is at or below its grid value, and within 0.02 points of it.
-- **Benchmark:** reproduces the Edwards et al. (2023) pattern. With an SRS of 30 and the normal 90% lower bound, coverage holds at or above 90% for right-skewed payments. It falls to 87–89% for two-spike and 82–87% for left-skewed payments once the error rate exceeds 0.6.
-- **Smoke test:** one production-style design per program (stratified SRS, systematic PERM selection, RADV n = 100 within a frame) recovers the truth over 300 draws, within 3.5 Monte Carlo standard errors.
+- **Benchmark (checks the payment shapes only):** reproduces the Edwards et al. (2023) pattern. With an SRS of 30 and the normal 90% lower bound, coverage holds at or above 90% for right-skewed payments. It falls to 87–89% for two-spike and 82–87% for left-skewed payments once the error rate exceeds 0.6.
+- **Smoke test:** one production-style design per program (stratified SRS, systematic PERM selection) is unbiased for the true rate or total over 300 draws, within 3.5 Monte Carlo standard errors.
 - **Tests:** RNG independence and moments, exact sample sizes, byte-identical output at 1 and 4 threads.
 
 ## Two pitfalls found while building (worth knowing for review)
@@ -88,7 +88,7 @@ src/sql/validate/ffs_benchmark.sql    Edwards et al. Fig. 4.1 replication
 ## Not yet built (next steps, in the aims)
 
 - Interval methods: analytic normal/t, design (Rao–Wu rescaled) bootstrap with percentile, bootstrap-t and BCa intervals.
-- ML-assisted GREG estimator using `pred_score` and other auxiliaries.
+- GREG with several auxiliaries (and, if wanted, a model-assisted version with ML predictions as the auxiliary).
 - Coverage scoring at 10,000 replications per cell.
 - Optional measurement error (reviewer misclassification, appeal overturns).
 

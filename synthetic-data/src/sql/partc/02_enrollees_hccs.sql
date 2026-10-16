@@ -1,5 +1,5 @@
 -- =====================================================================
--- capitation/02_enrollees_hccs.sql : enrollees and submitted HCCs
+-- partc/02_enrollees_hccs.sql : enrollees and submitted HCCs
 -- ---------------------------------------------------------------------
 -- HCC families are ILLUSTRATIVE (labels A-J), not CMS-HCC coefficients.
 -- Each family has a mild and a severe level (a two-level hierarchy): if

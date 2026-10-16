@@ -15,7 +15,9 @@ Columns shared by every `population.parquet`:
 
 Shared columns only. Shapes: `right` (N = 59,804), `two_spike` (N = 249), `left` (N = 570). Exactly round(p·N) units are in error.
 
-## partc / radv (`population.parquet`)
+## partc
+
+`population.parquet` has one row per enrollee:
 
 | Column | Meaning |
 |---|---|
@@ -25,20 +27,12 @@ Shared columns only. Shapes: `right` (N = 59,804), `two_spike` (N = 249), `left`
 | `demo_score` | Demographic part of the risk score |
 | `n_hcc` | Payment HCCs submitted (after hierarchy) |
 | `risk_orig` | Submitted risk score R0 |
-| `risk_radv` | Risk score supported by the record |
-| `delta_r` | R0 − R_radv (3 decimals; discrete steps) |
+| `risk_validated` | Risk score supported by the medical record |
+| `delta_r` | R0 − risk_validated (3 decimals; discrete steps) |
 | `x` | R0 × county_rate × months |
 | `y` | delta_r × county_rate × months |
 
-RADV only:
-
-| Column | Meaning |
-|---|---|
-| `pred_score` | Prediction-model probability that ΔR > 0 |
-| `eligible` | Enrollee has ≥ 1 HCC |
-| `in_frame` | Enrollee is in the top quartile of eligible enrollees by `pred_score` within the contract |
-
-Part C strata: `low` / `medium` / `high` terciles of `risk_orig`. RADV strata: `stratum = contract_id`.
+Strata: `low` / `medium` / `high` terciles of `risk_orig`.
 
 `hcc_detail.parquet` has one row per enrollee × HCC family:
 
@@ -52,7 +46,7 @@ Part C strata: `low` / `medium` / `high` terciles of `risk_orig`. RADV strata: `
 | `validation` | `supported`, `deleted` or `hierarchy_move` |
 | `err_coef` | Risk-score error from this HCC |
 
-`frames.parquet` (RADV) has one row per audited contract: `frame_n` and `sample_n`. `contracts.parquet` gives each contract's enrollment, coding `intensity` and base county rate.
+`contracts.parquet` gives each contract's enrollment, coding `intensity` and base county rate.
 
 ## partd
 
@@ -122,7 +116,7 @@ Strata are income bands: `A_lt150`, `B_150_250`, `C_250_400`, `D_ge400`.
 ## truth.json
 
 - `overall`: population totals and rates.
-- `by.<level>.<key>`: the same quantities by stratum, state, contract or error type.
+- `by.<level>.<key>`: the same quantities by stratum, state or error type.
 - `by.calibration`: the multipliers and calibration passes.
 
 Dollar truths are national-scale, i.e. multiplied by `w_pop`.

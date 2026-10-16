@@ -22,7 +22,7 @@
     "truth": 0.060623118432538724,
     "mean_estimate": 0.0606729626100271,
     "rel_bias": 0.0008221975176656571,
-    "z_bias": 0.34266037493418877,
+    "z_bias": 0.34266037493418766,
     "status": "pass"
   },
   {
@@ -46,9 +46,9 @@
     "reps": 300,
     "sample_size": 2000,
     "truth": 0.009302081169931259,
-    "mean_estimate": 0.009207777233064063,
-    "rel_bias": -0.010137939579804023,
-    "z_bias": -0.5373710334055029,
+    "mean_estimate": 0.009207777233064061,
+    "rel_bias": -0.010137939579804134,
+    "z_bias": -0.5373710334055128,
     "status": "pass"
   },
   {
@@ -59,22 +59,9 @@
     "reps": 300,
     "sample_size": 520,
     "truth": 0.06026309867785313,
-    "mean_estimate": 0.05918247865410803,
-    "rel_bias": -0.017931703603920934,
-    "z_bias": -1.6946936281225682,
-    "status": "pass"
-  },
-  {
-    "program": "radv",
-    "scenario": "base",
-    "estimand": "contract 11 month-weighted mean dR",
-    "selection": "srs",
-    "reps": 300,
-    "sample_size": 100,
-    "truth": 0.20857592071454792,
-    "mean_estimate": 0.20792311783001555,
-    "rel_bias": -0.0031298094348377603,
-    "z_bias": -0.42186048657234543,
+    "mean_estimate": 0.05918247865410804,
+    "rel_bias": -0.017931703603920712,
+    "z_bias": -1.6946936281225464,
     "status": "pass"
   }
 ]

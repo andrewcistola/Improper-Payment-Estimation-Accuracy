@@ -11,7 +11,7 @@ CREATE OR REPLACE TABLE population AS
 SELECT unit_id, contract_id,
        CASE ntile(3) OVER (ORDER BY risk_orig, unit_id)
             WHEN 1 THEN 'low' WHEN 2 THEN 'medium' ELSE 'high' END AS stratum,
-       months, county_rate, demo_score, n_hcc, risk_orig, risk_radv, delta_r,
+       months, county_rate, demo_score, n_hcc, risk_orig, risk_validated, delta_r,
        x, y, error_type, w_pop
 FROM capitation_units;
 

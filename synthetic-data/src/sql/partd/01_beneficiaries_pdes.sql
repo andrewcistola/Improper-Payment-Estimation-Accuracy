@@ -6,7 +6,7 @@
 -- GDC = ingredient cost + dispensing fee + sales tax + vaccine admin fee
 -- Every PDE carries a CANDIDATE error (type, direction, corrected GDC)
 -- and an activation uniform u_act. Step 03 activates a candidate when
--- u_act < p(type) * m(direction); the m multipliers are calibrated.
+-- u_act < m, one calibrated multiplier for all types (see step 02).
 -- Error types and base relative probabilities (FY 2025 count shares of
 -- sampled errors): missing/invalid documentation 75.00% (all-or-nothing,
 -- corrected GDC = 0), pricing 17.86% (partial +/- ~12% of GDC, 40% are

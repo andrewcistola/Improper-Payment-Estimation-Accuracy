@@ -1,6 +1,9 @@
 -- =====================================================================
 -- validate/ffs_benchmark.sql : Edwards, Liu & Delage (2023) Fig. 4.1
 -- ---------------------------------------------------------------------
+-- Purpose: check that the synthetic payment shapes reproduce a published
+-- result. It reuses the paper's design (one-sided 90% bound) only for
+-- that check; it is not part of the study's estimands.
 -- For each FFS stress population: R simple random samples of n without
 -- replacement; expansion estimate; one-sided 90% normal lower bound with
 -- FPC; coverage = share of samples whose bound <= true total.
@@ -45,6 +48,5 @@ SELECT scen,
        avg((lb <= T)::INT) AS coverage,
        sqrt(avg((lb <= T)::INT) * (1 - avg((lb <= T)::INT)) / count(*)) AS mc_se,
        avg(t_hat) / any_value(T) - 1 AS rel_bias,
-       avg(greatest(lb, 0)) / any_value(T) AS mean_recovery_share,
        count(*) AS reps
 FROM est GROUP BY scen ORDER BY shape, error_rate;

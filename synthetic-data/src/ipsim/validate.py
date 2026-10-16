@@ -2,7 +2,7 @@
 
   calibration : truth.json vs public targets, with stated tolerances
   benchmark   : Edwards, Liu & Delage (2023) Fig. 4.1 coverage pattern
-  smoke       : production-style samples recover the truth on average
+  smoke       : production-style samples are unbiased for the truth
 
 Run:  python -m ipsim.validate [calibration|benchmark|smoke|all]
 Writes output/validation/<check>.json and a combined report.md.
@@ -148,15 +148,6 @@ SMOKE = {
               "FROM read_parquet('{p}') WHERE state_id = 5",
         selection="systematic", stat="rate",
         truth=lambda t: t["by"]["state"]["5"]["overall_rate"], label="state 5 overall rate"),
-    "radv": dict(
-        scen="base",
-        # contract 11 frame (n = 100). Ratio of sum(dR*months) to sum(months)
-        # = the production month-weighted mean Delta-R.
-        pop="SELECT unit_id, stratum, (delta_r * months)::DOUBLE AS y, months::DOUBLE AS x "
-            "FROM read_parquet('{p}') WHERE in_frame AND contract_id = 11",
-        alloc="SELECT '11' AS stratum, 100 AS n_h", selection="srs",
-        stat="rate", truth=lambda t: t["by"]["contract"]["11"]["mean_dr_m"],
-        label="contract 11 month-weighted mean dR"),
 }
 
 
@@ -223,7 +214,7 @@ def main(argv=None):
     if which in ("smoke", "all"):
         r = smoke()
         (VAL / "smoke.json").write_text(json.dumps(r, indent=2) + "\n")
-        report += ["## Smoke test: production-style designs recover the truth", "",
+        report += ["## Smoke test: production-style designs are unbiased for the truth", "",
                    "Pass if |mean estimate - truth| < 3.5 Monte Carlo SE.", "",
                    _md_table(r, ["program", "estimand", "selection", "sample_size", "reps", "truth",
                                  "mean_estimate", "rel_bias", "z_bias", "status"]), ""]

@@ -1,11 +1,11 @@
 {
   "config_file": "partc.yaml",
-  "config_sha256": "46c26f76980ddc8747f4561d41eed1d8efe7b019b8399cf9454f63899f0213b8",
+  "config_sha256": "36f764ce351389c143f0e874316178bfc1fc8102562659574154cdc0cc27d93e",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 563,
-      "sha256": "b293e9cdcdc3397a5cacf914a9712c9863e3bc8914ba27475d31a16f61a5ed53"
+      "bytes": 430,
+      "sha256": "1739c67e8b09ec8548012ccf7b5009f2dffc640e7be90855e0bd0db2bebdf3f7"
     },
     "contracts.parquet": {
       "bytes": 10917,
@@ -22,9 +22,9 @@
       "sha256": "6072562c3238b4c0b20ce65c7a4b0076a9104aa0718d0522264a312b499276e7"
     },
     "population.parquet": {
-      "bytes": 4621278,
+      "bytes": 4621298,
       "rows": 330253,
-      "sha256": "2804f9b074cc2421e3685fc420818a9dc0c57590f2acf55b645f083d43e998b8"
+      "sha256": "a67a2e4728dd2582d35ddaa369296f4bd89802a939b5e58a1998c5571eb6c604"
     },
     "truth.json": {
       "bytes": 1914,

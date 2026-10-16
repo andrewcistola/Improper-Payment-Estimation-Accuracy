@@ -24,7 +24,9 @@ design:
   selection: srs_without_replacement
   strata: [{stratum: all, n: 30}]
   estimator: expansion_total          # T_hat = N * ybar
-  interval: one_sided_lower_90_normal # LB = T_hat - z_0.90 * N * s / sqrt(n) * sqrt(1 - n/N)
+  interval: two_sided_95
+  # validation only: src/sql/validate/ffs_benchmark.sql reruns the published
+  # Edwards et al. design (one-sided 90% normal bound) to check these shapes
   shape: $shape
   error_rate: $error_rate
   error_model: $error_model

@@ -3,23 +3,17 @@ scenario: base
 master_seed: 20261016
 scenario_seed: 3223099075479152603
 variables:
-  contract_mode: generate
-  contracts: []
   n_contracts: 550
   total_enrollees: 330000
   w_pop: 100.0
   payment_target: 388720000000.0
-  calibrate: true
   target_unsup: 0.0529
   target_md: 0.0022
   target_under: 0.0057
   p_md: 0.003
   p_add: 0.03
-  m_unsup_fixed: 1.0
-  m_md_fixed: 1.0
-  m_add_fixed: 1.0
 steps:
-- sql: capitation/01_contracts.sql
-- sql: capitation/02_enrollees_hccs.sql
-- sql: capitation/03_payments_errors.sql
+- sql: partc/01_contracts.sql
+- sql: partc/02_enrollees_hccs.sql
+- sql: partc/03_payments_errors.sql
 - sql: partc/04_population_truth.sql

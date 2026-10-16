@@ -1,19 +1,17 @@
 """Scenario runner.
 
 Python here is orchestration only: read a YAML config, open DuckDB, set
-scenario variables, execute the program's SQL files in order, call the
-rare Python step (an ML model fit, a calibration root-find), then export
-tables. All data generation, error injection, benefit logic, frames and
-truth tables live in ``src/sql``.
+scenario variables, execute the program's SQL files in order, then export
+tables. All data generation, error injection, benefit logic, calibration
+and truth tables live in ``src/sql``.
 """
 from __future__ import annotations
 
 import hashlib
-import importlib
 import json
 import platform
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -41,25 +39,13 @@ def sha256_file(path: Path) -> str:
 
 @dataclass
 class Context:
-    """Passed to Python steps."""
+    """State of one scenario run."""
 
     con: duckdb.DuckDBPyConnection
     program: str
     scenario: str
     vars: dict
-    config: dict
     outdir: Path
-    log: list = field(default_factory=list)
-
-    def var(self, name: str):
-        return self.vars[name]
-
-    def sql(self, q: str, params=None):
-        return self.con.execute(q, params or [])
-
-    def set_var(self, name: str, value):
-        self.vars[name] = value
-        self.con.execute(f"SET VARIABLE {name} = ?", [value])
 
 
 class Engine:
@@ -125,20 +111,14 @@ class Engine:
         v = dict(v)
         v["seed"] = child_seed(self.seed, self.program, name)
         v["master_seed"] = self.seed
-        ctx = Context(con, self.program, name, v, self.config, outdir)
+        ctx = Context(con, self.program, name, v, outdir)
         for k, val in v.items():
             if isinstance(val, (list, dict)):
                 val = json.dumps(val)
             con.execute(f"SET VARIABLE {k} = ?", [val])
 
-        for step in self.config["steps"]:
-            if "sql" in step:
-                con.execute((SQL_DIR / step["sql"]).read_text())
-            elif "python" in step:
-                mod, fn = step["python"].split(":")
-                getattr(importlib.import_module(mod), fn)(ctx, **step.get("args", {}))
-            else:
-                raise ValueError(f"unknown step {step}")
+        for step in self.config["steps"]:  # every step is a SQL file
+            con.execute((SQL_DIR / step["sql"]).read_text())
 
         files = self._export(ctx)
         self._scenario_manifest(ctx, files)
@@ -183,10 +163,6 @@ class Engine:
         p = outdir / "config.yaml"
         p.write_text(yaml.safe_dump(cfg, sort_keys=False))
         files.append(p)
-        if ctx.log:
-            p = outdir / "calibration_log.json"
-            p.write_text(json.dumps(ctx.log, indent=2) + "\n")
-            files.append(p)
         return files
 
     @staticmethod

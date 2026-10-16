@@ -1,5 +1,5 @@
 -- =====================================================================
--- capitation/03_payments_errors.sql : payments, error draws, Delta-R
+-- partc/03_payments_errors.sql : payments, error draws, Delta-R
 -- ---------------------------------------------------------------------
 -- Risk score (original)  R0 = demo_score + sum(coef_paid)
 -- Annual payment         x  = R0 * county_rate * months
@@ -12,17 +12,16 @@
 --     all HCCs deleted (all-or-nothing on the HCC part of the score)
 --   additional HCC (underpayment): p = p_add * m_add, only for enrollees
 --     with no overpayment; adds the mild coef of a family not coded
--- Delta-R = R0 - R_radv (positive = overpayment); payment error
+-- Delta-R = R0 - R_validated (positive = overpayment), where R_validated
+-- is the score supported by the medical record; payment error
 -- y = Delta-R * county_rate * months.
--- Calibration (calibrate = true): each multiplier m is ONE closed-form
--- ratio, target dollars / expected dollars at m = 1. With calibrate =
--- false (RADV) the multipliers are fixed inputs, copied from the Part C
--- calibration so both programs share one error process. Realized rates then
--- match targets up to sampling noise; both are written to truth.json.
+-- Calibration: each multiplier m is ONE closed-form ratio, target dollars
+-- / expected dollars at m = 1. Realized rates then match the targets up
+-- to sampling noise; both are written to truth.json.
 -- =====================================================================
 
 -- Step 3. Scale county rates so weighted payments hit payment_target
--- (Part C national total). payment_target = 0 keeps raw rates (RADV).
+-- (Part C national total).
 CREATE OR REPLACE TABLE enr_score AS
 SELECT e.*, round(e.demo_score + coalesce(h.sum_coef, 0), 3)::DECIMAL(8, 3) AS risk_orig,
        coalesce(h.n_hcc, 0) AS n_hcc
@@ -31,10 +30,8 @@ LEFT JOIN (SELECT enrollee_id, sum(coef_paid) AS sum_coef, count(*) AS n_hcc
            FROM hccs GROUP BY enrollee_id) h USING (enrollee_id);
 
 CREATE OR REPLACE TABLE rate_factor AS
-SELECT CASE WHEN getvariable('payment_target') > 0
-            THEN getvariable('payment_target')
-                 / (getvariable('w_pop') * sum((risk_orig * county_rate_raw * months)::DECIMAL(38, 6))::DOUBLE)
-            ELSE 1.0 END AS f
+SELECT getvariable('payment_target')
+       / (getvariable('w_pop') * sum((risk_orig * county_rate_raw * months)::DECIMAL(38, 6))::DOUBLE) AS f
 FROM enr_score;
 
 CREATE OR REPLACE TABLE enr_score AS
@@ -55,8 +52,8 @@ WITH tot AS (SELECT sum(risk_orig * county_rate * months)::DOUBLE AS X FROM enr_
      eu AS (SELECT sum((p1 * exp_err_coef * county_rate * months)::DECIMAL(38, 6))::DOUBLE AS e FROM hcc_p),
      em AS (SELECT sum((getvariable('p_md') * (risk_orig - demo_score) * county_rate * months)::DECIMAL(38, 6))::DOUBLE AS e
             FROM enr_score WHERE n_hcc > 0)
-SELECT CASE WHEN getvariable('calibrate') THEN getvariable('target_unsup') * tot.X / eu.e ELSE getvariable('m_unsup_fixed') END AS m_unsup,
-       CASE WHEN getvariable('calibrate') THEN getvariable('target_md')    * tot.X / em.e ELSE getvariable('m_md_fixed') END AS m_md,
+SELECT getvariable('target_unsup') * tot.X / eu.e AS m_unsup,
+       getvariable('target_md')    * tot.X / em.e AS m_md,
        1.0 AS m_add
 FROM tot, eu, em;
 
@@ -85,7 +82,7 @@ WITH tot AS (SELECT sum(risk_orig * county_rate * months)::DOUBLE AS X FROM enr_
         JOIN absent a USING (enrollee_id)
         LEFT JOIN p_over o USING (enrollee_id), multipliers m)
 SELECT round(m.m_unsup, 8) AS m_unsup, round(m.m_md, 8) AS m_md,
-       round(CASE WHEN getvariable('calibrate') THEN getvariable('target_under') * tot.X / ea.e ELSE getvariable('m_add_fixed') END, 8) AS m_add
+       round(getvariable('target_under') * tot.X / ea.e, 8) AS m_add
 FROM multipliers m, tot, ea;
 
 -- Step 5. Realized HCC-level errors.
@@ -144,7 +141,7 @@ SELECT enrollee_id AS unit_id, contract_id, months, county_rate, demo_score, n_h
 FROM enr_err;
 
 CREATE OR REPLACE TABLE capitation_units AS
-SELECT *, (risk_orig - delta_r)::DECIMAL(8, 3) AS risk_radv,
+SELECT *, (risk_orig - delta_r)::DECIMAL(8, 3) AS risk_validated,
        usd(risk_orig * county_rate * months) AS x,
        usd(delta_r * county_rate * months) AS y,
        getvariable('w_pop')::DOUBLE AS w_pop
