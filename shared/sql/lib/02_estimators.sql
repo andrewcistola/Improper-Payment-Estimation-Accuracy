@@ -262,6 +262,8 @@ FROM bca;
 --                (upper < theta) the truth; balance between the two
 --                tails matters for PIIA rate reporting
 -- rel_bias, rel_rmse, rel_width: relative to the true rate
+-- median_rel_width: median width / true rate (robust to a few huge
+--                intervals, e.g. bootstrap-t when a replicate's se* is ~0)
 -- mc_se_coverage: Monte Carlo standard error of the coverage estimate
 CREATE OR REPLACE MACRO ipm_score() AS TABLE
 SELECT e.domain, e.method, e.interval,
@@ -277,6 +279,7 @@ SELECT e.domain, e.method, e.interval,
        avg(coalesce(e.upper < f.theta, false)::INT) AS below,
        count(*) FILTER (WHERE e.lower IS NULL OR e.upper IS NULL) AS n_undefined,
        favg(e.upper - e.lower) / any_value(f.theta) AS rel_width,
+       qsorted(list_sort(list((e.upper - e.lower)::DOUBLE)), 0.5) / any_value(f.theta) AS median_rel_width,
        favg(e.se) AS mean_se,
        fsd(e.estimate) AS empirical_se
 FROM estimates e JOIN frame_totals f USING (domain)

@@ -150,6 +150,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 | `n_undefined` | Intervals that could not be formed (counted as not covering) |
 | `rel_bias`, `rel_rmse` | Bias and RMSE of the point estimate, relative to `theta` |
 | `rel_width` | Mean interval width relative to `theta` |
+| `median_rel_width` | Median interval width relative to `theta` (robust to a few very wide intervals) |
 | `mean_se`, `empirical_se` | Average reported SE vs the standard deviation of the estimates across samples |
 
 `truth.json` (estimation) gives the frame totals per domain: X (paid), Y (improper) and theta = Y / X.
