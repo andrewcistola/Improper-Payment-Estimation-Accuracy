@@ -1,38 +1,32 @@
 {
   "by": {
     "calibration": {
-      "pass_0": {
-        "m": 0.0,
-        "realized_gross": 0.0
-      },
       "pass_1": {
-        "m": 0.05780629,
-        "realized_gross": 8770070.19
-      },
-      "pass_2": {
-        "m": 0.05563069,
-        "realized_gross": 8445019.34
+        "m": 1.0,
+        "realized_gross": 2917962.79
       }
     },
     "error_type_share": {
       "pde_count": {
-        "full_error": 0.8999567307130076,
-        "partial_error": 0.10004326928699232
+        "full_error": 0.8996864978872684,
+        "partial_error": 0.10031350211273163
       }
     }
   },
   "overall": {
+    "claim_err_rate_ltc": 0.09935471033032009,
+    "claim_err_rate_other": 0.02501649131026514,
     "direct_subsidy": 60811560000.0,
-    "gross_rate": 0.040001071474914815,
+    "gross_rate": 0.013821358297082578,
     "lics": 11935654900.0,
     "n_units": 108000.0,
-    "net_rate": 0.03934744636950758,
-    "overpayments": 4188011365.0,
+    "net_rate": 0.01342936858828989,
+    "overpayments": 1438292195.0,
     "payments": 105559914130.0,
     "reinsurance": 32812699230.0,
     "share_catastrophic": 0.1403611111111111,
-    "underpayments": 34498305.0,
-    "unit_err_rate": 0.26107407407407407
+    "underpayments": 20689200.0,
+    "unit_err_rate": 0.1981111111111111
   },
   "program": "partd",
   "scenario": "base"

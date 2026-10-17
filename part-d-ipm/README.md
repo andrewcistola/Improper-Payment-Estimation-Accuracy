@@ -10,12 +10,11 @@ Run: `ipsim part-d-ipm/errors/config.yaml` → `errors/output/base/` (about 45 s
 |---|---|---|
 | Population | `01_population.sql` | 108,000 beneficiaries (1 = 500 real), ~4.5M PDEs; GDC = ingredient cost + dispensing fee + sales tax + vaccine admin fee. 4% of beneficiaries are in long-term care (LTC) and fill about twice as many PDEs (illustrative) |
 | Errors | `02_candidate_errors.sql` | One candidate error per PDE, as a share e of GDC: 90% full errors (e = 100%, GDC → 0), 10% partial errors with e uniform on [−100%, 100%) (e < 0 is an underpayment; −100% means the correct GDC is double) |
-| Errors | `03_init_calibration.sql` | Starts with no active errors |
-| Errors | `04_apply_errors.sql` | Activates each candidate with probability m, or 10m for LTC claims |
+| Errors | `03_init_calibration.sql` | Error rates used as stated: no calibration |
+| Errors | `04_apply_errors.sql` | Activates each candidate with probability 2.5%, or 10% for LTC claims |
 | Errors | `05_benefit.sql` | CY 2025 standard benefit ($590 deductible, $2,000 out-of-pocket cap, Manufacturer Discount Program, 20%/40% reinsurance, LIS copays), run on submitted and corrected PDEs |
-| Errors | `06_calibrate.sql` | Sets m to hit gross $4.22B: one linear pass, one proportional refinement (steps 04–06 run three times; see `config.yaml`) |
 | Truth | `07_population_truth.sql` | x = direct subsidy + reinsurance + LICS; y = Medicare(submitted) − Medicare(corrected) |
-| Checks | `08_checks.sql` | FY 2025 targets: gross 4.00% (calibrated), over $3.70B and under $0.52B (reported: with 90% full errors, underpayments cannot reach 14% of overpayments), full/partial shares; unique ids |
+| Checks | `08_checks.sql` | Claim error rates (10% LTC, 2.5% other) and full/partial shares; gross, over and under reported against FY 2025 (4.00%, $3.70B, $0.52B) but not calibrated to them; unique ids |
 
 Outputs: `population.parquet` (one row per beneficiary), `pde_detail.parquet` (every PDE's submitted vs corrected liability by payer), `truth.json`, `checks.json`. The Parquet files are not committed (98 MB); rebuild them and compare hashes with `manifest.json`.
 
@@ -41,51 +40,51 @@ Each row gives the true value and, over the 25 audit years, the median point est
 
 | Measure | Method | True | Estimated | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Overpayments | Expansion | $4.19B | $4.08B | $5.14B | $2.93B |
-|  | Ratio | $4.19B | $3.83B | $5.34B | $2.46B |
-|  | Regression | $4.19B | $4.02B | $5.35B | $2.48B |
-|  | Bootstrap simulation (fixed rates) | $4.19B | $4.19B | $4.28B | $4.09B |
-| Underpayments | Expansion | $0.03B | $0.00B | $0.00B | $0.00B |
-|  | Ratio | $0.03B | $0.02B | $0.04B | $0.00B |
-|  | Regression | $0.03B | $0.02B | $0.04B | $0.00B |
-|  | Bootstrap simulation (fixed rates) | $0.03B | $0.04B | $0.05B | $0.03B |
-| Gross | Expansion | $4.22B | $4.08B | $5.14B | $2.93B |
-|  | Ratio | $4.22B | $3.86B | $5.35B | $2.50B |
-|  | Regression | $4.22B | $4.03B | $5.36B | $2.53B |
-|  | Bootstrap simulation (fixed rates) | $4.22B | $4.22B | $4.31B | $4.12B |
-| Net | Expansion | $4.15B | $4.08B | $5.14B | $2.93B |
-|  | Ratio | $4.15B | $3.81B | $5.33B | $2.42B |
-|  | Regression | $4.15B | $4.01B | $5.34B | $2.42B |
-|  | Bootstrap simulation (fixed rates) | $4.15B | $4.15B | $4.25B | $4.05B |
+| Overpayments | Expansion | $1.44B | $1.28B | $1.95B | $0.57B |
+|  | Ratio | $1.44B | $1.48B | $2.20B | $0.72B |
+|  | Regression | $1.44B | $1.47B | $2.21B | $0.73B |
+|  | Bootstrap simulation (fixed rates) | $1.44B | $1.44B | $1.51B | $1.38B |
+| Underpayments | Expansion | $0.02B | $0.00B | $0.00B | $0.00B |
+|  | Ratio | $0.02B | $0.01B | $0.03B | $0.00B |
+|  | Regression | $0.02B | $0.01B | $0.02B | $0.00B |
+|  | Bootstrap simulation (fixed rates) | $0.02B | $0.02B | $0.03B | $0.02B |
+| Gross | Expansion | $1.46B | $1.28B | $1.95B | $0.57B |
+|  | Ratio | $1.46B | $1.49B | $2.22B | $0.74B |
+|  | Regression | $1.46B | $1.48B | $2.22B | $0.77B |
+|  | Bootstrap simulation (fixed rates) | $1.46B | $1.46B | $1.52B | $1.39B |
+| Net | Expansion | $1.42B | $1.28B | $1.95B | $0.57B |
+|  | Ratio | $1.42B | $1.45B | $2.19B | $0.72B |
+|  | Regression | $1.42B | $1.45B | $2.20B | $0.70B |
+|  | Bootstrap simulation (fixed rates) | $1.42B | $1.41B | $1.47B | $1.34B |
 
 **Rates**
 
 | Measure | Method | True | Estimated | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Overpayments | Expansion | 3.97% | 3.87% | 4.87% | 2.77% |
-|  | Ratio | 3.97% | 3.63% | 5.06% | 2.33% |
-|  | Regression | 3.97% | 3.81% | 5.07% | 2.35% |
-|  | Bootstrap simulation (fixed rates) | 3.97% | 3.97% | 4.05% | 3.87% |
-| Underpayments | Expansion | 0.03% | 0.00% | 0.00% | 0.00% |
-|  | Ratio | 0.03% | 0.02% | 0.03% | 0.00% |
-|  | Regression | 0.03% | 0.02% | 0.03% | 0.00% |
-|  | Bootstrap simulation (fixed rates) | 0.03% | 0.04% | 0.04% | 0.03% |
-| Gross | Expansion | 4.00% | 3.87% | 4.87% | 2.77% |
-|  | Ratio | 4.00% | 3.65% | 5.07% | 2.37% |
-|  | Regression | 4.00% | 3.82% | 5.08% | 2.39% |
-|  | Bootstrap simulation (fixed rates) | 4.00% | 4.00% | 4.09% | 3.91% |
-| Net | Expansion | 3.93% | 3.87% | 4.87% | 2.77% |
-|  | Ratio | 3.93% | 3.61% | 5.05% | 2.30% |
-|  | Regression | 3.93% | 3.80% | 5.06% | 2.29% |
-|  | Bootstrap simulation (fixed rates) | 3.93% | 3.93% | 4.03% | 3.84% |
+| Overpayments | Expansion | 1.36% | 1.22% | 1.85% | 0.54% |
+|  | Ratio | 1.36% | 1.40% | 2.09% | 0.69% |
+|  | Regression | 1.36% | 1.39% | 2.09% | 0.69% |
+|  | Bootstrap simulation (fixed rates) | 1.36% | 1.37% | 1.43% | 1.31% |
+| Underpayments | Expansion | 0.02% | 0.00% | 0.00% | 0.00% |
+|  | Ratio | 0.02% | 0.01% | 0.02% | 0.00% |
+|  | Regression | 0.02% | 0.01% | 0.02% | 0.00% |
+|  | Bootstrap simulation (fixed rates) | 0.02% | 0.02% | 0.03% | 0.02% |
+| Gross | Expansion | 1.38% | 1.22% | 1.85% | 0.54% |
+|  | Ratio | 1.38% | 1.41% | 2.10% | 0.70% |
+|  | Regression | 1.38% | 1.41% | 2.11% | 0.73% |
+|  | Bootstrap simulation (fixed rates) | 1.38% | 1.38% | 1.44% | 1.32% |
+| Net | Expansion | 1.34% | 1.22% | 1.85% | 0.54% |
+|  | Ratio | 1.34% | 1.37% | 2.07% | 0.68% |
+|  | Regression | 1.34% | 1.38% | 2.08% | 0.66% |
+|  | Bootstrap simulation (fixed rates) | 1.34% | 1.33% | 1.40% | 1.27% |
 
 **How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
 
 | Measure | Expansion | Ratio | Regression | Bootstrap simulation (fixed rates) |
 |---|---|---|---|---|
-| Overpayments | 20/25 (0/5) | 21/25 (0/4) | 20/25 (1/4) | 9/25 (8/8) |
-| Underpayments | 0/25 (0/25) | 14/25 (0/11) | 15/25 (0/10) | 15/25 (7/3) |
-| Gross | 20/25 (0/5) | 21/25 (0/4) | 20/25 (1/4) | 9/25 (8/8) |
-| Net | 20/25 (0/5) | 22/25 (0/3) | 20/25 (1/4) | 9/25 (8/8) |
+| Overpayments | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 9/25 (9/7) |
+| Underpayments | 0/25 (0/25) | 15/25 (0/10) | 15/25 (0/10) | 10/25 (12/3) |
+| Gross | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 10/25 (8/7) |
+| Net | 19/25 (0/6) | 19/25 (1/5) | 20/25 (1/4) | 11/25 (7/7) |
 
 From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).

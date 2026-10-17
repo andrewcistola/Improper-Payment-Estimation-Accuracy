@@ -1,21 +1,11 @@
 -- =====================================================================
--- partd errors/03_init_calibration.sql : start with no active errors
+-- partd errors/03_init_calibration.sql : error rates as stated
 -- ---------------------------------------------------------------------
--- Each PDE's candidate (full 90% / partial 10%) was drawn in step 02;
--- a candidate becomes active with probability m (x ltc_error_mult for
--- LTC claims), so active errors keep the 90/10 split within each group.
--- m is calibrated to GROSS improper dollars (over + under = $4.22B).
--- The over/under split is NOT forced; it follows from the error
--- shares in step 02 and is reported against $3.70B/$0.52B. (With 90%
--- full errors and partial errors uniform on [-1, 1), underpayments
--- cannot reach 14% of overpayments.)
--- Pass 0: m = 0 (no errors) -> benefit run gives submitted payments.
--- Pass 1: m from a linear expectation (each PDE's marginal Medicare
---         share of its submitted dollars).
--- Pass 2: one proportional refinement, m <- m * target / realized,
---         because benefit phases and within-beneficiary netting make
---         the error nonlinear.
--- Every pass is written to truth.json (level 'calibration').
+-- No calibration: a PDE's candidate error (step 02) is active with
+-- probability error_rate (2.5%), or ltc_error_rate (10%) for LTC claims.
+-- Gross, over and under dollars are outcomes, reported in truth.json and
+-- compared with FY 2025 in checks.json. The calib table records m = 1
+-- (rates used as stated) for the truth file.
 -- =====================================================================
 CREATE OR REPLACE TABLE calib AS
-SELECT 0 AS pass, 0.0::DOUBLE AS m, NULL::DOUBLE AS realized_gross;
+SELECT 1 AS pass, 1.0::DOUBLE AS m, NULL::DOUBLE AS realized_gross;

@@ -107,7 +107,7 @@ def test_part_d_bootstrap_rates_unbiased():
         k = mod.Kernel(con, {**v, "sim_rates": rates})
         k.prepare(1, rng.random(k.units) < 0.3)
         y = k.y_true.astype(float)
-        gross = np.mean([k.iterate(None, rng)["national|gross"] for _ in range(3)])
+        gross = np.mean([k.iterate(None, rng)["national|gross"] for _ in range(10)])
         assert abs(gross / (np.abs(y).sum() / k.X) - 1) < 0.02
 
 

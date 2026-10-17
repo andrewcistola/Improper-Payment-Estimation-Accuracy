@@ -5,7 +5,7 @@ CREATE OR REPLACE TABLE pde_versions AS
 WITH m AS (SELECT * FROM calib ORDER BY pass DESC LIMIT 1),
 a AS (
     SELECT p.*,
-           p.u_act < least(0.95, m.m * CASE WHEN p.ltc THEN getvariable('ltc_error_mult') ELSE 1 END) AS active
+           p.u_act < m.m * CASE WHEN p.ltc THEN getvariable('ltc_error_rate') ELSE getvariable('error_rate') END AS active
     FROM pdes p, m
 )
 SELECT 'submitted' AS version, bene_id, pde_id, fill_day, lis, brand, gdc, active,
