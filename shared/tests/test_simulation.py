@@ -38,6 +38,40 @@ def test_part_c_payment_function_exact():
     assert len(y) == 330253 and np.array_equal(y, truth)
 
 
+def partc_kernel():
+    con = setup("part-c-ipm/errors/output/base", "part-c-ipm/estimation/sql/40_simulation_inputs.sql")
+    return con, load_kernel(ROOT / "part-c-ipm/estimation/simulation.py").Kernel(con, {})
+
+
+def test_part_c_bootstrap_census_is_exact():
+    """Every enrollee audited: each keeps its own finding, so every
+    iteration gives the exact over, under, gross and net rates."""
+    con, k = partc_kernel()
+    y = con.execute("SELECT y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()["y_cents"].astype(float)
+    k.prepare(1, np.ones(k.units, bool))
+    got = k.iterate(None, np.random.default_rng(1))
+    over, under = y[y > 0].sum(), -y[y < 0].sum()
+    assert got == {"national|over": over / k.X, "national|under": under / k.X,
+                   "national|gross": (over + under) / k.X, "national|net": (over - under) / k.X}
+
+
+def test_part_c_bootstrap_rates():
+    """No extrapolation: an HCC with no audited instance never fails. With a
+    large audit the HCC rates reproduce the net rate (net is linear in the
+    findings, so it is unbiased; gross is not, see the README)."""
+    con, k = partc_kernel()
+    rng = np.random.default_rng(7)
+    lacks_j = ((k.fam_mask >> 9) & 1) == 0                         # family J = code 9
+    audited = lacks_j & (rng.random(k.units) < 0.5)
+    k.prepare(1, audited)
+    assert k.f_rate[18] == 0 and k.f_rate[19] == 0 and (k.f_rate[:18] > 0).all()
+    assert (k.a_rate > 0).all()
+    y = con.execute("SELECT y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()["y_cents"].astype(float)
+    k.prepare(1, rng.random(k.units) < 0.5)
+    net = np.mean([k.iterate(None, rng)["national|net"] for _ in range(20)])
+    assert abs(net / (y.sum() / k.X) - 1) < 0.01
+
+
 def test_part_d_payment_function_exact():
     cfg = yaml.safe_load((ROOT / "part-d-ipm/errors/config.yaml").read_text())["defaults"]
     v = {**cfg, "seed": 1, "sim_reps": 1, "sim_audit_size": 10, "sim_bene_size": 10}
