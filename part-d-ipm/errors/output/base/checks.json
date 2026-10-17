@@ -1,23 +1,43 @@
 [
   {
-    "metric": "gross_rate",
-    "value": 0.040001071474914815,
-    "target": 0.04,
-    "diff": 1.07147491481413e-06,
+    "metric": "claim_err_rate_ltc",
+    "value": 0.09935471033032009,
+    "target": 0.1,
+    "diff": -0.000645289669679916,
+    "tolerance": 0.005,
+    "rel": false,
+    "status": "pass",
+    "source": "LTC claims in error: 10%"
+  },
+  {
+    "metric": "claim_err_rate_other",
+    "value": 0.02501649131026514,
+    "target": 0.025,
+    "diff": 1.649131026513692e-05,
     "tolerance": 0.001,
     "rel": false,
     "status": "pass",
-    "source": "gross improper rate 4.00%"
+    "source": "other claims in error: 2.5%"
+  },
+  {
+    "metric": "gross_rate",
+    "value": 0.013821358297082578,
+    "target": 0.04,
+    "diff": -0.02617864170291742,
+    "tolerance": null,
+    "rel": false,
+    "status": "reported",
+    "source": "FY 2025 gross rate 4.00% (reported, not a target)"
   },
   {
     "metric": "overpayments",
-    "value": 4188011365.0,
+    "value": 1438292195.0,
     "target": 3700000000.0,
-    "diff": 0.1318949635135136,
-    "tolerance": 0.05,
+    "diff": -0.6112723797297297,
+    "tolerance": null,
     "rel": true,
-    "status": "FAIL",
-    "source": "overpayments $3.70B (not forced: outcome of the error model)"
+    "status": "reported",
+    "source": "FY 2025 overpayments $3.70B (reported, not a target)"
   },
   {
     "metric": "payments",
@@ -31,9 +51,9 @@
   },
   {
     "metric": "share_full_error",
-    "value": 0.8999567307130076,
+    "value": 0.8996864978872684,
     "target": 0.9,
-    "diff": -4.3269286992386746e-05,
+    "diff": -0.00031350211273162287,
     "tolerance": 0.01,
     "rel": false,
     "status": "pass",
@@ -41,9 +61,9 @@
   },
   {
     "metric": "share_partial_error",
-    "value": 0.10004326928699232,
+    "value": 0.10031350211273163,
     "target": 0.1,
-    "diff": 4.326928699231736e-05,
+    "diff": 0.00031350211273162287,
     "tolerance": 0.01,
     "rel": false,
     "status": "pass",
@@ -51,13 +71,13 @@
   },
   {
     "metric": "underpayments",
-    "value": 34498305.0,
+    "value": 20689200.0,
     "target": 520000000.0,
-    "diff": -0.9336571057692308,
-    "tolerance": 0.1,
+    "diff": -0.9602130769230769,
+    "tolerance": null,
     "rel": true,
-    "status": "FAIL",
-    "source": "underpayments $0.52B (not reachable with 90% full errors; reported)"
+    "status": "reported",
+    "source": "FY 2025 underpayments $0.52B (reported, not a target)"
   },
   {
     "metric": "unique ids: pde_detail",

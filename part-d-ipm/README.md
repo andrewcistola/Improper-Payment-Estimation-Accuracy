@@ -10,12 +10,11 @@ Run: `ipsim part-d-ipm/errors/config.yaml` → `errors/output/base/` (about 45 s
 |---|---|---|
 | Population | `01_population.sql` | 108,000 beneficiaries (1 = 500 real), ~4.5M PDEs; GDC = ingredient cost + dispensing fee + sales tax + vaccine admin fee. 4% of beneficiaries are in long-term care (LTC) and fill about twice as many PDEs (illustrative) |
 | Errors | `02_candidate_errors.sql` | One candidate error per PDE, as a share e of GDC: 90% full errors (e = 100%, GDC → 0), 10% partial errors with e uniform on [−100%, 100%) (e < 0 is an underpayment; −100% means the correct GDC is double) |
-| Errors | `03_init_calibration.sql` | Starts with no active errors |
-| Errors | `04_apply_errors.sql` | Activates each candidate with probability m, or 10m for LTC claims |
+| Errors | `03_init_calibration.sql` | Error rates used as stated: no calibration |
+| Errors | `04_apply_errors.sql` | Activates each candidate with probability 2.5%, or 10% for LTC claims |
 | Errors | `05_benefit.sql` | CY 2025 standard benefit ($590 deductible, $2,000 out-of-pocket cap, Manufacturer Discount Program, 20%/40% reinsurance, LIS copays), run on submitted and corrected PDEs |
-| Errors | `06_calibrate.sql` | Sets m to hit gross $4.22B: one linear pass, one proportional refinement (steps 04–06 run three times; see `config.yaml`) |
 | Truth | `07_population_truth.sql` | x = direct subsidy + reinsurance + LICS; y = Medicare(submitted) − Medicare(corrected) |
-| Checks | `08_checks.sql` | FY 2025 targets: gross 4.00% (calibrated), over $3.70B and under $0.52B (reported: with 90% full errors, underpayments cannot reach 14% of overpayments), full/partial shares; unique ids |
+| Checks | `08_checks.sql` | Claim error rates (10% LTC, 2.5% other) and full/partial shares; gross, over and under reported against FY 2025 (4.00%, $3.70B, $0.52B) but not calibrated to them; unique ids |
 
 Outputs: `population.parquet` (one row per beneficiary), `pde_detail.parquet` (every PDE's submitted vs corrected liability by payer), `truth.json`, `checks.json`. The Parquet files are not committed (98 MB); rebuild them and compare hashes with `manifest.json`.
 

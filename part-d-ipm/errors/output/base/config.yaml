@@ -9,7 +9,8 @@ variables:
   specialty_share: 0.03
   ltc_share: 0.04
   ltc_pde_factor: 2.0
-  ltc_error_mult: 10.0
+  error_rate: 0.025
+  ltc_error_rate: 0.1
   full_error_share: 0.9
   payment_target: 105560000000.0
   target_over: 3700000000.0
@@ -28,12 +29,6 @@ steps:
 - sql: part-d-ipm/errors/sql/01_population.sql
 - sql: part-d-ipm/errors/sql/02_candidate_errors.sql
 - sql: part-d-ipm/errors/sql/03_init_calibration.sql
-- sql: part-d-ipm/errors/sql/04_apply_errors.sql
-- sql: part-d-ipm/errors/sql/05_benefit.sql
-- sql: part-d-ipm/errors/sql/06_calibrate.sql
-- sql: part-d-ipm/errors/sql/04_apply_errors.sql
-- sql: part-d-ipm/errors/sql/05_benefit.sql
-- sql: part-d-ipm/errors/sql/06_calibrate.sql
 - sql: part-d-ipm/errors/sql/04_apply_errors.sql
 - sql: part-d-ipm/errors/sql/05_benefit.sql
 - sql: part-d-ipm/errors/sql/07_population_truth.sql

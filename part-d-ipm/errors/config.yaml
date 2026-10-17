@@ -7,14 +7,8 @@ output_dir: output
 steps:
   - sql: part-d-ipm/errors/sql/01_population.sql        # population (error-free PDEs)
   - sql: part-d-ipm/errors/sql/02_candidate_errors.sql  # fake errors: candidates
-  - sql: part-d-ipm/errors/sql/03_init_calibration.sql  # pass 0: no errors
-  - sql: part-d-ipm/errors/sql/04_apply_errors.sql
-  - sql: part-d-ipm/errors/sql/05_benefit.sql           # benefit run -> submitted payments
-  - sql: part-d-ipm/errors/sql/06_calibrate.sql         # -> pass 1 (linear expectation)
-  - sql: part-d-ipm/errors/sql/04_apply_errors.sql
-  - sql: part-d-ipm/errors/sql/05_benefit.sql
-  - sql: part-d-ipm/errors/sql/06_calibrate.sql         # -> pass 2 (one proportional refinement)
-  - sql: part-d-ipm/errors/sql/04_apply_errors.sql      # final errors at pass-2 multiplier
+  - sql: part-d-ipm/errors/sql/03_init_calibration.sql  # error rates as stated (no calibration)
+  - sql: part-d-ipm/errors/sql/04_apply_errors.sql      # activate errors at the stated rates
   - sql: part-d-ipm/errors/sql/05_benefit.sql           # submitted vs corrected payments
   - sql: part-d-ipm/errors/sql/07_population_truth.sql  # truth
   - sql: part-d-ipm/errors/sql/08_checks.sql            # calibration checks
@@ -31,11 +25,12 @@ defaults:
   specialty_share: 0.03
   ltc_share: 0.04          # beneficiaries in long-term care (illustrative)
   ltc_pde_factor: 2.0      # LTC residents fill about twice as many PDEs
-  ltc_error_mult: 10.0     # an LTC claim is 10x as likely to be in error
+  error_rate: 0.025        # share of non-LTC claims in error (lowest cost decile and other)
+  ltc_error_rate: 0.10     # share of LTC claims in error
   full_error_share: 0.90   # 90% of errors are full (100% of GDC); the rest partial, uniform on [-1, 1)
   payment_target: 105560000000.0   # FY 2025 Part D payments ($105.56B)
-  target_over: 3700000000.0        # FY 2025 overpayments ($3.70B); gross = over + under is the calibration target
-  target_under: 520000000.0        # FY 2025 underpayments ($0.52B)
+  target_over: 3700000000.0        # FY 2025 overpayments ($3.70B): reported for comparison, not a target
+  target_under: 520000000.0        # FY 2025 underpayments ($0.52B): reported for comparison, not a target
   # CY 2025 standard benefit after the Inflation Reduction Act
   deductible: 590.0
   oop_threshold: 2000.0

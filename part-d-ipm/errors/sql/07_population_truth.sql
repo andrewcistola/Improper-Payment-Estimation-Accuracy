@@ -63,6 +63,11 @@ r AS (
               (overpayments - underpayments) / payments AS net_rate
     FROM a
 ),
+rates AS (   -- share of claims in error, LTC and other (targets 10% and 2.5%)
+    SELECT CASE WHEN ltc THEN 'claim_err_rate_ltc' ELSE 'claim_err_rate_other' END AS metric,
+           avg(active::INT)::DOUBLE AS value
+    FROM pde_detail GROUP BY 1
+),
 shares AS (  -- count shares among active PDE errors (targets: 90% full, 10% partial)
     SELECT error_type AS metric, count(*)::DOUBLE / sum(count(*)) OVER () AS value
     FROM pde_detail WHERE active GROUP BY error_type
@@ -71,6 +76,7 @@ SELECT 'overall' AS level, NULL::VARCHAR AS key, metric, value FROM r
 UNPIVOT (value FOR metric IN (n_units, payments, overpayments, underpayments, reinsurance, lics,
                               direct_subsidy, unit_err_rate, share_catastrophic, gross_rate, net_rate))
 UNION ALL SELECT 'error_type_share', 'pde_count', metric, value FROM shares
+UNION ALL SELECT 'overall', NULL, metric, value FROM rates
 UNION ALL
 SELECT 'calibration', 'pass_' || pass, metric, value FROM calib
 UNPIVOT (value FOR metric IN (m, realized_gross));

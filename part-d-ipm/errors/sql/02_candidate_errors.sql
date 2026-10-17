@@ -2,9 +2,8 @@
 -- partd errors/02_candidate_errors.sql : one candidate error per PDE
 -- ---------------------------------------------------------------------
 -- Every PDE carries a CANDIDATE error and an activation uniform u_act.
--- Step 04 activates it when u_act < m x (ltc_error_mult if LTC else 1),
--- one calibrated multiplier m (step 03), so an LTC claim is
--- ltc_error_mult (10) times as likely to be in error.
+-- Step 04 activates it when u_act < error rate: ltc_error_rate (10%) for
+-- long-term care claims, error_rate (2.5%) for all other claims.
 -- The error is a share of the PDE's gross drug cost (GDC):
 --   e = (submitted GDC - correct GDC) / submitted GDC,  -1 <= e <= 1
 --   full error     90% of errors: e = 1 (correct GDC = 0)
