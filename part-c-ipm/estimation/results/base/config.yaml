@@ -6,13 +6,13 @@ variables:
   population_dir: part-c-ipm/errors/output/base
   allocation:
   - stratum: low
-    n_h: 1500
+    n_h: 330
   - stratum: medium
-    n_h: 1500
+    n_h: 330
   - stratum: high
-    n_h: 1500
-  reps: 200
-  sim_reps: 50
+    n_h: 330
+  reps: 25
+  sim_reps: 25
   sim_iterations: 1000
   alpha: 0.05
   scenario: base

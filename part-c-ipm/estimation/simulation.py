@@ -1,24 +1,40 @@
-"""Part C: payment function and audit-finding bootstrap simulation kernel.
+"""Part C: payment function and bootstrap simulation kernel.
 
 Payment function (same as errors/sql/04_apply_errors.sql), per enrollee:
   HCC error  = sum over HCCs of  coef (deleted) | severe - mild (moved) | 0
   Delta-R    = (R0 - demographic score if missing documentation else HCC error)
                - mild coef of an additional HCC (if its family is not coded)
   y          = round(Delta-R x county rate x months, cents)
-Integer thousandths and cents reproduce errors/ exactly; checked in
-shared/tests/test_simulation.py.
+improper_cents() reproduces errors/ exactly (shared/tests/test_simulation.py).
 
-Audit findings transferred:
-  HCC level      : supported / deleted / hierarchy move, from audited HCCs
-                   of the same risk stratum, family and severity (fallback:
-                   same family and severity in any stratum)
-  enrollee level : (missing documentation, additional HCC family) from an
-                   audited enrollee of the same risk stratum that also has
-                   (or also lacks) coded HCCs
+Bootstrap simulation: rates from the audit year's audit, applied to the
+whole population, 1,000 iterations.
+  HCC failure rate, one per HCC (20 = 10 families x mild/severe):
+      f_k = audited instances of HCC k that failed / audited instances of k,
+      failed = deleted, moved down the hierarchy, or on a record with
+      missing documentation (which loses every coded HCC). A failed
+      instance loses L_k, the average risk score its HCC's audited
+      failures lost (full coefficient for deleted or missing
+      documentation, severe - mild for a move). An HCC with no audited
+      instances gets f_k = 0: no extrapolation.
+  HCC addition rate, one per family (10):
+      a_f = audited enrollees with family f added / audited enrollees
+      without family f coded. An addition subtracts the family's mild
+      coefficient (an underpayment).
+  Each iteration: every HCC instance of a non-audited enrollee fails with
+  probability f_k, and every non-audited enrollee without family f coded
+  gains it with probability a_f (independent draws). Audited enrollees
+  keep their own findings. Each enrollee's error is
+      y_i = round(Delta-R_i x county rate_i x months_i)   (cents)
+  over = sum of positive y_i, under = sum of -y_i where negative,
+  gross = over + under, net = over - under; each divided by total payments.
 """
 import numpy as np
 
-from ipsim.simulation import RowSet
+from ipsim.simulation import bernoulli_positions, round_half_away
+
+N_HCC, N_FAM = 20, 10
+DOMAINS = ("over", "under", "gross", "net")
 
 
 class Kernel:
@@ -34,27 +50,24 @@ class Kernel:
         self.rate = np.asarray(u["rate_cents"], dtype=np.int64)
         self.months = np.asarray(u["months"], dtype=np.int64)
         self.X = float(np.asarray(u["x_cents"]).sum())
+        self.y_cents = np.asarray(u["y_cents"], dtype=np.int64)
         self.md = np.asarray(u["missing_doc"], dtype=bool)
         self.add_fam = np.asarray(u["add_fam_code"], dtype=np.int64)
         self.mild = np.asarray(fam["mild_milli"], dtype=np.int64)
-        has_hcc = np.asarray(u["has_hcc"], dtype=bool)
-        stratum = np.asarray(u["stratum_code"], dtype=np.int64)
         self.row_unit = np.asarray(r["unit_idx"], dtype=np.int64)
         self.row_fam = np.asarray(r["fam_code"], dtype=np.int64)
+        self.hcc = np.asarray(r["hcc_code"], dtype=np.int64)
         self.paid = np.asarray(r["paid_milli"], dtype=np.int64)
         self.move = np.asarray(r["move_milli"], dtype=np.int64)
         self.outcome = np.asarray(r["outcome"], dtype=np.int64)
         # families coded per enrollee, as a bit mask (10 families)
         self.fam_mask = np.zeros(self.units, dtype=np.int64)
         np.bitwise_or.at(self.fam_mask, self.row_unit, np.left_shift(1, self.row_fam))
-        kind = np.asarray(r["kind"], dtype=np.int64)
-        fb = np.asarray(r["fallback"], dtype=np.int64)
-        fallback_of_kind = np.zeros(kind.max() + 1, dtype=np.int64)
-        fallback_of_kind[kind] = fb
-        self.hccs = RowSet(self.row_unit, self.units, kind=kind, identity=(self.outcome == 0),
-                           fallback_of_kind=fallback_of_kind)
-        self.enrollees = RowSet(np.arange(self.units), self.units, kind=stratum * 2 + has_hcc,
-                                identity=(~self.md) & (self.add_fam < 0))
+        # what each HCC instance actually lost on review (thousandths)
+        md_row = self.md[self.row_unit]
+        self.failed_row = (self.outcome != 0) | md_row
+        self.loss_row = np.where(md_row | (self.outcome == 1), self.paid,
+                                 np.where(self.outcome == 2, self.move, 0))
 
     def improper_cents(self, outcome, md, add_fam):
         """y per enrollee given HCC outcomes and enrollee-level findings."""
@@ -67,24 +80,50 @@ class Kernel:
         return np.sign(v) * ((np.abs(v) + 500) // 1000)                     # cents, half away
 
     def audited(self, rep):
-        s = self.con.execute("SELECT unit_id FROM sample WHERE rep = ? AND domain = 'national' "
+        s = self.con.execute("SELECT unit_id FROM sample WHERE rep = ? AND domain = 'national|gross' "
                              "ORDER BY unit_id", [rep]).fetchnumpy()
         return np.searchsorted(self.unit_id, np.asarray(s["unit_id"]))
 
     def prepare(self, rep, audited_mask):
-        self.hccs.prepare(audited_mask)
-        self.enrollees.prepare(audited_mask)
-        own_h = audited_mask[self.row_unit]
-        self._outcome = np.where(own_h, self.outcome, 0)     # audited keep their findings
-        self._md = np.where(audited_mask, self.md, False)
-        self._add = np.where(audited_mask, self.add_fam, -1)
+        """The audit year's rates, and which units and HCCs receive draws."""
+        aud_row = audited_mask[self.row_unit]
+        n_k = np.bincount(self.hcc[aud_row], minlength=N_HCC)
+        fail = aud_row & self.failed_row
+        nf_k = np.bincount(self.hcc[fail], minlength=N_HCC)
+        loss_k = np.bincount(self.hcc[fail], weights=self.loss_row[fail], minlength=N_HCC)
+        self.f_rate = np.where(n_k > 0, nf_k / np.maximum(n_k, 1), 0.0)     # 0 if not audited
+        self.f_loss = np.where(nf_k > 0, loss_k / np.maximum(nf_k, 1), 0.0)
+        recip = np.flatnonzero(~aud_row)
+        recip = recip[np.argsort(self.hcc[recip], kind="stable")]
+        bounds = np.searchsorted(self.hcc[recip], np.arange(N_HCC + 1))
+        self._recip_hcc = [recip[bounds[k]:bounds[k + 1]] for k in range(N_HCC)]
+        self.a_rate = np.zeros(N_FAM)
+        self._recip_add = []
+        for f in range(N_FAM):
+            lacks = ((self.fam_mask >> f) & 1) == 0
+            eligible = int((audited_mask & lacks).sum())
+            added = int((audited_mask & (self.add_fam == f)).sum())
+            self.a_rate[f] = added / eligible if eligible else 0.0
+            self._recip_add.append(np.flatnonzero(~audited_mask & lacks))
+        self._audited = audited_mask
 
     def iterate(self, donors, rng):
-        outcome, md, add = self._outcome.copy(), self._md.copy(), self._add.copy()
-        rows, d = self.hccs.assign(donors, rng)
-        outcome[rows] = self.outcome[d]
-        units, d = self.enrollees.assign(donors, rng)
-        md[units] = self.md[d]
-        add[units] = self.add_fam[d]
-        y = self.improper_cents(outcome, md, add)
-        return {"national": float(np.abs(y).sum()) / self.X}
+        """One iteration (donors = the audit; its rates were set in prepare)."""
+        rows, losses = [], []
+        for k in range(N_HCC):
+            if self.f_rate[k] > 0:
+                hit = self._recip_hcc[k][bernoulli_positions(len(self._recip_hcc[k]), self.f_rate[k], rng)]
+                rows.append(hit)
+                losses.append(np.full(len(hit), self.f_loss[k]))
+        rows = np.concatenate(rows) if rows else np.empty(0, dtype=np.int64)
+        losses = np.concatenate(losses) if losses else np.empty(0)
+        dr = np.bincount(self.row_unit[rows], weights=losses, minlength=self.units)   # thousandths
+        for f in range(N_FAM):
+            if self.a_rate[f] > 0:
+                gain = self._recip_add[f][bernoulli_positions(len(self._recip_add[f]), self.a_rate[f], rng)]
+                dr[gain] -= self.mild[f]
+        y = round_half_away(dr * (self.rate * self.months) / 1000.0)                 # cents
+        y = np.where(self._audited, self.y_cents, y)
+        over, under = float(y[y > 0].sum()), float(-y[y < 0].sum())
+        return {"national|over": over / self.X, "national|under": under / self.X,
+                "national|gross": (over + under) / self.X, "national|net": (over - under) / self.X}

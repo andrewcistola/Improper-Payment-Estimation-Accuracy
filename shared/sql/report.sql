@@ -61,6 +61,7 @@ SELECT e.program, e.scenario, e.domain, e.method, e."interval", e.rep AS audit_y
             WHEN t.true_rate < e.lower THEN 'above'      -- whole CI above the truth
             WHEN t.true_rate > e.upper THEN 'below'      -- whole CI below the truth
             ELSE 'inside' END AS truth_in_ci,
+       round(t.frame_paid * s.w_pop, 2) AS total_paid_usd,
        round(t.frame_improper * s.w_pop, 2) AS true_improper_usd,
        round(e.estimate * t.frame_paid * s.w_pop, 2) AS estimate_usd,
        round(e.lower * t.frame_paid * s.w_pop, 2) AS lower_usd,
@@ -80,6 +81,10 @@ SELECT program, scenario, domain, method, "interval",
        favg(estimate) AS mean_estimate,
        favg(lower) AS mean_lower,
        favg(upper) AS mean_upper,
+       favg(estimate_usd) AS mean_estimate_usd,     -- the same averages in national dollars
+       favg(lower_usd) AS mean_lower_usd,
+       favg(upper_usd) AS mean_upper_usd,
+       any_value(total_paid_usd) AS total_paid_usd,
        favg(error) AS mean_error,                   -- average signed error (bias)
        favg(abs(error)) AS mean_abs_error,          -- average distance from the truth
        favg(rel_error) AS mean_rel_error,           -- the same, relative to the true rate

@@ -134,7 +134,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 | `method` | `expansion`, `ratio`, `regression` or `simulation` (the audit-finding bootstrap simulation) |
 | `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
 | `rep` | Audit year (Monte Carlo replicate) number |
-| `domain` | What is estimated: `national`, or `<state>\|<component>` for PERM |
+| `domain` | What is estimated: `national` (Part D, EIPM, CERT); `national\|over`, `national\|under`, `national\|gross`, `national\|net` (Part C: overpayments, underpayments, gross = over + under, net = over − under); or `<state>\|<component>` for PERM |
 | `estimate` | Estimated improper payment rate (simulation: mean of the 1,000 iteration rates) |
 | `se` | Standard error: analytic for expansion, ratio and regression; standard deviation of the 1,000 iteration rates for simulation |
 | `lower`, `upper` | Two-sided 95% interval |
@@ -168,7 +168,7 @@ The report covers audit years 1 to `audit_years` (25, set in `shared/report.yaml
 | `estimate`, `lower`, `upper` | Point estimate and 95% CI from this audit year |
 | `error`, `rel_error` | Point estimate minus the true rate, and that difference ÷ the true rate |
 | `truth_in_ci` | `inside` (CI contains the truth), `above` (whole CI above it), `below`, or `undefined` |
-| `true_improper_usd`, `estimate_usd`, `lower_usd`, `upper_usd` | The same values in national dollars: rate × payments × `w_pop` |
+| `total_paid_usd`, `true_improper_usd`, `estimate_usd`, `lower_usd`, `upper_usd` | Total payments and the same values in national dollars: rate × payments × `w_pop`, each program's own factor (Part C 100, Part D 500, EIPM 100, PERM 200, CERT 1) |
 
 `by_scenario.csv` has one row per program × scenario × domain × method × interval:
 
@@ -177,6 +177,7 @@ The report covers audit years 1 to `audit_years` (25, set in `shared/report.yaml
 | `true_rate`, `true_improper_usd` | The fabricated truth |
 | `year1_estimate`, `year1_lower`, `year1_upper`, `year1_truth_in_ci` | Audit year 1 as a worked example |
 | `mean_estimate`, `mean_lower`, `mean_upper` | Averages over the reported audit years |
+| `mean_estimate_usd`, `mean_lower_usd`, `mean_upper_usd`, `total_paid_usd` | The same averages in national dollars, and total payments |
 | `mean_error`, `mean_abs_error` | Average signed error (bias) and average absolute error of the point estimate, in rate units |
 | `mean_rel_error`, `mean_abs_rel_error` | The same, relative to the true rate |
 | `n_audit_years`, `n_truth_inside`, `n_ci_above_truth`, `n_ci_below_truth`, `n_undefined` | Counts over the reported audit years |
