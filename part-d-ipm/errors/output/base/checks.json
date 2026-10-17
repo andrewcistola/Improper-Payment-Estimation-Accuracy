@@ -1,9 +1,9 @@
 [
   {
     "metric": "gross_rate",
-    "value": 0.039811862098000084,
+    "value": 0.040001071474914815,
     "target": 0.04,
-    "diff": -0.00018813790199991715,
+    "diff": 1.07147491481413e-06,
     "tolerance": 0.001,
     "rel": false,
     "status": "pass",
@@ -11,63 +11,53 @@
   },
   {
     "metric": "overpayments",
-    "value": 3691168710.0,
+    "value": 4188011365.0,
     "target": 3700000000.0,
-    "diff": -0.002386835135135157,
+    "diff": 0.1318949635135136,
     "tolerance": 0.05,
     "rel": true,
-    "status": "pass",
-    "source": "overpayments $3.70B"
+    "status": "FAIL",
+    "source": "overpayments $3.70B (not forced: outcome of the error model)"
   },
   {
     "metric": "payments",
-    "value": 105559981210.0,
+    "value": 105559914130.0,
     "target": 105560000000.0,
-    "diff": -1.7800303142578855e-07,
+    "diff": -8.134710117735366e-07,
     "tolerance": 0.001,
     "rel": true,
     "status": "pass",
     "source": "Part D payments $105.56B"
   },
   {
-    "metric": "share_drug_discrepancy",
-    "value": 0.07116991258455016,
-    "target": 0.0714,
-    "diff": -0.000230087415449845,
+    "metric": "share_full_error",
+    "value": 0.8999567307130076,
+    "target": 0.9,
+    "diff": -4.3269286992386746e-05,
     "tolerance": 0.01,
     "rel": false,
     "status": "pass",
-    "source": "7.14% of errors"
+    "source": "90% of errors are full (100% of GDC)"
   },
   {
-    "metric": "share_missing_documentation",
-    "value": 0.7493721865344909,
-    "target": 0.75,
-    "diff": -0.0006278134655091083,
+    "metric": "share_partial_error",
+    "value": 0.10004326928699232,
+    "target": 0.1,
+    "diff": 4.326928699231736e-05,
     "tolerance": 0.01,
     "rel": false,
     "status": "pass",
-    "source": "75.00% of errors"
-  },
-  {
-    "metric": "share_pricing",
-    "value": 0.17945790088095892,
-    "target": 0.1786,
-    "diff": 0.0008579008809589117,
-    "tolerance": 0.01,
-    "rel": false,
-    "status": "pass",
-    "source": "17.86% of errors"
+    "source": "10% of errors are partial"
   },
   {
     "metric": "underpayments",
-    "value": 511370705.0,
+    "value": 34498305.0,
     "target": 520000000.0,
-    "diff": -0.0165947980769231,
+    "diff": -0.9336571057692308,
     "tolerance": 0.1,
     "rel": true,
-    "status": "pass",
-    "source": "underpayments $0.52B"
+    "status": "FAIL",
+    "source": "underpayments $0.52B (not reachable with 90% full errors; reported)"
   },
   {
     "metric": "unique ids: pde_detail",

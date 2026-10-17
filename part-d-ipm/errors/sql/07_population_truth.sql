@@ -15,13 +15,12 @@ FROM bene_pay;
 CREATE OR REPLACE TABLE population AS
 WITH t AS (
     SELECT bene_id,
-           CASE WHEN bool_or(error_type = 'missing_documentation') THEN 'missing_documentation'
-                WHEN bool_or(error_type = 'pricing') THEN 'pricing'
-                WHEN bool_or(error_type = 'drug_discrepancy') THEN 'drug_discrepancy'
+           CASE WHEN bool_or(error_type = 'full_error') THEN 'full_error'
+                WHEN bool_or(error_type = 'partial_error') THEN 'partial_error'
                 ELSE 'none' END AS error_type
     FROM pde_versions WHERE version = 'submitted' GROUP BY bene_id
 )
-SELECT p.bene_id AS unit_id, 'all' AS stratum, e.lis, e.n_pde,
+SELECT p.bene_id AS unit_id, 'all' AS stratum, e.lis, e.ltc, e.n_pde,
        p.gdc_sub, p.gdc_cor, p.reins_sub, p.lics_sub, p.reached_catastrophic, p.n_err_pde,
        d.ds AS direct_subsidy,
        (d.ds + p.medicare_pde_sub)::DECIMAL(18, 2) AS x,
@@ -33,10 +32,10 @@ FROM bene_pay p JOIN benes e USING (bene_id) JOIN t USING (bene_id), direct_subs
 
 -- PDE-level trace: submitted vs corrected liability for every PDE
 CREATE OR REPLACE TABLE pde_detail AS
-SELECT p.bene_id, p.pde_id, p.fill_day, p.lis, p.brand, p.specialty,
+SELECT p.bene_id, p.pde_id, p.fill_day, p.lis, p.ltc, p.brand, p.specialty,
        p.ingredient_cost, p.dispensing_fee, p.sales_tax, p.vaccine_admin_fee,
        p.gdc AS gdc_submitted, c.gdc AS gdc_corrected,
-       p.cand_type, p.cand_dir, s.active, s.error_type,
+       p.cand_type, p.cand_dir, p.cand_e, s.active, s.error_type,
        s.ded_amt AS ded_sub, s.ini_amt AS ini_sub, s.cat_amt AS cat_sub,
        s.reinsurance AS reins_sub, c.reinsurance AS reins_cor,
        s.lics AS lics_sub, c.lics AS lics_cor,
@@ -64,7 +63,7 @@ r AS (
               (overpayments - underpayments) / payments AS net_rate
     FROM a
 ),
-shares AS (  -- count shares among active PDE errors (FY 2025 targets 75.00 / 17.86 / 7.14)
+shares AS (  -- count shares among active PDE errors (targets: 90% full, 10% partial)
     SELECT error_type AS metric, count(*)::DOUBLE / sum(count(*)) OVER () AS value
     FROM pde_detail WHERE active GROUP BY error_type
 )

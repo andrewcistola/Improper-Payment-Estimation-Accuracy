@@ -29,6 +29,10 @@ defaults:
   w_pop: 500.0
   lis_share: 0.25
   specialty_share: 0.03
+  ltc_share: 0.04          # beneficiaries in long-term care (illustrative)
+  ltc_pde_factor: 2.0      # LTC residents fill about twice as many PDEs
+  ltc_error_mult: 10.0     # an LTC claim is 10x as likely to be in error
+  full_error_share: 0.90   # 90% of errors are full (100% of GDC); the rest partial, uniform on [-1, 1)
   payment_target: 105560000000.0   # FY 2025 Part D payments ($105.56B)
   target_over: 3700000000.0        # FY 2025 overpayments ($3.70B); gross = over + under is the calibration target
   target_under: 520000000.0        # FY 2025 underpayments ($0.52B)
@@ -45,8 +49,9 @@ defaults:
 scenarios:
   - name: base
 design:
-  unit: beneficiary (cluster of PDEs)
+  unit: beneficiary (cluster of PDEs); PDE for the claim-level audit
   frame: all Part D beneficiaries with PDEs
-  selection: srs_without_replacement   # random beneficiary selection since FY 2025
-  strata: [{stratum: all, n: 1500}]    # sample size NOT public; illustrative
-  estimand: gross improper payment rate = sum |y| / sum x (y from re-running the benefit on corrected PDEs)
+  beneficiary_audit: {selection: srs_without_replacement, n: 990}   # ratio, regression; NOT public; illustrative
+  pde_audit: {selection: stratified_srs, n: 5000, allocation: neyman,
+              strata: [a_ltc, b_non_ltc_lowest_cost_decile, c_non_ltc_other]}   # expansion, bootstrap simulation
+  estimand: overpayments, underpayments, gross, net (y from re-running the benefit on corrected PDEs, netted per beneficiary) / total payments

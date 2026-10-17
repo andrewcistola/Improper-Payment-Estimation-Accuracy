@@ -6,34 +6,33 @@
         "realized_gross": 0.0
       },
       "pass_1": {
-        "m": 0.10349564,
-        "realized_gross": 8079321.46
+        "m": 0.05780629,
+        "realized_gross": 8770070.19
       },
       "pass_2": {
-        "m": 0.10811591,
-        "realized_gross": 8405078.83
+        "m": 0.05563069,
+        "realized_gross": 8445019.34
       }
     },
     "error_type_share": {
       "pde_count": {
-        "drug_discrepancy": 0.07116991258455016,
-        "missing_documentation": 0.7493721865344909,
-        "pricing": 0.17945790088095892
+        "full_error": 0.8999567307130076,
+        "partial_error": 0.10004326928699232
       }
     }
   },
   "overall": {
-    "direct_subsidy": 62733420000.0,
-    "gross_rate": 0.039811862098000084,
-    "lics": 11772939470.0,
+    "direct_subsidy": 60811560000.0,
+    "gross_rate": 0.040001071474914815,
+    "lics": 11935654900.0,
     "n_units": 108000.0,
-    "net_rate": 0.030123139172165452,
-    "overpayments": 3691168710.0,
-    "payments": 105559981210.0,
-    "reinsurance": 31053621740.0,
-    "share_catastrophic": 0.1323888888888889,
-    "underpayments": 511370705.0,
-    "unit_err_rate": 0.3023425925925926
+    "net_rate": 0.03934744636950758,
+    "overpayments": 4188011365.0,
+    "payments": 105559914130.0,
+    "reinsurance": 32812699230.0,
+    "share_catastrophic": 0.1403611111111111,
+    "underpayments": 34498305.0,
+    "unit_err_rate": 0.26107407407407407
   },
   "program": "partd",
   "scenario": "base"

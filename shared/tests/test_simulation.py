@@ -72,27 +72,43 @@ def test_part_c_bootstrap_rates():
     assert abs(net / (y.sum() / k.X) - 1) < 0.01
 
 
-def test_part_d_payment_function_exact():
+def partd_kernel(extra=None):
     cfg = yaml.safe_load((ROOT / "part-d-ipm/errors/config.yaml").read_text())["defaults"]
-    v = {**cfg, "seed": 1, "sim_reps": 1, "sim_audit_size": 10, "sim_bene_size": 10}
+    v = {**cfg, "seed": 1, "sim_reps": 1, "sim_audit_size": 300, **(extra or {})}
     if not (ROOT / "part-d-ipm/errors/output/base/pde_detail.parquet").exists():
         pytest.skip("build part-d-ipm/errors first")
     con = setup("part-d-ipm/errors/output/base", "part-d-ipm/estimation/sql/40_simulation_inputs.sql", v)
-    mod = load_kernel(ROOT / "part-d-ipm/estimation/simulation.py")
+    return con, load_kernel(ROOT / "part-d-ipm/estimation/simulation.py"), v
+
+
+def test_part_d_payment_function_exact():
+    """The numpy benefit rerun reproduces errors/ y to the cent; an audit of
+    every PDE gives the exact rates; the PDE audit has the Neyman sizes."""
+    con, mod, v = partd_kernel()
     k = mod.Kernel(con, v)
-    truth = con.execute("SELECT y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()["y_cents"]
-    assert np.array_equal(k.improper_cents(k.cor), truth)
-    # the fused per-iteration loop gives the same answer with every claim audited
-    m = mod.drawn_medicare(np.arange(k.n_benes), k.start, k.count, k.sub, k.cor, np.ones(k.units, bool),
-                           k.brand, k.lis, np.zeros(k.units), np.zeros(2), np.zeros(3, np.int64), np.zeros(0), *k.p)
-    assert np.array_equal(k.m_sub - m, truth)
-    # the audit year's beneficiary sample is fixed: with every claim audited,
-    # every iteration gives the same rate, the exact rate over that sample
-    benes = con.execute("SELECT unit_idx FROM sim_bene_sample WHERE rep = 1").fetchnumpy()["unit_idx"]
-    assert len(benes) == 10
+    assert np.array_equal(k.improper_cents(k.cor), k.y_true)
     k.prepare(1, np.ones(k.units, bool))
-    rates = [k.iterate(np.arange(k.units), np.random.default_rng(s))["national"] for s in (1, 2)]
-    assert rates[0] == rates[1] == np.abs(truth[benes]).sum() / k.x[benes].sum()
+    y = k.y_true.astype(float)
+    over, under = y[y > 0].sum(), -y[y < 0].sum()
+    assert k.iterate(None, np.random.default_rng(1)) == {
+        "national|over": over / k.X, "national|under": under / k.X,
+        "national|gross": (over + under) / k.X, "national|net": (over - under) / k.X}
+    n_h = dict(con.execute("SELECT stratum_code, n_h FROM pde_strata").fetchall())
+    got = dict(con.execute("SELECT r.stratum_code, count(*) FROM sim_audit_sample a JOIN sim_rows r USING (row_idx) "
+                           "GROUP BY 1").fetchall())
+    assert got == n_h and sum(n_h.values()) == 300 and min(n_h.values()) >= 2
+
+
+def test_part_d_bootstrap_rates_unbiased():
+    """With a large audit, both rate versions reproduce the true gross rate."""
+    con, mod, v = partd_kernel()
+    rng = np.random.default_rng(3)
+    for rates in ("fixed", "parametric"):
+        k = mod.Kernel(con, {**v, "sim_rates": rates})
+        k.prepare(1, rng.random(k.units) < 0.3)
+        y = k.y_true.astype(float)
+        gross = np.mean([k.iterate(None, rng)["national|gross"] for _ in range(3)])
+        assert abs(gross / (np.abs(y).sum() / k.X) - 1) < 0.02
 
 
 def test_eipm_payment_function_exact():

@@ -7,6 +7,10 @@ variables:
   w_pop: 500.0
   lis_share: 0.25
   specialty_share: 0.03
+  ltc_share: 0.04
+  ltc_pde_factor: 2.0
+  ltc_error_mult: 10.0
+  full_error_share: 0.9
   payment_target: 105560000000.0
   target_over: 3700000000.0
   target_under: 520000000.0
