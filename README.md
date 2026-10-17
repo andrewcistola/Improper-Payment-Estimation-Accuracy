@@ -54,16 +54,16 @@ Add `--set reps=20 sim_reps=3 sim_iterations=100` (20 audit years, 3 of them run
 
 > **Reworking program by program.** Each program's audit design, population and methods are being revised in turn. Part C is done; the other programs are placeholders until theirs is.
 
-Each row averages the 25 audit years: the true gross improper payment, the average estimate, and the average upper and lower bounds of the 95% interval. Gross = overpayments + underpayments. Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200; CERT is not scaled). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years)).
+Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments. Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200; CERT is not scaled). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years)).
 
 **Gross improper payments (national dollars)**
 
 | Program | Method | True gross | Estimated gross | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Part C (audit of 990) | Expansion | $23.57B | $23.83B | $27.99B | $19.66B |
-|  | Ratio | $23.57B | $23.77B | $27.94B | $19.61B |
-|  | Regression | $23.57B | $23.82B | $27.91B | $19.73B |
-|  | Bootstrap simulation | $23.57B | $23.55B | $23.75B | $23.34B |
+| Part C (audit of 990) | Expansion | $23.57B | $23.92B | $27.96B | $19.69B |
+|  | Ratio | $23.57B | $23.82B | $27.81B | $19.83B |
+|  | Regression | $23.57B | $23.94B | $27.78B | $20.05B |
+|  | Bootstrap simulation | $23.57B | $23.56B | $23.76B | $23.35B |
 | Part D | | _pending rework_ | | | |
 | PERM | | _pending rework_ | | | |
 | EIPM | | _pending rework_ | | | |
@@ -73,9 +73,9 @@ Each row averages the 25 audit years: the true gross improper payment, the avera
 
 | Program | Method | True gross | Estimated gross | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Part C (audit of 990) | Expansion | 6.06% | 6.13% | 7.20% | 5.06% |
-|  | Ratio | 6.06% | 6.12% | 7.19% | 5.04% |
-|  | Regression | 6.06% | 6.13% | 7.18% | 5.08% |
+| Part C (audit of 990) | Expansion | 6.06% | 6.15% | 7.19% | 5.06% |
+|  | Ratio | 6.06% | 6.13% | 7.16% | 5.10% |
+|  | Regression | 6.06% | 6.16% | 7.15% | 5.16% |
 |  | Bootstrap simulation | 6.06% | 6.06% | 6.11% | 6.01% |
 | Part D | | _pending rework_ | | | |
 | PERM | | _pending rework_ | | | |

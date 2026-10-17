@@ -19,8 +19,8 @@
 --                   the national scale.
 --   by_scenario   : one row per program x scenario x domain x method x
 --                   interval: the truth, audit year 1's estimate and CI as
---                   a worked example, the average estimate and CI over the
---                   reported audit years, the average error of the point
+--                   a worked example, the average and the median estimate
+--                   and CI bounds over the reported audit years, the average error of the point
 --                   estimate (signed and absolute), and how many CIs
 --                   contain the truth.
 -- National dollars = rate x frame payments (X) x w_pop, where w_pop is the
@@ -85,6 +85,12 @@ SELECT program, scenario, domain, method, "interval",
        favg(lower_usd) AS mean_lower_usd,
        favg(upper_usd) AS mean_upper_usd,
        any_value(total_paid_usd) AS total_paid_usd,
+       median(estimate) AS median_estimate,         -- medians over the reported audit years (25: the 13th value)
+       median(lower) AS median_lower,
+       median(upper) AS median_upper,
+       median(estimate_usd) AS median_estimate_usd,
+       median(lower_usd) AS median_lower_usd,
+       median(upper_usd) AS median_upper_usd,
        favg(error) AS mean_error,                   -- average signed error (bias)
        favg(abs(error)) AS mean_abs_error,          -- average distance from the truth
        favg(rel_error) AS mean_rel_error,           -- the same, relative to the true rate
