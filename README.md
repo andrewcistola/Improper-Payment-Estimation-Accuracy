@@ -64,10 +64,10 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 |  | Ratio | $23.57B | $23.82B | $27.81B | $19.83B |
 |  | Regression | $23.57B | $23.94B | $27.78B | $20.05B |
 |  | Bootstrap simulation (fixed rates) | $23.57B | $23.56B | $23.76B | $23.35B |
-| Part D (PDE audit of 5,000; beneficiary audit of 990) | Expansion | $4.22B | $4.08B | $5.14B | $2.93B |
-|  | Ratio | $4.22B | $3.86B | $5.35B | $2.50B |
-|  | Regression | $4.22B | $4.03B | $5.36B | $2.53B |
-|  | Bootstrap simulation (fixed rates) | $4.22B | $4.22B | $4.31B | $4.12B |
+| Part D (PDE audit of 5,000; beneficiary audit of 990) | Expansion | $1.46B | $1.28B | $1.95B | $0.57B |
+|  | Ratio | $1.46B | $1.49B | $2.22B | $0.74B |
+|  | Regression | $1.46B | $1.48B | $2.22B | $0.77B |
+|  | Bootstrap simulation (fixed rates) | $1.46B | $1.46B | $1.52B | $1.39B |
 | PERM | | _pending rework_ | | | |
 | EIPM | | _pending rework_ | | | |
 | CERT | | _pending rework_ | | | |
@@ -80,10 +80,10 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 |  | Ratio | 6.06% | 6.13% | 7.16% | 5.10% |
 |  | Regression | 6.06% | 6.16% | 7.15% | 5.16% |
 |  | Bootstrap simulation (fixed rates) | 6.06% | 6.06% | 6.11% | 6.01% |
-| Part D (PDE audit of 5,000; beneficiary audit of 990) | Expansion | 4.00% | 3.87% | 4.87% | 2.77% |
-|  | Ratio | 4.00% | 3.65% | 5.07% | 2.37% |
-|  | Regression | 4.00% | 3.82% | 5.08% | 2.39% |
-|  | Bootstrap simulation (fixed rates) | 4.00% | 4.00% | 4.09% | 3.91% |
+| Part D (PDE audit of 5,000; beneficiary audit of 990) | Expansion | 1.38% | 1.22% | 1.85% | 0.54% |
+|  | Ratio | 1.38% | 1.41% | 2.10% | 0.70% |
+|  | Regression | 1.38% | 1.41% | 2.11% | 0.73% |
+|  | Bootstrap simulation (fixed rates) | 1.38% | 1.38% | 1.44% | 1.32% |
 | PERM | | _pending rework_ | | | |
 | EIPM | | _pending rework_ | | | |
 | CERT | | _pending rework_ | | | |
