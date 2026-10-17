@@ -46,19 +46,19 @@ Each row gives the true value and, over the 25 audit years, the median point est
 | Overpayments | Expansion | $21.34B | $22.00B | $25.97B | $17.76B |
 |  | Ratio | $21.34B | $21.92B | $25.75B | $17.74B |
 |  | Regression | $21.34B | $22.07B | $26.02B | $18.09B |
-|  | Bootstrap simulation | $21.34B | $21.99B | $22.18B | $21.80B |
+|  | Bootstrap simulation (fixed rates) | $21.34B | $21.99B | $22.18B | $21.80B |
 | Underpayments | Expansion | $2.23B | $2.07B | $3.09B | $1.05B |
 |  | Ratio | $2.23B | $2.05B | $3.11B | $1.00B |
 |  | Regression | $2.23B | $2.08B | $3.08B | $0.98B |
-|  | Bootstrap simulation | $2.23B | $1.88B | $1.93B | $1.82B |
+|  | Bootstrap simulation (fixed rates) | $2.23B | $1.88B | $1.93B | $1.82B |
 | Gross | Expansion | $23.57B | $23.92B | $27.96B | $19.69B |
 |  | Ratio | $23.57B | $23.82B | $27.81B | $19.83B |
 |  | Regression | $23.57B | $23.94B | $27.78B | $20.05B |
-|  | Bootstrap simulation | $23.57B | $23.56B | $23.76B | $23.35B |
+|  | Bootstrap simulation (fixed rates) | $23.57B | $23.56B | $23.76B | $23.35B |
 | Net | Expansion | $19.10B | $19.79B | $24.12B | $15.50B |
 |  | Ratio | $19.10B | $19.85B | $23.89B | $15.37B |
 |  | Regression | $19.10B | $19.63B | $23.57B | $15.36B |
-|  | Bootstrap simulation | $19.10B | $19.87B | $20.10B | $19.65B |
+|  | Bootstrap simulation (fixed rates) | $19.10B | $19.87B | $20.10B | $19.65B |
 
 **Rates**
 
@@ -67,23 +67,23 @@ Each row gives the true value and, over the 25 audit years, the median point est
 | Overpayments | Expansion | 5.49% | 5.66% | 6.68% | 4.57% |
 |  | Ratio | 5.49% | 5.64% | 6.62% | 4.56% |
 |  | Regression | 5.49% | 5.68% | 6.69% | 4.65% |
-|  | Bootstrap simulation | 5.49% | 5.66% | 5.70% | 5.61% |
+|  | Bootstrap simulation (fixed rates) | 5.49% | 5.66% | 5.70% | 5.61% |
 | Underpayments | Expansion | 0.57% | 0.53% | 0.79% | 0.27% |
 |  | Ratio | 0.57% | 0.53% | 0.80% | 0.26% |
 |  | Regression | 0.57% | 0.53% | 0.79% | 0.25% |
-|  | Bootstrap simulation | 0.57% | 0.48% | 0.50% | 0.47% |
+|  | Bootstrap simulation (fixed rates) | 0.57% | 0.48% | 0.50% | 0.47% |
 | Gross | Expansion | 6.06% | 6.15% | 7.19% | 5.06% |
 |  | Ratio | 6.06% | 6.13% | 7.16% | 5.10% |
 |  | Regression | 6.06% | 6.16% | 7.15% | 5.16% |
-|  | Bootstrap simulation | 6.06% | 6.06% | 6.11% | 6.01% |
+|  | Bootstrap simulation (fixed rates) | 6.06% | 6.06% | 6.11% | 6.01% |
 | Net | Expansion | 4.91% | 5.09% | 6.20% | 3.99% |
 |  | Ratio | 4.91% | 5.11% | 6.15% | 3.95% |
 |  | Regression | 4.91% | 5.05% | 6.06% | 3.95% |
-|  | Bootstrap simulation | 4.91% | 5.11% | 5.17% | 5.06% |
+|  | Bootstrap simulation (fixed rates) | 4.91% | 5.11% | 5.17% | 5.06% |
 
 **How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
 
-| Measure | Expansion | Ratio | Regression | Bootstrap simulation |
+| Measure | Expansion | Ratio | Regression | Bootstrap simulation (fixed rates) |
 |---|---|---|---|---|
 | Overpayments | 25/25 (0/0) | 25/25 (0/0) | 24/25 (1/0) | 3/25 (13/9) |
 | Underpayments | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 2/25 (4/19) |
