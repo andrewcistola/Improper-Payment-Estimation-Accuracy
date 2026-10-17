@@ -32,3 +32,60 @@ Two audits per audit year (25 audit years):
   - **Bootstrap simulation, parametric rates** (`sim_rates: parametric`): before each iteration, each stratum's error rate and partial-error share are redrawn as Binomial(n, f/n)/n and Binomial(f, g/f)/f; partial sizes from the stratum's audited partial errors.
 
 All methods are scored in `90_score.sql`.
+
+## Results (25 audit years)
+
+Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 500); rates are dollars ÷ total payments ($105.6B).
+
+**Dollars**
+
+| Measure | Method | True | Estimated | Upper bound | Lower bound |
+|---|---|---|---|---|---|
+| Overpayments | Expansion | $4.19B | $4.08B | $5.14B | $2.93B |
+|  | Ratio | $4.19B | $3.83B | $5.34B | $2.46B |
+|  | Regression | $4.19B | $4.02B | $5.35B | $2.48B |
+|  | Bootstrap simulation (fixed rates) | $4.19B | $4.19B | $4.28B | $4.09B |
+| Underpayments | Expansion | $0.03B | $0.00B | $0.00B | $0.00B |
+|  | Ratio | $0.03B | $0.02B | $0.04B | $0.00B |
+|  | Regression | $0.03B | $0.02B | $0.04B | $0.00B |
+|  | Bootstrap simulation (fixed rates) | $0.03B | $0.04B | $0.05B | $0.03B |
+| Gross | Expansion | $4.22B | $4.08B | $5.14B | $2.93B |
+|  | Ratio | $4.22B | $3.86B | $5.35B | $2.50B |
+|  | Regression | $4.22B | $4.03B | $5.36B | $2.53B |
+|  | Bootstrap simulation (fixed rates) | $4.22B | $4.22B | $4.31B | $4.12B |
+| Net | Expansion | $4.15B | $4.08B | $5.14B | $2.93B |
+|  | Ratio | $4.15B | $3.81B | $5.33B | $2.42B |
+|  | Regression | $4.15B | $4.01B | $5.34B | $2.42B |
+|  | Bootstrap simulation (fixed rates) | $4.15B | $4.15B | $4.25B | $4.05B |
+
+**Rates**
+
+| Measure | Method | True | Estimated | Upper bound | Lower bound |
+|---|---|---|---|---|---|
+| Overpayments | Expansion | 3.97% | 3.87% | 4.87% | 2.77% |
+|  | Ratio | 3.97% | 3.63% | 5.06% | 2.33% |
+|  | Regression | 3.97% | 3.81% | 5.07% | 2.35% |
+|  | Bootstrap simulation (fixed rates) | 3.97% | 3.97% | 4.05% | 3.87% |
+| Underpayments | Expansion | 0.03% | 0.00% | 0.00% | 0.00% |
+|  | Ratio | 0.03% | 0.02% | 0.03% | 0.00% |
+|  | Regression | 0.03% | 0.02% | 0.03% | 0.00% |
+|  | Bootstrap simulation (fixed rates) | 0.03% | 0.04% | 0.04% | 0.03% |
+| Gross | Expansion | 4.00% | 3.87% | 4.87% | 2.77% |
+|  | Ratio | 4.00% | 3.65% | 5.07% | 2.37% |
+|  | Regression | 4.00% | 3.82% | 5.08% | 2.39% |
+|  | Bootstrap simulation (fixed rates) | 4.00% | 4.00% | 4.09% | 3.91% |
+| Net | Expansion | 3.93% | 3.87% | 4.87% | 2.77% |
+|  | Ratio | 3.93% | 3.61% | 5.05% | 2.30% |
+|  | Regression | 3.93% | 3.80% | 5.06% | 2.29% |
+|  | Bootstrap simulation (fixed rates) | 3.93% | 3.93% | 4.03% | 3.84% |
+
+**How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
+
+| Measure | Expansion | Ratio | Regression | Bootstrap simulation (fixed rates) |
+|---|---|---|---|---|
+| Overpayments | 20/25 (0/5) | 21/25 (0/4) | 20/25 (1/4) | 9/25 (8/8) |
+| Underpayments | 0/25 (0/25) | 14/25 (0/11) | 15/25 (0/10) | 15/25 (7/3) |
+| Gross | 20/25 (0/5) | 21/25 (0/4) | 20/25 (1/4) | 9/25 (8/8) |
+| Net | 20/25 (0/5) | 22/25 (0/3) | 20/25 (1/4) | 9/25 (8/8) |
+
+From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).

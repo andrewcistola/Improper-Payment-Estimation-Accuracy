@@ -6,20 +6,21 @@ variables:
   population_dir: part-d-ipm/errors/output/base
   allocation:
   - stratum: all
-    n_h: 1500
-  reps: 200
+    n_h: 990
+  reps: 25
   sim_reps: 25
   sim_iterations: 1000
   sim_audit_size: 5000
-  sim_bene_size: 108000
+  sim_rates: fixed
   alpha: 0.05
   scenario: base
 steps:
 - sql: part-d-ipm/estimation/sql/01_frame.sql
 - sql: shared/sql/sample_srs.sql
-- sql: part-d-ipm/estimation/sql/10_expansion.sql
 - sql: part-d-ipm/estimation/sql/20_ratio.sql
 - sql: part-d-ipm/estimation/sql/30_regression.sql
 - sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql
+- python: part-d-ipm/estimation/simulation.py
+  run: run_expansion
 - python: part-d-ipm/estimation/simulation.py
 - sql: part-d-ipm/estimation/sql/90_score.sql
