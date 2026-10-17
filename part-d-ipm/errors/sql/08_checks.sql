@@ -14,12 +14,11 @@ WITH t AS (
 targets AS (
     SELECT * FROM (VALUES
         ('gross_rate',                  0.0400,    0.0010, false, 'gross improper rate 4.00%'),
-        ('overpayments',                3.70e9,    0.05,   true,  'overpayments $3.70B'),
-        ('underpayments',               0.52e9,    0.10,   true,  'underpayments $0.52B'),
+        ('overpayments',                3.70e9,    0.05,   true,  'overpayments $3.70B (not forced: outcome of the error model)'),
+        ('underpayments',               0.52e9,    0.10,   true,  'underpayments $0.52B (not reachable with 90% full errors; reported)'),
         ('payments',                    105.56e9,  0.001,  true,  'Part D payments $105.56B'),
-        ('share_missing_documentation', 0.7500,    0.01,   false, '75.00% of errors'),
-        ('share_pricing',               0.1786,    0.01,   false, '17.86% of errors'),
-        ('share_drug_discrepancy',      0.0714,    0.01,   false, '7.14% of errors')
+        ('share_full_error',            0.9000,    0.01,   false, '90% of errors are full (100% of GDC)'),
+        ('share_partial_error',         0.1000,    0.01,   false, '10% of errors are partial')
     ) v(metric, target, tolerance, rel, source)
 )
 SELECT g.metric, t.value, g.target,

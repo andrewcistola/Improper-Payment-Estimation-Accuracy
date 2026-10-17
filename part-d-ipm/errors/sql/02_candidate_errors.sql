@@ -1,16 +1,16 @@
 -- =====================================================================
 -- partd errors/02_candidate_errors.sql : one candidate error per PDE
 -- ---------------------------------------------------------------------
--- Every PDE carries a CANDIDATE error (type, direction, corrected GDC)
--- and an activation uniform u_act. Step 04 activates a candidate when
--- u_act < m, one calibrated multiplier for all types (see step 03).
--- Error types and base relative probabilities (FY 2025 count shares of
--- sampled errors): missing/invalid documentation 75.00% (all-or-nothing,
--- corrected GDC = 0), pricing 17.86% (partial +/- ~12% of GDC, 40% are
--- underpayments), drug discrepancy 7.14% (half are a costlier drug
--- supported by the record -> underpayment; half a cheaper one).
--- One multiplier m applies to all types, so active errors keep the
--- published type shares in expectation.
+-- Every PDE carries a CANDIDATE error and an activation uniform u_act.
+-- Step 04 activates it when u_act < m x (ltc_error_mult if LTC else 1),
+-- one calibrated multiplier m (step 03), so an LTC claim is
+-- ltc_error_mult (10) times as likely to be in error.
+-- The error is a share of the PDE's gross drug cost (GDC):
+--   e = (submitted GDC - correct GDC) / submitted GDC,  -1 <= e <= 1
+--   full error     90% of errors: e = 1 (correct GDC = 0)
+--   partial error  10% of errors: e uniform on [-1, 1); e < 0 is an
+--                  underpayment (at e = -1 the correct GDC is double)
+--   correct GDC = round(GDC x (1 - e))
 -- =====================================================================
 
 -- Step 3. Candidate error per PDE (not yet active).
@@ -18,28 +18,17 @@ CREATE OR REPLACE TABLE pdes AS
 WITH t AS (
     SELECT *,
            u01(getvariable('seed'), 'etype', pde_id) AS u_type,
-           u01(getvariable('seed'), 'edir', pde_id) AS u_dir,
-           rkuma(getvariable('seed'), 'emag', pde_id, 1.5, 6.0) AS f_price,          -- mean ~0.12
-           rlnorm(getvariable('seed'), 'emag_dd', pde_id, 0.0, 0.5) AS f_drug,
+           -1.0 + 2.0 * u01(getvariable('seed'), 'emag', pde_id) AS e_partial,
            u01(getvariable('seed'), 'act', pde_id) AS u_act
     FROM pdes
 ),
 k AS (
     SELECT *,
-           CASE WHEN u_type < 0.7500 THEN 'missing_documentation'
-                WHEN u_type < 0.9286 THEN 'pricing'
-                ELSE 'drug_discrepancy' END AS cand_type
+           CASE WHEN u_type < getvariable('full_error_share') THEN 'full_error' ELSE 'partial_error' END AS cand_type
     FROM t
 )
 SELECT *,
-       CASE cand_type WHEN 'missing_documentation' THEN 'over'
-                      WHEN 'pricing' THEN CASE WHEN u_dir < 0.40 THEN 'under' ELSE 'over' END
-                      ELSE CASE WHEN u_dir < 0.50 THEN 'under' ELSE 'over' END END AS cand_dir,
-       CASE cand_type
-            WHEN 'missing_documentation' THEN usd(0)
-            WHEN 'pricing' THEN CASE WHEN u_dir < 0.40 THEN usd(gdc * (1 + f_price))
-                                     ELSE usd(gdc * (1 - f_price)) END
-            ELSE CASE WHEN u_dir < 0.50 THEN usd(gdc * (1 + 3.5 * f_drug))               -- costlier drug (factor tuned once to the public over/under split)
-                      ELSE usd(gdc * greatest(0.0, 1 - abs(f_drug - 1) - 0.05)) END   -- cheaper drug
-       END AS cand_gdc
+       CASE WHEN cand_type = 'full_error' THEN 1.0 ELSE e_partial END AS cand_e,
+       CASE WHEN cand_type = 'full_error' OR e_partial >= 0 THEN 'over' ELSE 'under' END AS cand_dir,
+       usd(gdc * (1 - CASE WHEN cand_type = 'full_error' THEN 1.0 ELSE e_partial END)) AS cand_gdc
 FROM k;

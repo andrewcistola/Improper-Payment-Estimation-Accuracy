@@ -1,12 +1,14 @@
 -- =====================================================================
 -- partd errors/03_init_calibration.sql : start with no active errors
 -- ---------------------------------------------------------------------
--- Each PDE's candidate type was drawn in step 02 with the published
--- shares (0.7500 / 0.1786 / 0.0714); every candidate then becomes active
--- with the same probability m, so active errors keep those shares.
+-- Each PDE's candidate (full 90% / partial 10%) was drawn in step 02;
+-- a candidate becomes active with probability m (x ltc_error_mult for
+-- LTC claims), so active errors keep the 90/10 split within each group.
 -- m is calibrated to GROSS improper dollars (over + under = $4.22B).
 -- The over/under split is NOT forced; it follows from the error
--- directions and sizes in step 02 and is reported against $3.70B/$0.52B.
+-- shares in step 02 and is reported against $3.70B/$0.52B. (With 90%
+-- full errors and partial errors uniform on [-1, 1), underpayments
+-- cannot reach 14% of overpayments.)
 -- Pass 0: m = 0 (no errors) -> benefit run gives submitted payments.
 -- Pass 1: m from a linear expectation (each PDE's marginal Medicare
 --         share of its submitted dollars).

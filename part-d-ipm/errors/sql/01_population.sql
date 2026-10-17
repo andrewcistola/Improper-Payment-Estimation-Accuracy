@@ -4,6 +4,9 @@
 -- Application 1: claim-level errors that flow through a benefit design
 -- to a reinsurance / subsidy payment (Part D-like).
 -- GDC = ingredient cost + dispensing fee + sales tax + vaccine admin fee
+-- Long-term care (LTC): a share ltc_share of beneficiaries live in LTC
+-- facilities; all their PDEs are LTC claims, and they fill about
+-- ltc_pde_factor times as many PDEs.
 -- Output: benes, pdes (submitted, error-free)
 -- =====================================================================
 
@@ -12,13 +15,18 @@ CREATE OR REPLACE TABLE benes AS
 SELECT i AS bene_id,
        u01(getvariable('seed'), 'lis', i) < getvariable('lis_share') AS lis,
        u01(getvariable('seed'), 'specialty', i) < getvariable('specialty_share') AS specialty_user,
-       rcount(getvariable('seed'), 'n_pde', i, 3.3, 0.9, 1) AS n_pde
+       u01(getvariable('seed'), 'ltc', i) < getvariable('ltc_share') AS ltc
 FROM range(1, getvariable('n_benes') + 1) t(i);
+
+CREATE OR REPLACE TABLE benes AS
+SELECT *, rcount(getvariable('seed'), 'n_pde', bene_id,
+                 3.3 + CASE WHEN ltc THEN ln(getvariable('ltc_pde_factor')) ELSE 0 END, 0.9, 1) AS n_pde
+FROM benes;
 
 -- Step 2. PDEs: pde_id = bene_id * 10,000 + j
 CREATE OR REPLACE TABLE pdes AS
 WITH d AS (
-    SELECT b.bene_id, b.lis, b.specialty_user,
+    SELECT b.bene_id, b.lis, b.specialty_user, b.ltc,
            b.bene_id * 10000 + j AS pde_id,
            1 + floor(365 * u01(getvariable('seed'), 'day', b.bene_id * 10000 + j))::INT AS fill_day,
            u01(getvariable('seed'), 'brand', b.bene_id * 10000 + j) AS u_brand,
@@ -31,7 +39,7 @@ c AS (
            specialty_user AND u_spec < 0.25 AS specialty
     FROM d
 )
-SELECT bene_id, pde_id, fill_day, lis, brand, specialty,
+SELECT bene_id, pde_id, fill_day, lis, ltc, brand, specialty,
        usd(CASE WHEN specialty THEN rlnorm(getvariable('seed'), 'ing', pde_id, 8.3, 0.6)
                 WHEN brand     THEN rlnorm(getvariable('seed'), 'ing', pde_id, 5.6, 0.8)
                 ELSE                rlnorm(getvariable('seed'), 'ing', pde_id, 2.4, 0.9) END) AS ingredient_cost,

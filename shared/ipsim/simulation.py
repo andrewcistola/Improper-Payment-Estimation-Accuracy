@@ -161,6 +161,15 @@ def load_kernel(path):
     return mod
 
 
+def population_variables(v):
+    """This run's variables on top of those that built the population
+    (errors/output/<scenario>/config.yaml, e.g. benefit parameters)."""
+    import yaml
+    from .engine import ROOT
+    pop_cfg = yaml.safe_load((ROOT / v["population_dir"] / "config.yaml").read_text())["variables"]
+    return {**pop_cfg, **v}
+
+
 def run(con, v, kernel_module):
     """Engine entry point: run the simulation for the first sim_reps audit years.
 
@@ -176,10 +185,7 @@ def run(con, v, kernel_module):
     """
     # payment-function parameters: exactly those that built the population
     # (errors/output/<scenario>/config.yaml), then this run's variables
-    import yaml
-    from .engine import ROOT
-    pop_cfg = yaml.safe_load((ROOT / v["population_dir"] / "config.yaml").read_text())["variables"]
-    kernel = kernel_module.Kernel(con, {**pop_cfg, **v})
+    kernel = kernel_module.Kernel(con, population_variables(v))
     n_iter, alpha = int(v["sim_iterations"]), float(v["alpha"])
     reps = sorted(r for (r,) in con.execute("SELECT DISTINCT rep FROM sample ORDER BY rep").fetchall())
     reps = reps[: int(v["sim_reps"])]

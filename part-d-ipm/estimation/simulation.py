@@ -1,4 +1,4 @@
-"""Part D: payment function and audit-finding bootstrap simulation kernel.
+"""Part D: payment function, expansion and bootstrap simulation.
 
 Payment function (same as errors/sql/05_benefit.sql, CY 2025 post-IRA
 standard benefit), per beneficiary, PDEs in fill order:
@@ -7,32 +7,46 @@ standard benefit), per beneficiary, PDEs in fill order:
   LICS (LIS only) = round(enrollee share - min(enrollee share, copay)),
       enrollee share = deductible GDC + 0.25 * initial GDC
   Medicare (PDE-driven) = sum over PDEs of reinsurance + LICS
-  improper payment y = Medicare(submitted PDEs) - Medicare(corrected PDEs)
-Amounts follow the SQL arithmetic exactly (cents; DOUBLE shares; round
-half away from zero); shared/tests/test_simulation.py checks that applying
-each PDE's own finding reproduces errors/ y to the cent.
+  payment error y = Medicare(submitted PDEs) - Medicare(corrected PDEs),
+  netted within the beneficiary
+Cents and SQL rounding are reproduced exactly (shared/tests/test_simulation.py).
+Every method sums y over beneficiaries: over = sum of positive y, under =
+sum of -y where negative, gross = over + under, net = over - under, each
+divided by total payments X (direct subsidy + reinsurance + LICS).
 
-Design (claim level, as in production). Each audit year has two samples,
-drawn once in SQL (40_simulation_inputs.sql) and held fixed for all of
-that year's iterations:
-  audit sample       : sim_audit_size PDEs sampled from all PDEs,
-                       independent of beneficiary (sim_audit_sample).
-                       Finding = corrected GDC / submitted GDC
-                       (0 = missing documentation; 1 = no error).
-  beneficiary sample : sim_bene_size beneficiaries drawn with replacement
-                       (sim_bene_sample; 108,000 = the population size,
-                       standing in for production's random 1 million).
-Each iteration:
-  1. every PDE of a beneficiary-sample beneficiary takes the finding of a
-     random audit-sample PDE of the same kind (brand vs generic); audited
-     PDEs keep their own finding; corrected GDC = round(submitted x ratio)
-  2. rerun the benefit for each beneficiary in the beneficiary sample; the
-     iteration's rate is sum |y| / sum x over the beneficiary sample
+PDE audit (40_simulation_inputs.sql): 5,000 PDEs per audit year, stratified
+SRS over claim strata (LTC; non-LTC lowest cost decile; other non-LTC),
+Neyman allocation. Finding = corrected GDC / submitted GDC.
+
+Expansion (run_expansion): r_h = audited error dollars / audited submitted
+  GDC in stratum h. Every PDE in the population gets corrected GDC =
+  round(GDC x (1 - r_h)); the benefit is rerun for every beneficiary.
+  Interval (delta method): Var(r_h) is the stratified ratio variance
+  (1 - n_h/N_h) s_h^2(d - r_h g) / (n_h gbar_h^2); each stratum's
+  contribution is [T(r_h + SE_h) - T(r_h - SE_h)] / 2 (one rerun each way,
+  other strata at their r); Var(T) = sum of squared contributions;
+  T +- 1.96 sqrt(Var(T)), divided by X.
+
+Bootstrap simulation (Kernel): every non-audited PDE in the full
+  population takes a finding from the audited PDEs of its own stratum;
+  audited PDEs keep their own. Drawing a random audited donor is done in
+  two equivalent steps per stratum: an error with probability p = f/n
+  (f of n audited PDEs in error), and, given an error, a partial one
+  (correct GDC > 0) with probability q = g/f, its corrected/submitted
+  ratio drawn from the audited partial errors; full errors set GDC to 0.
+  sim_rates: fixed       p and q as audited
+             parametric  p and q redrawn before each iteration as
+                         Binomial(n, p)/n and Binomial(f, q)/f
+  The benefit is rerun for all beneficiaries; 1,000 iterations; mean and
+  2.5th-97.5th percentiles.
 """
 import numpy as np
 from numba import njit
 
-from ipsim.simulation import RowSet, round_half_away, round_half_away_scalar
+from ipsim.simulation import bernoulli_positions, round_half_away, round_half_away_scalar
+
+DOMAINS = ("over", "under", "gross", "net")
+N_STRATA = 3
 
 
 def benefit_params(v):
@@ -72,100 +86,127 @@ def medicare_cents(g, row_unit, lis, brand, n_units, D, I, coins, reins_brand, r
     return out
 
 
-@njit
-def drawn_medicare(drawn, start, count, sub, cor, audited, brand, lis, u, p_err, err_off, err_ratio,
-                   D, I, coins, reins_brand, reins_generic, copay_brand, copay_generic):
-    """Corrected Medicare payment for each drawn beneficiary (cents).
-    u: one uniform per PDE of the drawn beneficiaries, in order. A PDE of
-    kind k gets an error when u < p_err[k]; its donor is then
-    err_ratio[err_off[k] + floor(u / p_err[k] * n_err[k])] (u / p_err[k] is
-    uniform on (0, 1) given the error, so no second draw is needed)."""
-    out = np.zeros(len(drawn))
-    pos = 0
-    for j in range(len(drawn)):
-        b = drawn[j]
-        pre = 0
-        m = 0.0
-        for r in range(start[b], start[b] + count[b]):
-            k = 1 if brand[r] else 0
-            if audited[r]:
-                g = cor[r]                                     # own finding
-            elif u[pos] < p_err[k]:
-                n_err = err_off[k + 1] - err_off[k]
-                idx = err_off[k] + min(int(u[pos] / p_err[k] * n_err), n_err - 1)
-                g = np.int64(round_half_away_scalar(sub[r] * err_ratio[idx]))
-            else:
-                g = sub[r]                                     # no error
-            pos += 1
-            post = pre + g
-            ded = max(0, min(post, D) - min(pre, D))
-            ini = max(0, min(post, I) - max(pre, D))
-            cat = max(0, post - max(pre, I))
-            share = reins_brand if brand[r] else reins_generic
-            reins = round_half_away_scalar(share * (cat / 100.0) * 100.0)
-            lics = 0.0
-            if lis[r]:
-                std = ded / 100.0 + coins * (ini / 100.0)
-                copay = copay_brand if brand[r] else copay_generic
-                lics = round_half_away_scalar((std - min(std, copay)) * 100.0)
-            m += reins + lics
-            pre = post
-        out[j] = m
-    return out
+def load_rows(con):
+    u = con.execute("SELECT unit_idx, x_cents, y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()
+    r = con.execute("SELECT unit_idx, brand, lis, stratum_code, sub_cents, cor_cents FROM sim_rows "
+                    "ORDER BY row_idx").fetchnumpy()
+    return u, r
+
+
+def measures(y, X):
+    """Domain rates from beneficiary-level payment errors (cents)."""
+    over, under = float(y[y > 0].sum()), float(-y[y < 0].sum())
+    return {"national|over": over / X, "national|under": under / X,
+            "national|gross": (over + under) / X, "national|net": (over - under) / X}
 
 
 class Kernel:
-    """Audit units are PDE claims; projection units are beneficiaries."""
+    """Audit units are PDEs; payment errors are netted per beneficiary."""
 
     def __init__(self, con, v):
         self.con = con
-        u = con.execute("SELECT unit_idx, x_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()
-        r = con.execute("SELECT unit_idx, brand, lis, sub_cents, cor_cents FROM sim_rows "
-                        "ORDER BY row_idx").fetchnumpy()
+        self.parametric = str(v.get("sim_rates", "fixed")) == "parametric"
+        u, r = load_rows(con)
         self.n_benes = len(u["unit_idx"])
-        self.x = np.asarray(u["x_cents"], dtype=np.int64)
+        self.X = float(np.asarray(u["x_cents"]).sum())
+        self.y_true = np.asarray(u["y_cents"], dtype=np.int64)
         self.row_unit = np.asarray(r["unit_idx"], dtype=np.int64)
         self.brand = np.asarray(r["brand"], dtype=np.bool_)
         self.lis = np.asarray(r["lis"], dtype=np.bool_)
+        self.stratum = np.asarray(r["stratum_code"], dtype=np.int64)
         self.sub = np.asarray(r["sub_cents"], dtype=np.int64)
         self.cor = np.asarray(r["cor_cents"], dtype=np.int64)
-        self.ratio = self.cor / self.sub
         self.p = benefit_params(v)
-        self.units = len(self.sub)                      # audit units = claims
-        counts = np.bincount(self.row_unit, minlength=self.n_benes)
-        self.start = np.concatenate([[0], np.cumsum(counts)[:-1]]).astype(np.int64)
-        self.count = counts.astype(np.int64)
+        self.units = len(self.sub)                      # audit units = PDEs
         self.m_sub = medicare_cents(self.sub, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
 
     def improper_cents(self, g_corrected):
-        """y per beneficiary for a corrected GDC vector (all beneficiaries)."""
+        """y per beneficiary for a corrected GDC vector (all PDEs)."""
         return self.m_sub - medicare_cents(g_corrected, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
 
     def audited(self, rep):
-        """The audit year's audit sample: row indices of the audited PDEs."""
         s = self.con.execute("SELECT row_idx FROM sim_audit_sample WHERE rep = ? ORDER BY row_idx",
                              [rep]).fetchnumpy()
         return np.asarray(s["row_idx"], dtype=np.int64)
 
     def prepare(self, rep, audited_mask):
-        """Fix the audit year's samples: audited PDEs and beneficiary sample."""
+        """The audit year's counts and partial-error lists, per stratum."""
         self._audited = audited_mask
-        b = self.con.execute("SELECT unit_idx FROM sim_bene_sample WHERE rep = ? ORDER BY unit_idx",
-                             [rep]).fetchnumpy()
-        self._benes = np.asarray(b["unit_idx"], dtype=np.int64)  # sorted; a repeat = drawn twice
-        self._n_rows = int(self.count[self._benes].sum())        # PDEs of the beneficiary sample
-        self._m_sub = self.m_sub[self._benes]
-        self._x = float(self.x[self._benes].sum())
+        self._n, self._f, self._g, self._partial, self._recip = [], [], [], [], []
+        for h in range(N_STRATA):
+            a = np.flatnonzero(audited_mask & (self.stratum == h))
+            err = self.cor[a] != self.sub[a]
+            part = err & (self.cor[a] != 0)
+            self._n.append(len(a)); self._f.append(int(err.sum())); self._g.append(int(part.sum()))
+            self._partial.append(self.cor[a][part] / self.sub[a][part])
+            self._recip.append(np.flatnonzero(~audited_mask & (self.stratum == h)))
 
     def iterate(self, donors, rng):
-        kind = self.brand[donors].astype(np.int64)
-        err = self.cor[donors] != self.sub[donors]
-        p_err = np.array([err[kind == k].mean() if (kind == k).any() else 0.0 for k in (0, 1)])
-        order = np.argsort(kind[err], kind="stable")
-        err_ratio = self.ratio[donors[err]][order]
-        err_off = np.searchsorted(kind[err][order], np.arange(3)).astype(np.int64)
-        u = rng.random(self._n_rows)
-        m_cor = drawn_medicare(self._benes, self.start, self.count, self.sub, self.cor, self._audited,
-                               self.brand, self.lis, u, p_err, err_off, err_ratio, *self.p)
-        y = self._m_sub - m_cor
-        return {"national": float(np.abs(y).sum()) / self._x}
+        g = np.where(self._audited, self.cor, self.sub)          # audited keep their own findings
+        for h in range(N_STRATA):
+            n, f, k = self._n[h], self._f[h], self._g[h]
+            p = f / n if n else 0.0
+            q = k / f if f else 0.0
+            if self.parametric:                                  # redraw the audit's rates
+                p = rng.binomial(n, p) / n if n else 0.0
+                q = rng.binomial(f, q) / f if f else 0.0
+            if p <= 0:
+                continue
+            hit = self._recip[h][bernoulli_positions(len(self._recip[h]), p, rng)]
+            partial = (rng.random(len(hit)) < q) if len(self._partial[h]) else np.zeros(len(hit), bool)
+            g[hit[~partial]] = 0                                 # full error: GDC 0
+            ph = hit[partial]
+            if len(ph):
+                ratio = self._partial[h][rng.integers(0, len(self._partial[h]), len(ph))]
+                g[ph] = round_half_away(self.sub[ph] * ratio).astype(np.int64)
+        return measures(self.improper_cents(g), self.X)
+
+
+def run_expansion(con, v):
+    """Expansion with a delta-method interval; writes table est_expansion."""
+    import pyarrow as pa
+    from ipsim.simulation import population_variables
+    v = population_variables(v)
+    k = Kernel(con, v)
+    z = 1.959963984540054
+    N = np.bincount(k.stratum, minlength=N_STRATA).astype(float)
+    reps = sorted(r for (r,) in con.execute("SELECT DISTINCT rep FROM sim_audit_sample ORDER BY rep").fetchall())
+
+    def totals(rate):
+        g = round_half_away(k.sub * (1.0 - rate[k.stratum])).astype(np.int64)
+        return measures(k.improper_cents(g), k.X)
+
+    rows = []
+    for rep in reps:
+        a = k.audited(rep)
+        r, se = np.zeros(N_STRATA), np.zeros(N_STRATA)
+        for h in range(N_STRATA):
+            ah = a[k.stratum[a] == h]
+            d = (k.sub[ah] - k.cor[ah]).astype(float)            # error dollars (cents)
+            s = k.sub[ah].astype(float)
+            n = len(ah)
+            r[h] = d.sum() / s.sum()
+            if n > 1:
+                e = d - r[h] * s
+                se[h] = np.sqrt((1 - n / N[h]) * e.var(ddof=1) / (n * s.mean() ** 2))
+        base = totals(r)
+        var = dict.fromkeys(base, 0.0)
+        for h in range(N_STRATA):
+            if se[h] == 0:
+                continue
+            up, dn = r.copy(), r.copy()
+            up[h] += se[h]; dn[h] -= se[h]
+            tu, td = totals(up), totals(dn)
+            for d_ in base:
+                var[d_] += ((tu[d_] - td[d_]) / 2.0) ** 2
+        for d_, est in base.items():
+            sd = float(np.sqrt(var[d_]))
+            rows.append(("expansion", "normal", rep, d_, est, sd, est - z * sd, est + z * sd))
+    cols = list(zip(*rows))
+    tbl = pa.table({"method": pa.array(cols[0], pa.string()), "interval": pa.array(cols[1], pa.string()),
+                    "rep": pa.array(cols[2], pa.int32()), "domain": pa.array(cols[3], pa.string()),
+                    "estimate": pa.array(cols[4], pa.float64()), "se": pa.array(cols[5], pa.float64()),
+                    "lower": pa.array(cols[6], pa.float64()), "upper": pa.array(cols[7], pa.float64())})
+    con.register("est_expansion_arrow", tbl)
+    con.execute("CREATE OR REPLACE TABLE est_expansion AS SELECT * FROM est_expansion_arrow")
+    con.unregister("est_expansion_arrow")

@@ -8,7 +8,8 @@ CREATE OR REPLACE TABLE calib AS
 WITH last AS (SELECT * FROM calib ORDER BY pass DESC LIMIT 1),
 realized AS (SELECT sum(abs(medicare_pde_sub - medicare_pde_cor))::DOUBLE AS gross FROM bene_pay),
 linear AS (  -- expected gross dollars at m = 1
-    SELECT sum((abs(p.gdc - p.cand_gdc) * (b.reinsurance + b.lics) / b.gdc)::DECIMAL(38, 6))::DOUBLE AS e
+    SELECT sum((abs(p.gdc - p.cand_gdc) * (b.reinsurance + b.lics) / b.gdc
+                * CASE WHEN p.ltc THEN getvariable('ltc_error_mult') ELSE 1 END)::DECIMAL(38, 6))::DOUBLE AS e
     FROM pdes p JOIN pde_benefit b ON b.pde_id = p.pde_id AND b.version = 'submitted'
     WHERE p.gdc > 0
 ),

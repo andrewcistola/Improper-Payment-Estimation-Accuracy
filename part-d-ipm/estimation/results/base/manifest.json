@@ -1,24 +1,24 @@
 {
   "config_file": "part-d-ipm/estimation/config.yaml",
-  "config_sha256": "4b7b09dcab1f514cb949347bead669b4abf2cdc66f4d5d1188ee29623c007a53",
+  "config_sha256": "730f987f9690a8d35242cf76136a684129aa93185b4eba97c974e87ec7969389",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 713,
-      "sha256": "4648afd9fc9813eda4215c6915fe306d08af1574660ad4622a28036cd4bd40ce"
+      "bytes": 723,
+      "sha256": "6ffb48ab8cb1bf1b2489e2fdcdacdceb3d93c9d41136ed5c330e5fed8e537793"
     },
     "estimates.parquet": {
-      "bytes": 20580,
-      "rows": 625,
-      "sha256": "218a32c98b2c27d22ba5b39cc354c2ee0e00cfeae4190077a09f14a02b0d435a"
+      "bytes": 12252,
+      "rows": 400,
+      "sha256": "2d80a3cede9936b25e498ceab0a3c6170bc2827c0d95809f81dafc7ebd53f69f"
     },
     "metrics.json": {
-      "bytes": 2174,
-      "sha256": "9e476ff507f506fea70c545442f71829c89adfd7b570f48c7503db15052460cb"
+      "bytes": 8576,
+      "sha256": "73549a6b774e433a22659b8a7c793269adbdd569f9bda96e373fdc54cd5fa2b7"
     },
     "truth.json": {
-      "bytes": 116,
-      "sha256": "e70876858b2cab119ab32f78bfcd8f6e9c23cbc45c37b08c8d11e832db2632d1"
+      "bytes": 473,
+      "sha256": "9959d76c4662a9d59fd00b592166100b4c4ca21f8f0ad135bc9b10afaf1bd115"
     }
   },
   "program": "partd_estimation",
