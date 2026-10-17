@@ -178,6 +178,7 @@ The report covers audit years 1 to `audit_years` (25, set in `shared/report.yaml
 | `year1_estimate`, `year1_lower`, `year1_upper`, `year1_truth_in_ci` | Audit year 1 as a worked example |
 | `mean_estimate`, `mean_lower`, `mean_upper` | Averages over the reported audit years |
 | `mean_estimate_usd`, `mean_lower_usd`, `mean_upper_usd`, `total_paid_usd` | The same averages in national dollars, and total payments |
+| `median_estimate`, `median_lower`, `median_upper` (and `_usd`) | Medians over the reported audit years of the point estimate and of each 95% bound (rates, and national dollars); the README tables use these |
 | `mean_error`, `mean_abs_error` | Average signed error (bias) and average absolute error of the point estimate, in rate units |
 | `mean_rel_error`, `mean_abs_rel_error` | The same, relative to the true rate |
 | `n_audit_years`, `n_truth_inside`, `n_ci_above_truth`, `n_ci_below_truth`, `n_undefined` | Counts over the reported audit years |
