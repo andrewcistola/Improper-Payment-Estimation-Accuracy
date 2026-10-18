@@ -12,9 +12,10 @@ data/raw/
 *.sas7bdat
 
 # errors/ outputs: large populations are regenerated (hashes in manifest.json);
-# only the small populations are committed (Part C, EIPM, CERT)
+# only the small populations are committed (Part C, EIPM)
 part-d-ipm/errors/output/**/*.parquet
 perm-cert/errors/output/perm/**/*.parquet
+perm-cert/errors/output/cert/**/*.parquet
 *.egg-info/
 .pytest_cache/
 

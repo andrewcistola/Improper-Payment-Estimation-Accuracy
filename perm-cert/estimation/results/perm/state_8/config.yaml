@@ -12,7 +12,7 @@ variables:
   reps: 25
   sim_reps: 25
   sim_iterations: 1000
-  sim_rates: fixed
+  sim_rates: parametric
   sim_export_draws: true
   alpha: 0.05
   state_id: 8

@@ -1,51 +1,91 @@
 {
   "by": {
     "calibration": {
-      "multiplier": {
-        "m": 0.01503469
+      "rate": {
+        "p_monetary": 0.0186991,
+        "p_technical": 0.004272
       }
     },
     "stratum": {
-      "A_lt150": {
-        "gross_rate": 0.0082559116530486,
-        "n_units": 26767.0,
-        "overpayments": 154942892.0,
-        "payments": 18767508485.0,
-        "unit_err_rate": 0.010572720140471475
+      "P1": {
+        "gross_rate": 0.012656017107690837,
+        "monetary": 36604043.0,
+        "monetary_rate": 0.00828467022688567,
+        "n_units": 28431.0,
+        "overpayments": 55917904.0,
+        "payments": 4418286063.0,
+        "technical": 19313861.0,
+        "technical_rate": 0.004371346880805169,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.021138897682107558,
+        "unit_technical_rate": 0.004361436460201892
       },
-      "B_150_250": {
-        "gross_rate": 0.009055365468044056,
-        "n_units": 79469.0,
-        "overpayments": 440099872.0,
-        "payments": 50283273227.0,
-        "underpayments": 15233544.0,
-        "unit_err_rate": 0.015817488580452756
+      "P2": {
+        "gross_rate": 0.012412920693121235,
+        "monetary": 84906340.0,
+        "monetary_rate": 0.007491624948574122,
+        "n_units": 28431.0,
+        "overpayments": 140681851.0,
+        "payments": 11333501154.0,
+        "technical": 55775511.0,
+        "technical_rate": 0.004921295744547113,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.02370651753367803,
+        "unit_technical_rate": 0.00481868383102951
       },
-      "C_250_400": {
-        "gross_rate": 0.011585860088357776,
-        "n_units": 32059.0,
-        "overpayments": 116449034.00000001,
-        "payments": 12047274517.0,
-        "underpayments": 23129003.0,
-        "unit_err_rate": 0.016126516734770266
+      "P3": {
+        "gross_rate": 0.009319908621025483,
+        "monetary": 84976872.0,
+        "monetary_rate": 0.0053178359819269294,
+        "n_units": 28430.0,
+        "overpayments": 148928377.0,
+        "payments": 15979596266.0,
+        "technical": 63951505.00000001,
+        "technical_rate": 0.004002072639098553,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.023144565599718607,
+        "unit_technical_rate": 0.004045022863172705
       },
-      "D_ge400": {
-        "gross_rate": 0.017232196726657965,
-        "n_units": 3857.0,
-        "overpayments": 5146969.0,
-        "payments": 570780682.0,
-        "underpayments": 4688836.0,
-        "unit_err_rate": 0.015037593984962405
+      "P4": {
+        "gross_rate": 0.008870451648675686,
+        "monetary": 90810330.0,
+        "monetary_rate": 0.004385371464641319,
+        "n_units": 28430.0,
+        "overpayments": 183685384.0,
+        "payments": 20707557098.0,
+        "technical": 92875054.0,
+        "technical_rate": 0.0044850801840343665,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.023074217376011254,
+        "unit_technical_rate": 0.004431938093563137
+      },
+      "P5": {
+        "gross_rate": 0.007462697935610502,
+        "monetary": 95812928.0,
+        "monetary_rate": 0.0032779085809367973,
+        "n_units": 28430.0,
+        "overpayments": 218133887.0,
+        "payments": 29229896330.0,
+        "technical": 122320959.00000001,
+        "technical_rate": 0.004184789354673706,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.022018994020400987,
+        "unit_technical_rate": 0.004150545198733732
       }
     }
   },
   "overall": {
-    "gross_rate": 0.009302081169931259,
+    "gross_rate": 0.009150949508616543,
+    "monetary": 393110513.0,
+    "monetary_rate": 0.004813470203186545,
     "n_units": 142152.0,
-    "overpayments": 716638767.0,
+    "overpayments": 747347403.0,
     "payments": 81668836911.0,
-    "underpayments": 43051383.0,
-    "unit_err_rate": 0.014878439979739996
+    "technical": 354236890.0,
+    "technical_rate": 0.004337479305429997,
+    "underpayments": 0.0,
+    "unit_err_rate": 0.02261663571388373,
+    "unit_technical_rate": 0.0043615285046991956
   },
   "program": "eipm",
   "scenario": "base"

@@ -4,22 +4,22 @@
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 802,
-      "sha256": "46073d8b779232d8a77d1d3d18642d46432b93f60cf99347b7415da158ccebe4"
+      "bytes": 807,
+      "sha256": "73741f31842a94ead3ce4fed510b7a756fae2090deed0dab0c0e7d37819ed3d0"
     },
     "estimates.parquet": {
-      "bytes": 10986,
+      "bytes": 10976,
       "rows": 300,
-      "sha256": "04febc816b8be6575bd2801d29193a4e9b037b720e4654724f14b24032beea74"
+      "sha256": "896c150523ba1ff99cfcf07b618858764f31fc8ce6f528228cc4a941f5721daa"
     },
     "metrics.json": {
-      "bytes": 6479,
-      "sha256": "9ee7e881c000623f1b07cc20d8db8ef70b9bc2d89d45e60e6dc2b955c52a4a38"
+      "bytes": 6449,
+      "sha256": "3db8f15887dcae8bd746656fbea0e026a56e4422ed78524799120828c56a7237"
     },
     "sim_draws.parquet": {
-      "bytes": 564963,
+      "bytes": 568630,
       "rows": 75000,
-      "sha256": "e49d0ac9eed4dbb5094dfcbe7cd73dc817a4f57f5ce74a2faddb90d2465d23aa"
+      "sha256": "ffd93d9fcafc9ff502444edc7e6ee763ba5e5477af59a43090fa2f3f96e1e1de"
     },
     "truth.json": {
       "bytes": 345,

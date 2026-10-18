@@ -4,7 +4,9 @@
 -- Joins every program's estimation results (estimates.parquet: one row
 -- per audit year x method x interval) to the fabricated truth in
 -- the population (truth.json: theta = true improper payment rate).
--- No estimation is redone here.
+-- No estimation is redone here. The bootstrap simulation in results/ uses
+-- parametric rates (the configs' default); fixed-rate runs are kept in
+-- <program>/estimation/results_fixed/ and are not read here.
 --
 -- Audit years reported: 1 .. audit_years (report.yaml), the same years for
 -- every method. Each audit year is an independent random sample, so the
@@ -26,7 +28,7 @@
 -- National dollars = rate x frame payments (X) x w_pop, where w_pop is the
 -- number of real units each synthetic unit stands for (from each
 -- errors/config.yaml): Part C 100, Part D 500, EIPM 100, PERM 200
--- (federal share), CERT 1 (stress populations, not scaled).
+-- (federal share), CERT 200.
 -- =====================================================================
 
 CREATE OR REPLACE TABLE est AS
@@ -48,6 +50,7 @@ SELECT program, scenario,
             WHEN program = 'part-d-ipm' THEN 500
             WHEN program = 'eipm' THEN 100
             WHEN scenario LIKE 'perm/%' THEN 200
+            WHEN scenario LIKE 'cert/%' THEN 200
             ELSE 1 END::DOUBLE AS w_pop
 FROM (SELECT DISTINCT program, scenario FROM truth_rates);
 

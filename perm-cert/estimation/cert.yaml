@@ -1,32 +1,38 @@
-# CERT - estimation: draw simple random samples of claims from each
-# errors/ stress population and estimate the claim improper payment rate
-# with each method (expansion, ratio, regression, and the audit-finding simulation).
+# CERT - estimation: draw production-like audits (stratified SRS of claims:
+# claim type x payment quintile, FY 2025 claims reviewed per claim type,
+# Neyman across quintiles; no MAC jurisdictions) from the errors/ universe
+# and estimate overpayments, underpayments, gross and net improper payments
+# (and gross by claim type) with each method (expansion, ratio, regression,
+# and the audit-finding bootstrap simulation).
 program: cert_estimation   # also the seed label for sampling and simulation
 seed: 20261016
 output_dir: results/cert
 steps:
-  - sql: perm-cert/estimation/sql/cert_01_frame.sql        # estimand + design
-  - sql: shared/sql/sample_srs.sql                          # audit years (Monte Carlo replicates)
+  - sql: perm-cert/estimation/sql/cert_01_frame.sql        # estimands + allocation
+  - sql: perm-cert/estimation/sql/cert_02_sample.sql       # audit years (Monte Carlo replicates)
   - sql: perm-cert/estimation/sql/cert_10_expansion.sql
   - sql: perm-cert/estimation/sql/cert_20_ratio.sql
   - sql: perm-cert/estimation/sql/cert_30_regression.sql
   - sql: perm-cert/estimation/sql/cert_40_simulation_inputs.sql   # audit findings + population rows
-  - python: perm-cert/estimation/cert_simulation.py # simulation: payment function rerun 1,000x (numpy)
+  - python: perm-cert/estimation/cert_simulation.py # bootstrap simulation: claims rerun 1,000x (numpy)
   - sql: perm-cert/estimation/sql/cert_90_score.sql
 exports:
   - {table: estimates, order_by: "domain, method, interval, rep"}
 json:
   - {table: metrics, order_by: "domain, method, interval", file: metrics.json}
   - {table: frame_totals, order_by: domain, file: truth.json}
+  - {table: cert_neyman, order_by: stratum, file: allocation.json}
 defaults:
-  population_dir: "perm-cert/errors/output/cert/{shape}_all_or_nothing_p{error_rate:.2f}"
-  n: 30            # claims per sample (Edwards et al. design)
-  reps: 1000       # audit years (Monte Carlo replicates; MC SE of 95% coverage ~ 0.7 pt)
-  sim_reps: 100       # audit years scored for the simulation method (first 100 of reps)
+  population_dir: perm-cert/errors/output/cert/national
+  claim_audit:     # FY 2025 claims reviewed (Supplemental Improper Payment Data, Table A1)
+    - {claim_type: ipps, n: 8750}
+    - {claim_type: part_a_other, n: 8651}
+    - {claim_type: part_b, n: 11600}
+    - {claim_type: dmepos, n: 8650}
+  reps: 25         # audit years (Monte Carlo replicates)
+  sim_reps: 25     # audit years run through the bootstrap simulation (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
+  sim_rates: parametric # parametric (reported): rates redrawn as Binomial(n, rate)/n each iteration | fixed (comparison; results_fixed/)
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
-grid:
-  name: "{shape}_p{error_rate:.2f}"
-  vars:
-    shape: [right, two_spike, left]
-    error_rate: [0.05, 0.30, 0.70, 0.95]
+scenarios:
+  - name: national

@@ -4,17 +4,17 @@
   "duckdb": "1.5.6",
   "files": {
     "by_audit_year.csv": {
-      "bytes": 1255215,
-      "sha256": "5b8af7ba62d47b82e4e5ea9a86a8ffbeae7ab3b81f5aeb485b5b53d27f15a085"
+      "bytes": 1235257,
+      "sha256": "277372d68607ee85f0e573a2b6bf0dacdce1be6958e8d49bd0b3fc9af9230ec4"
     },
     "by_audit_year.parquet": {
-      "bytes": 299121,
-      "rows": 5100,
-      "sha256": "ea1dfad84d2b995a4cf0c8ecd3c637d8539d2d6e12c1d8a8f112a2d5f835430a"
+      "bytes": 295501,
+      "rows": 4900,
+      "sha256": "97a5c63d89d591b8f3e6ed62d60b9c15ac2b0ee295488142719e89a740f59401"
     },
     "by_scenario.csv": {
-      "bytes": 96981,
-      "sha256": "69c5df25fad4b7437d68b5e698cc72583bc8db135a1d33bfc2bb0a8cd995f3e2"
+      "bytes": 95006,
+      "sha256": "0a9d1d05c63764e208394a3c1105bd629edcec0b7fc3adebeb4bf84cd2c25527"
     },
     "config.yaml": {
       "bytes": 167,

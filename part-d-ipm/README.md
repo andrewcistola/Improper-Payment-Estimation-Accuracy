@@ -27,8 +27,8 @@ Two audits per audit year (25 audit years):
 - **Beneficiary audit** (`01_frame.sql`): simple random sample of 990 beneficiaries, every PDE reviewed. Used by **ratio** (`20_ratio.sql`) and **regression** (`30_regression.sql`, GREG on payment).
 - **PDE audit** (`40_simulation_inputs.sql`): 5,000 PDEs, stratified by claim type: (a) LTC, any cost; (b) non-LTC, lowest decile of GDC; (c) other non-LTC. Neyman allocation, n_h ∝ N_h × S_h (S_h = standard deviation of PDE error dollars; from the population, standing in for prior-year data). Used by:
   - **Expansion** (`simulation.py`, `run_expansion`): each stratum's error rate (audited error dollars ÷ audited GDC) is applied to every PDE in that stratum; the benefit is rerun for all 108,000 beneficiaries. Delta-method interval (each stratum's rate moved ±1 SE, one rerun each way).
-  - **Bootstrap simulation, fixed rates** (`simulation.py`): every non-audited PDE in the full population takes a finding from a random audited PDE of its own stratum (audited PDEs keep their own); the benefit is rerun; 1,000 iterations; mean and 2.5th–97.5th percentiles. Reported in the README.
-  - **Bootstrap simulation, parametric rates** (`sim_rates: parametric`): before each iteration, each stratum's error rate and partial-error share are redrawn as Binomial(n, f/n)/n and Binomial(f, g/f)/f; partial sizes from the stratum's audited partial errors.
+  - **Bootstrap simulation, parametric rates** (`simulation.py`; reported): every non-audited PDE in the full population takes a finding from its own stratum: before each iteration, the stratum's error rate and partial-error share are redrawn as Binomial(n, f/n)/n and Binomial(f, g/f)/f, a PDE is in error at that rate, and partial sizes come from the stratum's audited partial errors (audited PDEs keep their own). The benefit is rerun; 1,000 iterations; mean and 2.5th–97.5th percentiles.
+  - **Bootstrap simulation, fixed rates** (`--set sim_rates=fixed`; comparison only, `estimation/results_fixed/`): the audited rates in every iteration. Its intervals are far too narrow; see [`manuscripts/`](../manuscripts/).
 
 All methods are scored in `90_score.sql`.
 
@@ -43,19 +43,19 @@ Each row gives the true value and, over the 25 audit years, the median point est
 | Overpayments | Expansion | $1.44B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.44B | $1.48B | $2.20B | $0.72B |
 |  | Regression | $1.44B | $1.47B | $2.21B | $0.73B |
-|  | Bootstrap simulation (fixed rates) | $1.44B | $1.44B | $1.51B | $1.38B |
-| Underpayments | Expansion | $0.02B | $-0.00B | $0.00B | $-0.00B |
+|  | Bootstrap simulation (parametric rates) | $1.44B | $1.44B | $1.68B | $1.21B |
+| Underpayments | Expansion | $0.02B | $0.00B | $0.00B | $0.00B |
 |  | Ratio | $0.02B | $0.01B | $0.03B | $0.00B |
 |  | Regression | $0.02B | $0.01B | $0.02B | $0.00B |
-|  | Bootstrap simulation (fixed rates) | $0.02B | $0.02B | $0.03B | $0.02B |
+|  | Bootstrap simulation (parametric rates) | $0.02B | $0.02B | $0.04B | $0.01B |
 | Gross | Expansion | $1.46B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.46B | $1.49B | $2.22B | $0.74B |
 |  | Regression | $1.46B | $1.48B | $2.22B | $0.77B |
-|  | Bootstrap simulation (fixed rates) | $1.46B | $1.46B | $1.52B | $1.39B |
+|  | Bootstrap simulation (parametric rates) | $1.46B | $1.46B | $1.69B | $1.23B |
 | Net | Expansion | $1.42B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.42B | $1.45B | $2.19B | $0.72B |
 |  | Regression | $1.42B | $1.45B | $2.20B | $0.70B |
-|  | Bootstrap simulation (fixed rates) | $1.42B | $1.41B | $1.47B | $1.34B |
+|  | Bootstrap simulation (parametric rates) | $1.42B | $1.41B | $1.63B | $1.18B |
 
 **Rates**
 
@@ -64,27 +64,27 @@ Each row gives the true value and, over the 25 audit years, the median point est
 | Overpayments | Expansion | 1.36% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.36% | 1.40% | 2.09% | 0.69% |
 |  | Regression | 1.36% | 1.39% | 2.09% | 0.69% |
-|  | Bootstrap simulation (fixed rates) | 1.36% | 1.37% | 1.43% | 1.31% |
-| Underpayments | Expansion | 0.02% | -0.00% | 0.00% | -0.00% |
+|  | Bootstrap simulation (parametric rates) | 1.36% | 1.37% | 1.59% | 1.15% |
+| Underpayments | Expansion | 0.02% | 0.00% | 0.00% | 0.00% |
 |  | Ratio | 0.02% | 0.01% | 0.02% | 0.00% |
 |  | Regression | 0.02% | 0.01% | 0.02% | 0.00% |
-|  | Bootstrap simulation (fixed rates) | 0.02% | 0.02% | 0.03% | 0.02% |
+|  | Bootstrap simulation (parametric rates) | 0.02% | 0.02% | 0.04% | 0.01% |
 | Gross | Expansion | 1.38% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.38% | 1.41% | 2.10% | 0.70% |
 |  | Regression | 1.38% | 1.41% | 2.11% | 0.73% |
-|  | Bootstrap simulation (fixed rates) | 1.38% | 1.38% | 1.44% | 1.32% |
+|  | Bootstrap simulation (parametric rates) | 1.38% | 1.38% | 1.60% | 1.16% |
 | Net | Expansion | 1.34% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.34% | 1.37% | 2.07% | 0.68% |
 |  | Regression | 1.34% | 1.38% | 2.08% | 0.66% |
-|  | Bootstrap simulation (fixed rates) | 1.34% | 1.33% | 1.40% | 1.27% |
+|  | Bootstrap simulation (parametric rates) | 1.34% | 1.33% | 1.55% | 1.12% |
 
 **How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
 
-| Measure | Expansion | Ratio | Regression | Bootstrap simulation (fixed rates) |
+| Measure | Expansion | Ratio | Regression | Bootstrap simulation (parametric rates) |
 |---|---|---|---|---|
-| Overpayments | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 9/25 (9/7) |
-| Underpayments | 0/25 (0/25) | 15/25 (0/10) | 15/25 (0/10) | 10/25 (12/3) |
-| Gross | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 10/25 (8/7) |
-| Net | 19/25 (0/6) | 19/25 (1/5) | 20/25 (1/4) | 11/25 (7/7) |
+| Overpayments | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 25/25 (0/0) |
+| Underpayments | 0/25 (0/25) | 15/25 (0/10) | 15/25 (0/10) | 20/25 (4/1) |
+| Gross | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 25/25 (0/0) |
+| Net | 19/25 (0/6) | 19/25 (1/5) | 20/25 (1/4) | 24/25 (0/1) |
 
 From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).

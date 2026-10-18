@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 9.6pt; line-height: 1.38; color: #111; max-width: 7.6in; margin: 0 auto; }
+h1.title { font-size: 16pt; line-height: 1.2; margin: 0 0 3pt; color: #12355b; }
+header p { margin: 0; }
+p { margin: 5pt 0; }
+table { border-collapse: collapse; width: 100%; font-size: 8.4pt; margin: 4pt 0 2pt; }
+th, td { border-bottom: 1px solid #ddd; padding: 2pt 3pt; text-align: left; vertical-align: top; }
+th { background: #eef2f7; border-bottom: 1.5px solid #12355b; }
+a { color: #1f5fae; text-decoration: none; }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Comparative Accuracy of Improper Payment Estimation
+Methods in Federal Health Programs</h1>
+</header>
+<p><strong>Andrew Cistola, PhD, MPH · October 2026 · Full manuscript and
+code: <a href="https://github.com/andrewcistola/bootstrap-simulation-in-health-plan-payment-integrity">github.com/andrewcistola/bootstrap-simulation-in-health-plan-payment-integrity</a></strong></p>
+<p><strong>The question.</strong> What is the comparative accuracy of
+the available methods for estimating improper payments in federal health
+programs? CMS audits samples of payments in five programs and projects
+the errors to a national improper payment rate with a 95% confidence
+interval: Medicare Part C, Medicare Part D, Medicaid (PERM), Marketplace
+APTC (EIPM) and Medicare FFS (CERT). The projection uses analytic
+estimators (expansion, ratio, regression) or <em>audit-finding bootstrap
+simulation</em>, which assigns the audit’s findings at random across the
+whole population and reruns the payment rules many times. Accuracy means
+point accuracy and interval accuracy: whether the 95% interval contains
+the truth about 95% of the time, and how narrow it is.</p>
+<p><strong>How we tested it.</strong> We built five synthetic
+populations, one per program, with fabricated errors so that the true
+improper payment is known. Each was calibrated only to public FY 2025
+results. We drew each program’s production-like audit 25 times (25
+“audit years”). In every audit year we estimated the improper payment
+rate with the expansion, ratio and regression estimators and with
+bootstrap simulation, and checked whether each 95% interval contained
+the truth. No real or non-public data were used.</p>
+<p><strong>Finding 1: the standard bootstrap interval is far too
+narrow.</strong> The bootstrap’s point estimates are as accurate as, or
+more accurate than, the analytic methods. Its interval, however, is only
+5–21% as wide as it should be, and it contained the true rate in
+<strong>30 of 125</strong> audit-years (24%) instead of about 95%. The
+cause is structural. The simulation reuses the audit’s error rates in
+every iteration, so the interval reflects only where the errors land,
+not how different the rates would have been with a different audit.</p>
+<p><strong>Finding 2: one change fixes it.</strong> Before each
+iteration, redraw each error rate from its binomial sampling
+distribution (<em>parametric rates</em>). With that change the interval
+contained the true rate in <strong>121 of 125</strong> audit-years
+(96.8%). It was also narrower than the analytic interval from the same
+audit:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Gross improper payment rate</th>
+<th>Part C</th>
+<th>Part D</th>
+<th>PERM</th>
+<th>EIPM</th>
+<th>CERT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>True rate (synthetic)</td>
+<td>6.06%</td>
+<td>1.38%</td>
+<td>6.09%</td>
+<td>0.92%</td>
+<td>6.50%</td>
+</tr>
+<tr class="even">
+<td>Audit per year</td>
+<td>990 enrollees</td>
+<td>5,000 PDEs</td>
+<td>9 × 520 payments</td>
+<td>2,000 applications</td>
+<td>37,651 claims</td>
+</tr>
+<tr class="odd">
+<td><strong>Analytic</strong> (ratio; Part D expansion): coverage,
+half-width</td>
+<td>24/25, ±1.03</td>
+<td>18/25, ±0.60</td>
+<td>23/25, ±0.80</td>
+<td>22/25, ±0.35</td>
+<td>24/25, ±0.36</td>
+</tr>
+<tr class="even">
+<td><strong>Bootstrap, fixed rates</strong></td>
+<td>3/25, ±0.05</td>
+<td>10/25, ±0.06</td>
+<td>3/25, ±0.10</td>
+<td>6/25, ±0.05</td>
+<td>8/25, ±0.07</td>
+</tr>
+<tr class="odd">
+<td><strong>Bootstrap, parametric rates</strong></td>
+<td><strong>24/25, ±0.92</strong></td>
+<td><strong>25/25, ±0.22</strong></td>
+<td><strong>24/25, ±0.63</strong></td>
+<td><strong>23/25, ±0.31</strong></td>
+<td><strong>25/25, ±0.28</strong></td>
+</tr>
+<tr class="even">
+<td>Audit needed for today’s analytic precision, if width ∝ 1/√n</td>
+<td>~79%</td>
+<td>(see note)</td>
+<td>~63%</td>
+<td>~80%</td>
+<td>~62%</td>
+</tr>
+</tbody>
+</table>
+<p><em>Coverage = audit years (of 25) with the truth inside the 95%
+interval; a valid interval scores about 24. Half-width in percentage
+points.</em></p>
+<p><strong>Recommendation.</strong> Use <strong>bootstrap simulation
+with parametric rates</strong> for PIIA improper payment rates. It is
+valid, it gives the most accurate point estimates, and its narrower
+intervals leave room to cut audit sizes by roughly
+<strong>20–38%</strong> at current precision. That could mean about 780
+instead of 990 Part C enrollees, 330 instead of 520 PERM payments per
+state, and 23,300 instead of 37,651 CERT claims. Medical record review
+is the main cost of each measurement, so the savings would come without
+giving up accuracy. Keep the analytic interval alongside it during a
+transition. Do not use the fixed-rate interval.</p>
+<p><strong>Caveats.</strong> The audit reductions are projections and
+must be confirmed directly at the smaller sizes. Measures built from few
+errors, such as underpayments, were undercovered by every method and
+need their own check. The results come from 25 audit years per program
+(Monte Carlo SE about ±4 points) and synthetic populations; strata CMS
+does not publish are illustrative. <em>Note:</em> Part D’s only analytic
+comparator on the same audit (expansion) is weak, so its larger
+projected saving is not counted.</p>
+<p><strong>Next.</strong> (1) Find the optimal audit size by rerunning
+each design at 50–80% of the current audit with 200+ audit years. (2)
+Test model + simulation alternatives: hierarchical (beta-binomial) error
+rates, unit-level error models feeding the simulation, resampled error
+sizes, and calibrated (BCa) intervals. (3) Extend to state PERM rates,
+State-based Exchanges and one-sided recovery bounds.</p>
+</body>
+</html>

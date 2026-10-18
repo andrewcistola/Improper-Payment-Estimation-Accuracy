@@ -1,0 +1,8 @@
+unit: claim
+frame: Medicare FFS claims, four claim types (no MAC jurisdictions)
+strata: claim type x five equal-count payment quintiles (20)
+allocation: FY 2025 claims reviewed by claim type (8,750 / 8,651 / 11,600 / 8,650);
+  Neyman across quintiles within claim type
+selection: stratified_srs_without_replacement
+estimand: overpayments, underpayments, gross and net improper payment rates = sum
+  / sum x
