@@ -6,8 +6,7 @@ variables:
   n_households: 150000
   w_pop: 100.0
   target_rate: 0.0089
-  share_income: 0.5
-  share_elig: 0.3
+  technical_share: 0.48
   fpl_base: 15060.0
   fpl_per_person: 5380.0
   benchmark_base: 330.0

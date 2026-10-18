@@ -13,9 +13,19 @@ Columns shared by every `population.parquet`:
 | `error_type` | VARCHAR | Mechanism that produced `y`; `none` if `y = 0` |
 | `w_pop` | DOUBLE | Real units represented by one synthetic unit (scale weight) |
 
-### cert (`perm-cert/errors/output/cert/<shape>_<model>_p<rate>`)
+### cert (`perm-cert/errors/output/cert/national`)
 
-Shared columns only. Shapes: `right` (N = 59,804), `two_spike` (N = 249), `left` (N = 570). Exactly round(p·N) units are in error.
+`population.parquet` has one row per Medicare FFS claim (5.34 million; 1 = 200 real claims):
+
+| Column | Meaning |
+|---|---|
+| `claim_type` | `ipps` (Part A hospital IPPS), `part_a_other` (Part A excluding IPPS), `part_b`, `dmepos` |
+| `type_code` | 0–3, in that order |
+| `x` | Amount paid; each claim type's total × 200 matches its FY 2025 payments |
+| `y` | Improper amount: `x` (whole-claim overpayment), a share of `x` (partial overpayment), or minus a share of `x` (underpayment) |
+| `error_type` | `full_over`, `partial_over`, `under` or `none` |
+
+Strata: `<claim_type>_P1` .. `_P5`, equal-count payment quintiles within claim type (20). The Parquet file is not committed; rebuild it and compare hashes with `manifest.json`.
 
 ### part-c-ipm (`part-c-ipm/errors/output/base`)
 
@@ -111,9 +121,13 @@ Strata: `low` / `medium` / `high` terciles of `risk_orig`.
 | `benchmark_month` | Benchmark (SLCSP) monthly premium |
 | `aptc_month` | Monthly APTC |
 | `x` | aptc_month × months |
-| `y` | APTC paid − correct APTC |
+| `y` | Improper APTC (always ≥ 0: every error is an overpayment) = `y_technical` + `y_monetary` |
+| `y_technical` | Whole APTC where a required data match was not run (technically improper) |
+| `y_monetary` | APTC paid − APTC at the income the record supports |
+| `error_type` | `technical`, `monetary` or `none` |
+| `true_fpl_pct` | Supported income (% FPL), monetary errors only |
 
-Strata are income bands: `A_lt150`, `B_150_250`, `C_250_400`, `D_ge400`.
+Strata are five equal-count quintiles of annual APTC paid: `P1` (smallest) .. `P5`.
 
 ### truth.json
 
@@ -134,7 +148,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 | `method` | `expansion`, `ratio`, `regression` or `simulation` (the audit-finding bootstrap simulation) |
 | `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
 | `rep` | Audit year (Monte Carlo replicate) number |
-| `domain` | What is estimated: `national` (EIPM, CERT); `national\|over`, `national\|under`, `national\|gross`, `national\|net` (Part C and Part D: overpayments, underpayments, gross = over + under, net = over − under, each netted per enrollee or beneficiary first); or `<state>\|<component>` for PERM (component = gross, eligibility, claims; `national\|<component>` pools the 9 states) |
+| `domain` | What is estimated: `national\|gross`, `national\|technical`, `national\|monetary` (EIPM; all overpayments); `national\|over`, `national\|under`, `national\|gross`, `national\|net` (Part C, Part D and CERT: overpayments, underpayments, gross = over + under, net = over − under, each netted per enrollee or beneficiary first); `<claim type>\|gross` for CERT; or `<state>\|<component>` for PERM (component = gross, eligibility, claims; `national\|<component>` pools the 9 states) |
 | `estimate` | Estimated improper payment rate (simulation: mean of the 1,000 iteration rates) |
 | `se` | Standard error: analytic for expansion, ratio and regression; standard deviation of the 1,000 iteration rates for simulation |
 | `lower`, `upper` | Two-sided 95% interval |
@@ -168,7 +182,7 @@ The report covers audit years 1 to `audit_years` (25, set in `shared/report.yaml
 | `estimate`, `lower`, `upper` | Point estimate and 95% CI from this audit year |
 | `error`, `rel_error` | Point estimate minus the true rate, and that difference ÷ the true rate |
 | `truth_in_ci` | `inside` (CI contains the truth), `above` (whole CI above it), `below`, or `undefined` |
-| `total_paid_usd`, `true_improper_usd`, `estimate_usd`, `lower_usd`, `upper_usd` | Total payments and the same values in national dollars: rate × payments × `w_pop`, each program's own factor (Part C 100, Part D 500, EIPM 100, PERM 200, CERT 1) |
+| `total_paid_usd`, `true_improper_usd`, `estimate_usd`, `lower_usd`, `upper_usd` | Total payments and the same values in national dollars: rate × payments × `w_pop`, each program's own factor (Part C 100, Part D 500, EIPM 100, PERM 200, CERT 200) |
 
 `by_scenario.csv` has one row per program × scenario × domain × method × interval:
 

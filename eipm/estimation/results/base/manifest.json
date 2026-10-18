@@ -1,24 +1,28 @@
 {
   "config_file": "eipm/estimation/config.yaml",
-  "config_sha256": "5f28affb6ea1ea46c7db433f43b5a2e7f6cdc7c6ddc7669cf3050eac6dcfd208",
+  "config_sha256": "466ba86a41b04b1c4859f8ef3b0f5666bb14d8b1bb267458d051514a0ba97e61",
   "duckdb": "1.5.6",
   "files": {
+    "allocation.json": {
+      "bytes": 481,
+      "sha256": "442753285e624bd6723c099e884c232dfec49e2f56d948798bdc191b12f86875"
+    },
     "config.yaml": {
-      "bytes": 726,
-      "sha256": "6c48ceee9d31812d7888ab2fba8ddb0f82a77a516456f361481606c007a268b3"
+      "bytes": 664,
+      "sha256": "f57827789356db8384d4fdbdccd3da77a5f452022c8efb477538aee8852f8944"
     },
     "estimates.parquet": {
-      "bytes": 22960,
-      "rows": 700,
-      "sha256": "8a9938ea94a5a01ef74a0baa14fad712e5462dfa01748b380535bf99fee5c9f8"
+      "bytes": 11024,
+      "rows": 300,
+      "sha256": "2f0aadb9a51fff81a8743ff863a158efcd19bb616ca434f917d8ad5d1c8da68f"
     },
     "metrics.json": {
-      "bytes": 2175,
-      "sha256": "f66d98b70e99bf97275f0b09a5839bac2301238d1853b7df1c0b63ec4ee2fd5e"
+      "bytes": 6584,
+      "sha256": "affb9ff19aeb84ff58fce8f80c5aeb28b434d233f43d0f969b4583a5a52539a1"
     },
     "truth.json": {
-      "bytes": 115,
-      "sha256": "0bf07dd494e282160301110deef31f32a19dded73c0c557752118903b4203d70"
+      "bytes": 366,
+      "sha256": "6c7bd0bc86ac5138c7d5d98abacc9f9080d54e405b8b16ab8ce37b6b427e857d"
     }
   },
   "program": "eipm_estimation",

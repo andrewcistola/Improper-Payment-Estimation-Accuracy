@@ -27,7 +27,7 @@ defaults:
   sim_reps: 25     # audit years run through the PDE audit methods (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
   sim_audit_size: 5000  # PDE audit per audit year: claim strata, Neyman allocation
-  sim_rates: fixed      # fixed | parametric (p and q redrawn as Binomial(n, p)/n, Binomial(f, q)/f)
+  sim_rates: parametric # parametric (reported): p and q redrawn as Binomial(n, p)/n, Binomial(f, q)/f | fixed (comparison; results_fixed/)
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 scenarios:
   - name: base

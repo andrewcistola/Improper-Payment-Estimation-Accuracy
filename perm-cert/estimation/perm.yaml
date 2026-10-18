@@ -28,7 +28,7 @@ defaults:
   reps: 25         # audit years (Monte Carlo replicates)
   sim_reps: 25     # audit years run through the bootstrap simulation (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
-  sim_rates: fixed      # fixed | parametric (rates redrawn as Binomial(n, rate)/n each iteration)
+  sim_rates: parametric # parametric (reported): rates redrawn as Binomial(n, rate)/n each iteration | fixed (comparison; results_fixed/)
   sim_export_draws: true
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 grid:   # one scenario per state; true eligibility rates 2.00%..4.00%

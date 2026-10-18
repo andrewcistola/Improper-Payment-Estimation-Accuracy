@@ -1,5 +1,5 @@
 # EIPM - errors: build error-free FFE APTC applications, then apply fake
-# eligibility errors. Scaled: 1 synthetic application = 100 real applications.
+# APTC errors (overpayments only: technically improper and monetary). Scaled: 1 synthetic application = 100 real applications.
 program: eipm   # also the seed label: changing it changes every random draw
 seed: 20261016
 output_dir: output
@@ -17,9 +17,7 @@ defaults:
   n_households: 150000
   w_pop: 100.0
   target_rate: 0.0089          # FY 2025 EIPM gross rate (0.89%, $657.46M)
-  # candidate error type shares (illustrative; public reports give no split)
-  share_income: 0.50
-  share_elig: 0.30             # remainder (0.20) = missing documentation
+  technical_share: 0.48        # FY 2025: technically improper 0.43 of 0.89 points; the rest monetary
   fpl_base: 15060.0            # 2024 HHS poverty guideline (used for PY 2025)
   fpl_per_person: 5380.0
   benchmark_base: 330.0        # monthly SLCSP at age 21 (illustrative)
@@ -34,10 +32,7 @@ scenarios:
   - name: base
 design:
   unit: FFE application (household receiving APTC)
-  strata:   # EIPM strata are NOT public; illustrative income-band strata
-    - {stratum: A_lt150, n: 500}
-    - {stratum: B_150_250, n: 500}
-    - {stratum: C_250_400, n: 500}
-    - {stratum: D_ge400, n: 500}
-  selection: stratified_srs_without_replacement   # ~2,000 total
-  estimand: gross improper payment rate = sum |y| / sum x
+  strata: five equal-count quintiles of annual APTC paid (P1..P5)   # EIPM strata are NOT public; illustrative
+  allocation: Neyman over 2,000 applications (estimation/config.yaml)
+  selection: stratified_srs_without_replacement
+  estimand: gross improper payment rate = sum y / sum x (all errors are overpayments)

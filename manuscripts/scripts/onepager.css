@@ -1,0 +1,8 @@
+body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 9.6pt; line-height: 1.38; color: #111; max-width: 7.6in; margin: 0 auto; }
+h1.title { font-size: 16pt; line-height: 1.2; margin: 0 0 3pt; color: #12355b; }
+header p { margin: 0; }
+p { margin: 5pt 0; }
+table { border-collapse: collapse; width: 100%; font-size: 8.4pt; margin: 4pt 0 2pt; }
+th, td { border-bottom: 1px solid #ddd; padding: 2pt 3pt; text-align: left; vertical-align: top; }
+th { background: #eef2f7; border-bottom: 1.5px solid #12355b; }
+a { color: #1f5fae; text-decoration: none; }

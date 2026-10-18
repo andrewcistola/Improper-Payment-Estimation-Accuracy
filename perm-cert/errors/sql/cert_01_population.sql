@@ -1,26 +1,36 @@
 -- =====================================================================
--- cert errors/cert_01_population.sql : claim payment universes (no errors)
+-- cert errors/cert_01_population.sql : Medicare FFS claims (no errors)
 -- ---------------------------------------------------------------------
--- Application 3: claim-level errors (CERT-like), stress family.
--- Stylized versions of the three payment shapes in Edwards, Liu &
--- Delage (2023): synthetic shapes only, no source data.
---   right     : beneficiary-level totals, lognormal (N = 59,804)
---   two_spike : two narrow payment modes, 30% low / 70% high (N = 249)
---   left      : claims piled up near a per-claim ceiling (N = 570)
--- Output: base(unit_id, x)
+-- Application 3: claim-level errors (CERT-like), national universe.
+-- Four claim types (the CERT claim-type strata): Part A hospital IPPS,
+-- Part A excluding IPPS, Part B, DMEPOS. No MAC jurisdictions.
+-- Per claim type (config claim_types):
+--   n_claims synthetic claims (1 = w_pop real claims)
+--   raw amount  r_i ~ lognormal(0, sigma)
+--   x_i = round(r_i x (paid / w_pop) / sum r, cents), at least $1, so
+--         the type's synthetic total x w_pop matches its FY 2025 payments
+-- Strata: claim type x five equal-count quintiles of x (P1 smallest).
+-- Output: claims(unit_id, claim_type, type_code, stratum, x)
 -- =====================================================================
+CREATE OR REPLACE TABLE claim_types AS
+SELECT * FROM (SELECT unnest(from_json(getvariable('claim_types')::JSON,
+    '[{"claim_type":"VARCHAR","code":"INTEGER","n_claims":"BIGINT","sigma":"DOUBLE","paid":"DOUBLE","gross":"DOUBLE","over":"DOUBLE"}]'),
+    recursive := true));
 
-CREATE OR REPLACE TABLE base AS
-SELECT
-    i::BIGINT AS unit_id,
-    CASE getvariable('shape')
-        WHEN 'right' THEN
-            usd(greatest(25.0, rlnorm(getvariable('seed'), 'x', i, 7.6, 1.15)))
-        WHEN 'two_spike' THEN
-            usd(CASE WHEN u01(getvariable('seed'), 'mode', i) < 0.30
-                     THEN 4800.0 + 180.0 * rnorm(getvariable('seed'), 'x', i)
-                     ELSE 13500.0 + 420.0 * rnorm(getvariable('seed'), 'x', i) END)
-        WHEN 'left' THEN
-            usd(250.0 + 6750.0 * rkuma(getvariable('seed'), 'x', i, 6.0, 1.4))
-    END AS x
-FROM range(1, getvariable('n_units') + 1) t(i);
+-- unit_id = code x 10^8 + i (unique, and sorted by claim type)
+CREATE OR REPLACE TABLE claims_raw AS
+SELECT t.claim_type, t.code AS type_code, t.code::BIGINT * 100000000 + i AS unit_id,
+       rlnorm(getvariable('seed'), 'x', t.code::BIGINT * 100000000 + i, 0.0, t.sigma) AS r,
+       t.paid / getvariable('w_pop') AS target
+FROM claim_types t, LATERAL range(1, t.n_claims + 1) r(i);
+
+CREATE OR REPLACE TABLE claims AS
+WITH s AS (SELECT type_code, fsum(r) AS sum_r FROM claims_raw GROUP BY type_code),
+c AS (SELECT c.unit_id, c.claim_type, c.type_code,
+             usd(greatest(1.0, c.r * c.target / s.sum_r)) AS x
+      FROM claims_raw c JOIN s USING (type_code))
+SELECT unit_id, claim_type, type_code,
+       claim_type || '_P' || ntile(5) OVER (PARTITION BY type_code ORDER BY x, unit_id) AS stratum, x
+FROM c;
+
+DROP TABLE claims_raw;

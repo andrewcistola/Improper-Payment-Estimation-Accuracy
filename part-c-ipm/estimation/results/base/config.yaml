@@ -14,6 +14,7 @@ variables:
   reps: 25
   sim_reps: 25
   sim_iterations: 1000
+  sim_rates: parametric
   alpha: 0.05
   scenario: base
 steps:

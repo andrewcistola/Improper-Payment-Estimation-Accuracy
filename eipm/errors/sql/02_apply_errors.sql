@@ -1,56 +1,67 @@
 -- =====================================================================
--- eipm errors/02_apply_errors.sql : fake APTC eligibility errors
+-- eipm errors/02_apply_errors.sql : fake APTC errors (overpayments only)
 -- ---------------------------------------------------------------------
--- Errors are rare. Each application carries one candidate error whose
--- type is drawn with the configured shares, and is in error with
--- probability m (same for every type). m is ONE closed-form multiplier:
--- target gross dollars / expected gross dollars at m = 1 (candidate
--- dollar amounts are known, so the expectation is exact).
---   income_misstatement  : APTC recomputed at true income (two-sided, partial)
---   eligibility_failure  : not eligible for APTC (e.g. other coverage),
---                          whole APTC improper (all-or-nothing)
---   missing_documentation: unverifiable, whole APTC improper
+-- The public FFE results report no underpayments (FY 2023-2025), so every
+-- error here is an overpayment (y >= 0). Two error types, at most one per
+-- application, from one uniform u_act per application:
+--   technical : a required periodic data match was not run, so the whole
+--               APTC is improper ("technically improper"; FY 2025: 0.43
+--               of the 0.89 points). y = x.          u_act < p_t
+--   monetary  : income entered wrong (or documents accepted that do not
+--               support it): the income the record supports is HIGHER
+--               than the income used, by a factor max(r, 1/r),
+--               r ~ lognormal(0, 0.35); APTC recomputed at the supported
+--               income. y = x - correct APTC (partial, or whole when the
+--               correct APTC is 0).        p_t <= u_act < p_t + p_m
+-- Rates are closed form (candidate amounts are known, so expectations are
+-- exact):
+--   p_t = target_rate x technical_share                (y = x for every unit)
+--   p_m = target_rate x (1 - technical_share) x sum x / sum candidate y
+-- A monetary candidate whose correct APTC equals the APTC paid (income
+-- already at the 600% FPL cap) has y = 0 and is not an error.
+-- Strata (for estimation): five equal-count quintiles of annual APTC
+-- paid, P1 (smallest) .. P5.
 -- Output: population (one row per application), calib
 -- =====================================================================
--- Step 3. Candidate errors and their dollar amounts
+-- Step 3. Candidate monetary error and its dollar amount
 CREATE OR REPLACE TABLE hh AS
 WITH c AS (
     SELECT h.*,
-           u01(getvariable('seed'), 'etype', unit_id) AS u_type,
-           -- true income differs by a lognormal factor (either direction)
-           least(600.0, greatest(100.0, h.fpl_pct * rlnorm(getvariable('seed'), 'true_inc', unit_id, 0.0, 0.35)))
-               AS true_fpl_pct,
+           rlnorm(getvariable('seed'), 'true_inc', unit_id, 0.0, 0.35) AS r_inc,
            u01(getvariable('seed'), 'act', unit_id) AS u_act
     FROM hh h
 ),
-k AS (
-    SELECT *,
-           CASE WHEN u_type < getvariable('share_income') THEN 'income_misstatement'
-                WHEN u_type < getvariable('share_income') + getvariable('share_elig') THEN 'eligibility_failure'
-                ELSE 'missing_documentation' END AS cand_type
-    FROM c
-)
-SELECT k.*,
-       CASE WHEN cand_type = 'income_misstatement' THEN
-                (usd(greatest(0, benchmark_month - applicable_pct(true_fpl_pct) * true_fpl_pct / 100.0 * fpl_dollars / 12.0))
-                 * months)::DECIMAL(18, 2)
-            ELSE usd(0) END AS cand_correct_aptc
-FROM k;
+t AS (SELECT *, least(600.0, fpl_pct * greatest(r_inc, 1.0 / r_inc)) AS true_fpl_pct FROM c)
+SELECT t.*,
+       (usd(greatest(0, benchmark_month - applicable_pct(true_fpl_pct) * true_fpl_pct / 100.0 * fpl_dollars / 12.0))
+        * months)::DECIMAL(18, 2) AS cand_correct_aptc
+FROM t;
 
--- Step 4. Calibrate m (closed form) and activate
+-- Step 4. Rates (closed form) and activation
 CREATE OR REPLACE TABLE calib AS
-SELECT round(getvariable('target_rate') * sum(x)::DOUBLE / sum(abs(x - cand_correct_aptc))::DOUBLE, 8) AS m
+SELECT round(getvariable('target_rate') * getvariable('technical_share'), 8) AS p_t,
+       round(getvariable('target_rate') * (1 - getvariable('technical_share'))
+             * sum(x)::DOUBLE / sum(x - cand_correct_aptc)::DOUBLE, 8) AS p_m
 FROM hh;
 
 CREATE OR REPLACE TABLE population AS
-SELECT h.unit_id,
-       CASE WHEN h.fpl_pct < 150 THEN 'A_lt150' WHEN h.fpl_pct < 250 THEN 'B_150_250'
-            WHEN h.fpl_pct < 400 THEN 'C_250_400' ELSE 'D_ge400' END AS stratum,
-       h.region, h.hh_size, h.age, h.fpl_pct, h.months,
-       h.benchmark_month, h.aptc_month, h.x,
-       CASE WHEN h.u_act < least(0.95, c.m) THEN (h.x - h.cand_correct_aptc)::DECIMAL(18, 2) ELSE usd(0) END AS y,
-       CASE WHEN h.u_act < least(0.95, c.m) THEN h.cand_type ELSE 'none' END AS error_type,
+WITH a AS (
+    SELECT h.*,
+           CASE WHEN h.u_act < c.p_t THEN 'technical'
+                WHEN h.u_act < c.p_t + c.p_m AND h.cand_correct_aptc < h.x THEN 'monetary'
+                ELSE 'none' END AS error_type
+    FROM hh h, calib c
+)
+SELECT unit_id,
+       'P' || ntile(5) OVER (ORDER BY x, unit_id) AS stratum,
+       region, hh_size, age, fpl_pct, months,
+       benchmark_month, aptc_month, x,
+       CASE error_type WHEN 'technical' THEN x
+                       WHEN 'monetary' THEN (x - cand_correct_aptc)::DECIMAL(18, 2)
+                       ELSE usd(0) END AS y,
+       CASE WHEN error_type = 'technical' THEN x ELSE usd(0) END AS y_technical,
+       CASE WHEN error_type = 'monetary' THEN (x - cand_correct_aptc)::DECIMAL(18, 2) ELSE usd(0) END AS y_monetary,
+       error_type,
        getvariable('w_pop')::DOUBLE AS w_pop,
-       CASE WHEN h.u_act < least(0.95, c.m) AND h.cand_type = 'income_misstatement'
-            THEN h.true_fpl_pct END AS true_fpl_pct   -- audit finding: income the record supports
-FROM hh h, calib c;
+       CASE WHEN error_type = 'monetary' THEN true_fpl_pct END AS true_fpl_pct   -- audit finding: supported income
+FROM a;

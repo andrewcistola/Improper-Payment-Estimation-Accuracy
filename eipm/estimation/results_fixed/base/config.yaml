@@ -1,0 +1,26 @@
+program: eipm_estimation
+scenario: base
+master_seed: 20261016
+scenario_seed: 579582104793643683
+variables:
+  population_dir: eipm/errors/output/base
+  components:
+  - gross
+  - technical
+  - monetary
+  audit_size: 2000
+  reps: 25
+  sim_reps: 25
+  sim_iterations: 1000
+  sim_rates: fixed
+  alpha: 0.05
+  scenario: base
+steps:
+- sql: eipm/estimation/sql/01_frame.sql
+- sql: shared/sql/sample_srs.sql
+- sql: eipm/estimation/sql/10_expansion.sql
+- sql: eipm/estimation/sql/20_ratio.sql
+- sql: eipm/estimation/sql/30_regression.sql
+- sql: eipm/estimation/sql/40_simulation_inputs.sql
+- python: eipm/estimation/simulation.py
+- sql: eipm/estimation/sql/90_score.sql

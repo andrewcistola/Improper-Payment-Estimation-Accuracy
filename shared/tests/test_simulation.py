@@ -111,15 +111,80 @@ def test_part_d_bootstrap_rates_unbiased():
         assert abs(gross / (np.abs(y).sum() / k.X) - 1) < 0.02
 
 
-def test_eipm_payment_function_exact():
+def eipm_kernel(extra=None):
     cfg = yaml.safe_load((ROOT / "eipm/errors/config.yaml").read_text())["defaults"]
     con = setup("eipm/errors/output/base", "eipm/estimation/sql/40_simulation_inputs.sql")
-    mod = load_kernel(ROOT / "eipm/estimation/simulation.py")
+    return con, load_kernel(ROOT / "eipm/estimation/simulation.py"), {**cfg, **(extra or {})}
+
+
+def test_eipm_payment_function_exact():
+    """Each application's own finding reproduces errors/ y to the cent (all
+    overpayments); an audit of every application gives the exact rates."""
+    con, mod, cfg = eipm_kernel()
     k = mod.Kernel(con, cfg)
     y = k.improper_cents(k.finding, np.where(k.finding == 1, k.true_fpl, k.fpl))
     truth = con.execute("SELECT y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()["y_cents"]
-    assert np.array_equal(y, truth)
+    assert np.array_equal(y["gross"], truth) and (truth >= 0).all()
     assert np.array_equal(mod.annual_aptc_cents(k.fpl, k.bench, k.fpl_dollars, k.months, k.schedule), k.x)
+    for rates in ("fixed", "parametric"):
+        k = mod.Kernel(con, {**cfg, "sim_rates": rates})
+        k.prepare(1, np.ones(k.units, bool))
+        got = k.iterate(None, np.random.default_rng(1))
+        assert got["national|gross"] == truth.sum() / k.X
+        assert got["national|technical"] + got["national|monetary"] == got["national|gross"]
+
+
+def test_eipm_bootstrap_rates_unbiased():
+    """With half the applications audited, both rate versions reproduce the
+    audited half's own gross rate (the target the audit can see; the
+    income ratio moved to another application costs about 1-2%)."""
+    con, mod, cfg = eipm_kernel()
+    rng = np.random.default_rng(5)
+    y = con.execute("SELECT y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()["y_cents"].astype(float)
+    for rates in ("fixed", "parametric"):
+        k = mod.Kernel(con, {**cfg, "sim_rates": rates})
+        m = rng.random(k.units) < 0.5
+        k.prepare(1, m)
+        target = y[m].sum() / m.sum() * k.units / k.X
+        gross = np.mean([k.iterate(None, rng)["national|gross"] for _ in range(20)])
+        assert abs(gross / target - 1) < 0.03
+
+
+def cert_kernel(extra=None):
+    if not (ROOT / "perm-cert/errors/output/cert/national/population.parquet").exists():
+        pytest.skip("build perm-cert/errors/cert.yaml first")
+    con = setup("perm-cert/errors/output/cert/national", "perm-cert/estimation/sql/cert_40_simulation_inputs.sql")
+    return con, load_kernel(ROOT / "perm-cert/estimation/cert_simulation.py").Kernel(con, extra or {})
+
+
+def test_cert_payment_function_exact():
+    """Each claim's own taint reproduces errors/ y to the cent; an audit of
+    every claim gives the exact over, under, gross, net and claim-type rates."""
+    con, k = cert_kernel()
+    assert np.array_equal(k.improper_cents(k.taint), k.y)
+    k.prepare(1, np.ones(k.units, bool))
+    got = k.iterate(None, np.random.default_rng(1))
+    y = k.y.astype(float)
+    over, under = y[y > 0].sum(), -y[y < 0].sum()
+    assert got["national|over"] == over / k.X and got["national|under"] == under / k.X
+    assert got["national|net"] == (over - under) / k.X
+    g = np.bincount(k.type, weights=np.abs(y), minlength=4) / k.X_type
+    assert np.allclose([got[f"{t}|gross"] for t in ("ipps", "part_a_other", "part_b", "dmepos")], g, rtol=1e-12)
+
+
+def test_cert_bootstrap_rates_unbiased():
+    """With 30% of claims audited, both rate versions reproduce the audited
+    claims' own over and under rates."""
+    rng = np.random.default_rng(9)
+    for rates in ("fixed", "parametric"):
+        con, k = cert_kernel({"sim_rates": rates})
+        m = rng.random(k.units) < 0.3
+        k.prepare(1, m)
+        w = np.where(m, 1.0 / m.mean(), 0.0)   # crude expansion of the audited claims (same in every stratum)
+        y = k.y * w
+        it = [k.iterate(None, rng) for _ in range(5)]
+        assert abs(np.mean([r["national|over"] for r in it]) / (y[y > 0].sum() / k.X) - 1) < 0.02
+        assert abs(np.mean([r["national|under"] for r in it]) / (-y[y < 0].sum() / k.X) - 1) < 0.05
 
 
 def test_perm_payment_function_exact():
@@ -175,15 +240,15 @@ def test_rowset_assign():
 
 def test_simulation_reproducible(tmp_path):
     from ipsim.engine import Engine
-    if not (ROOT / "perm-cert/errors/output/cert/left_all_or_nothing_p0.30").exists():
-        pytest.skip("build perm-cert/errors/cert.yaml first")
+    if not (ROOT / "eipm/errors/output/base/population.parquet").exists():
+        pytest.skip("build eipm/errors/config.yaml first")
     out = []
     for i in range(2):
-        e = Engine(ROOT / "perm-cert/estimation/cert.yaml", tmp_path / f"r{i}")
-        e.config["defaults"].update(reps=6, sim_reps=4, sim_iterations=150)
-        e.run(["left_p0.30"])
-        out.append((tmp_path / f"r{i}" / "left_p0.30" / "estimates.parquet").read_bytes())
+        e = Engine(ROOT / "eipm/estimation/config.yaml", tmp_path / f"r{i}")
+        e.config["defaults"].update(reps=4, sim_reps=4, sim_iterations=150)
+        e.run(["base"])
+        out.append((tmp_path / f"r{i}" / "base" / "estimates.parquet").read_bytes())
     assert out[0] == out[1]
     import duckdb
-    methods = {m for (m,) in duckdb.sql(f"SELECT DISTINCT method FROM '{tmp_path}/r0/left_p0.30/estimates.parquet'").fetchall()}
+    methods = {m for (m,) in duckdb.sql(f"SELECT DISTINCT method FROM '{tmp_path}/r0/base/estimates.parquet'").fetchall()}
     assert methods == {"expansion", "ratio", "regression", "simulation"}    # one simulation: the audit as audited
