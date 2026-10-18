@@ -71,3 +71,51 @@ Average error of the point estimate over the 25 audit years, as a % of the true 
 | left-skewed, 95% errors | 95.11% | 3.2% (0.0%) | 3.0% (−0.7%) | 3.1% (−0.6%) | 3.0% (−0.6%) |
 
 All 12 populations are in `estimation/results/cert/`.
+
+## PERM results (25 audit years)
+
+Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 200, federal share); rates are dollars ÷ total payments ($142.0B).
+
+**Dollars**
+
+| Measure | Method | True | Estimated | Upper bound | Lower bound |
+|---|---|---|---|---|---|
+| Gross (all PERM errors are overpayments) | Expansion | $8.65B | $8.57B | $9.74B | $7.42B |
+|  | Ratio | $8.65B | $8.52B | $9.70B | $7.38B |
+|  | Regression | $8.65B | $8.57B | $9.71B | $7.44B |
+|  | Bootstrap simulation (fixed rates) | $8.65B | $8.48B | $8.63B | $8.34B |
+| Eligibility | Expansion | $4.34B | $4.33B | $5.18B | $3.48B |
+|  | Ratio | $4.34B | $4.33B | $5.18B | $3.48B |
+|  | Regression | $4.34B | $4.34B | $5.19B | $3.49B |
+|  | Bootstrap simulation (fixed rates) | $4.34B | $4.24B | $4.37B | $4.11B |
+| Claims | Expansion | $4.44B | $4.50B | $5.26B | $3.63B |
+|  | Ratio | $4.44B | $4.52B | $5.28B | $3.67B |
+|  | Regression | $4.44B | $4.53B | $5.28B | $3.75B |
+|  | Bootstrap simulation (fixed rates) | $4.44B | $4.42B | $4.48B | $4.36B |
+
+**Rates**
+
+| Measure | Method | True | Estimated | Upper bound | Lower bound |
+|---|---|---|---|---|---|
+| Gross (all PERM errors are overpayments) | Expansion | 6.09% | 6.04% | 6.86% | 5.23% |
+|  | Ratio | 6.09% | 6.00% | 6.83% | 5.20% |
+|  | Regression | 6.09% | 6.04% | 6.84% | 5.24% |
+|  | Bootstrap simulation (fixed rates) | 6.09% | 5.97% | 6.08% | 5.87% |
+| Eligibility | Expansion | 3.06% | 3.05% | 3.64% | 2.45% |
+|  | Ratio | 3.06% | 3.05% | 3.65% | 2.45% |
+|  | Regression | 3.06% | 3.06% | 3.65% | 2.46% |
+|  | Bootstrap simulation (fixed rates) | 3.06% | 2.99% | 3.07% | 2.89% |
+| Claims | Expansion | 3.13% | 3.17% | 3.70% | 2.55% |
+|  | Ratio | 3.13% | 3.18% | 3.72% | 2.58% |
+|  | Regression | 3.13% | 3.19% | 3.72% | 2.64% |
+|  | Bootstrap simulation (fixed rates) | 3.13% | 3.11% | 3.16% | 3.07% |
+
+**How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
+
+| Measure | Expansion | Ratio | Regression | Bootstrap simulation (fixed rates) |
+|---|---|---|---|---|
+| Gross (all PERM errors are overpayments) | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 3/25 (9/13) |
+| Eligibility | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 8/25 (7/10) |
+| Claims | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 2/25 (11/12) |
+
+From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).

@@ -44,7 +44,7 @@ Each row gives the true value and, over the 25 audit years, the median point est
 |  | Ratio | $1.44B | $1.48B | $2.20B | $0.72B |
 |  | Regression | $1.44B | $1.47B | $2.21B | $0.73B |
 |  | Bootstrap simulation (fixed rates) | $1.44B | $1.44B | $1.51B | $1.38B |
-| Underpayments | Expansion | $0.02B | $0.00B | $0.00B | $0.00B |
+| Underpayments | Expansion | $0.02B | $-0.00B | $0.00B | $-0.00B |
 |  | Ratio | $0.02B | $0.01B | $0.03B | $0.00B |
 |  | Regression | $0.02B | $0.01B | $0.02B | $0.00B |
 |  | Bootstrap simulation (fixed rates) | $0.02B | $0.02B | $0.03B | $0.02B |
@@ -65,7 +65,7 @@ Each row gives the true value and, over the 25 audit years, the median point est
 |  | Ratio | 1.36% | 1.40% | 2.09% | 0.69% |
 |  | Regression | 1.36% | 1.39% | 2.09% | 0.69% |
 |  | Bootstrap simulation (fixed rates) | 1.36% | 1.37% | 1.43% | 1.31% |
-| Underpayments | Expansion | 0.02% | 0.00% | 0.00% | 0.00% |
+| Underpayments | Expansion | 0.02% | -0.00% | 0.00% | -0.00% |
 |  | Ratio | 0.02% | 0.01% | 0.02% | 0.00% |
 |  | Regression | 0.02% | 0.01% | 0.02% | 0.00% |
 |  | Bootstrap simulation (fixed rates) | 0.02% | 0.02% | 0.03% | 0.02% |

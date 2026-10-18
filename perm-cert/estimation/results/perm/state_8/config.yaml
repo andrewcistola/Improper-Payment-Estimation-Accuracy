@@ -5,14 +5,15 @@ scenario_seed: 2125096697135393104
 variables:
   population_dir: perm-cert/errors/output/perm/state_elig_grid
   components:
-  - overall
+  - gross
   - eligibility
   - claims
-  n_ffs_per_stratum: 20
-  n_mc_per_stratum: 6
-  reps: 200
+  audit_size: 520
+  reps: 25
   sim_reps: 25
   sim_iterations: 1000
+  sim_rates: fixed
+  sim_export_draws: true
   alpha: 0.05
   state_id: 8
   scenario: state_8

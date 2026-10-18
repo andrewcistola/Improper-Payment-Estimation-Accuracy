@@ -52,9 +52,9 @@ Add `--set reps=20 sim_reps=3 sim_iterations=100` (20 audit years, 3 of them run
 
 ## Results
 
-> **Reworking program by program.** Each program's audit design, population and methods are being revised in turn. Part C and Part D are done; the other programs are placeholders until theirs is.
+> **Reworking program by program.** Each program's audit design, population and methods are being revised in turn. Part C, Part D and PERM are done; the other programs are placeholders until theirs is.
 
-Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee or beneficiary first. Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200; CERT is not scaled). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years)).
+Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee or beneficiary first. Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200; CERT is not scaled). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm-cert/README.md#perm-results-25-audit-years)).
 
 **Gross improper payments (national dollars)**
 
@@ -68,7 +68,10 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 |  | Ratio | $1.46B | $1.49B | $2.22B | $0.74B |
 |  | Regression | $1.46B | $1.48B | $2.22B | $0.77B |
 |  | Bootstrap simulation (fixed rates) | $1.46B | $1.46B | $1.52B | $1.39B |
-| PERM | | _pending rework_ | | | |
+| PERM (9 states, 520 payments each) | Expansion | $8.65B | $8.57B | $9.74B | $7.42B |
+|  | Ratio | $8.65B | $8.52B | $9.70B | $7.38B |
+|  | Regression | $8.65B | $8.57B | $9.71B | $7.44B |
+|  | Bootstrap simulation (fixed rates) | $8.65B | $8.48B | $8.63B | $8.34B |
 | EIPM | | _pending rework_ | | | |
 | CERT | | _pending rework_ | | | |
 
@@ -84,7 +87,10 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 |  | Ratio | 1.38% | 1.41% | 2.10% | 0.70% |
 |  | Regression | 1.38% | 1.41% | 2.11% | 0.73% |
 |  | Bootstrap simulation (fixed rates) | 1.38% | 1.38% | 1.44% | 1.32% |
-| PERM | | _pending rework_ | | | |
+| PERM (9 states, 520 payments each) | Expansion | 6.09% | 6.04% | 6.86% | 5.23% |
+|  | Ratio | 6.09% | 6.00% | 6.83% | 5.20% |
+|  | Regression | 6.09% | 6.04% | 6.84% | 5.24% |
+|  | Bootstrap simulation (fixed rates) | 6.09% | 5.97% | 6.08% | 5.87% |
 | EIPM | | _pending rework_ | | | |
 | CERT | | _pending rework_ | | | |
 
