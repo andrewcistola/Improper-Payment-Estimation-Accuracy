@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[2]
 LR = ROOT / "literature-review"
-SRC = LR / "comparing-improper-payment-estimators-literature-review.md"
+SRC = LR / "improper-payment-estimation-accuracy-literature-review.md"
 STEM = SRC.stem
 CSS = ROOT / "manuscripts" / "scripts" / "print.css"
 
