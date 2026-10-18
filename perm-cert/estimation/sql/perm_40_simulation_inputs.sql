@@ -5,9 +5,9 @@
 -- beneficiary, and -- for audited payments -- the findings:
 --   claims review : improper share of the payment (taint = y_claims / x)
 --   eligibility   : the beneficiary's eligibility error (all payments)
--- Donor kinds: claims findings by payment type x payment-size class
--- (S1..S5, pooled over quarters); eligibility from any audited
--- beneficiary in the state.
+-- Donor kinds: claims findings within the payment stratum (payment type
+-- x payment quintile P1..P5, claims_kind 0..9); eligibility from the
+-- audited beneficiaries of the state.
 -- =====================================================================
 CREATE OR REPLACE TABLE sim_units AS
 SELECT row_number() OVER (ORDER BY unit_id) - 1 AS unit_idx, unit_id, bene_id, stratum,

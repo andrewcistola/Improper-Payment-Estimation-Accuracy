@@ -1,6 +1,6 @@
 {
   "config_file": "perm-cert/errors/perm.yaml",
-  "config_sha256": "ed941f33c2462b95dfb5a9c913bcd0e8ed1b65749add0264db77b613eaf5cc8e",
+  "config_sha256": "c86f282da1af17caf52081d502be31ada4f205028ca3219b362f9ce3525ae397",
   "duckdb": "1.5.6",
   "files": {
     "checks.json": {
@@ -12,13 +12,13 @@
       "sha256": "7f2833561bc8ae03b755dfb048117dfe0cb937cf12ed119483cae26c7fb636ce"
     },
     "design.yaml": {
-      "bytes": 559,
-      "sha256": "c87bbc4defea6576a529a2d97c8536210c700834ada99dbb52c0c47f252c0688"
+      "bytes": 529,
+      "sha256": "b0b078092054dbd3282be81e7ec15cd5f6b37e116c7194501de0342f8c83a5c9"
     },
     "population.parquet": {
-      "bytes": 19110373,
+      "bytes": 18567531,
       "rows": 3088859,
-      "sha256": "182c78747c249748ff6bc48a626fd9955cbf061ffa3d2e88e8f92a95470aa512"
+      "sha256": "8e9aa27654ce4f534490221def1e3f450d4ea85aba2de29b99335bd680e76b5c"
     },
     "states.parquet": {
       "bytes": 568,

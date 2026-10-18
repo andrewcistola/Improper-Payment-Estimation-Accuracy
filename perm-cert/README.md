@@ -2,7 +2,7 @@
 
 Individual claim or benefit-level errors. Two populations share this folder; files are prefixed `perm_` or `cert_`.
 
-- **PERM** (Medicaid): payment universes for 9 states, with claims-review errors and eligibility errors. Each state's true eligibility rate is set on a grid from 2.00% to 4.00%. Estimands: each state's overall, eligibility and claims improper payment rates at federal share, Σ y·FMAP / Σ x·FMAP.
+- **PERM** (Medicaid): payment universes for 9 states, with claims-review errors and eligibility errors. Each state's true eligibility rate is set on a grid from 2.00% to 4.00%. Estimands: each state's gross, eligibility and claims improper payment rates at federal share, Σ y·FMAP / Σ x·FMAP, and the 9 states pooled. Every PERM error is an overpayment, so gross = overpayments = net and underpayments are zero.
 - **CERT** (claims stress family): the three payment shapes of Edwards, Liu & Delage (2023) (right-skewed, two-spike, left-skewed), each with all-or-nothing errors at 5%, 30%, 70% and 95% of claims. Estimand: the claim improper payment rate, Σy / Σx.
 
 ## errors/ — build the populations, then apply fake errors
@@ -24,12 +24,12 @@ PERM details:
 
 | Run | Design | Output |
 |---|---|---|
-| `ipsim perm-cert/estimation/perm.yaml` | One scenario per state: systematic selection after sorting by amount paid, within strata; 400 FFS + 120 MC payments a year; all components share one sample; 200 audit years | `estimation/results/perm/state_<id>/` (domain = `state\|component`) |
+| `ipsim perm-cert/estimation/perm.yaml` then `perm_national.yaml` | One scenario per state: strata = payment type (FFS, MC) × five equal-count payment quintiles; Neyman allocation of 520 payments per state-year (n_h ∝ N_h × S_h, S_h = standard deviation of gross improper dollars); systematic selection after sorting by amount paid within stratum; all components share one sample; 25 audit years. `perm_national.yaml` pools the states: dollars and variances add for the analytic methods; the bootstrap simulation sums the states' iterations | `estimation/results/perm/state_<id>/` (domain = `state\|component`), `estimation/results/perm/national/` |
 | `ipsim perm-cert/estimation/cert.yaml` | SRS of 30 claims; 1,000 audit years per population | `estimation/results/cert/<shape>_p<rate>/` |
 
 Methods: `*_10_expansion.sql`, `*_20_ratio.sql`, `*_30_regression.sql`, and the audit-finding bootstrap simulation (`*_40_simulation_inputs.sql` + `perm_simulation.py` / `cert_simulation.py`), all scored in `*_90_score.sql`.
 
-- **PERM bootstrap simulation:** each non-audited payment takes the claims finding (improper share of the payment) of a random audited payment of the same payment type and size class; each beneficiary with no audited payment takes the eligibility finding of a random audited beneficiary. Run on the first 25 audit years per state.
+- **PERM bootstrap simulation:** within each stratum, a non-audited payment is in error with the audited error rate; an error is partial with the audited partial share (its improper share drawn from the stratum's audited partial errors), otherwise the whole payment is improper. A beneficiary with no audited payment is ineligible with the audited beneficiaries' eligibility error rate. Fixed rates (README) or parametric rates (`sim_rates: parametric`: each rate redrawn as Binomial(n, rate)/n before every iteration). 25 audit years per state, 1,000 iterations.
 - **CERT bootstrap simulation:** each non-audited claim takes the improper share of a random audited claim. Run on the first 100 audit years per population; results are reported for audit years 1–25. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql). The systematic sample's variance is estimated as if it were stratified SRS, the usual approximation; the study measures how well that works.
 
 ## CERT results (SRS of 30 claims)
@@ -71,3 +71,51 @@ Average error of the point estimate over the 25 audit years, as a % of the true 
 | left-skewed, 95% errors | 95.11% | 3.2% (0.0%) | 3.0% (−0.7%) | 3.1% (−0.6%) | 3.0% (−0.6%) |
 
 All 12 populations are in `estimation/results/cert/`.
+
+## PERM results (25 audit years)
+
+Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 200, federal share); rates are dollars ÷ total payments ($142.0B).
+
+**Dollars**
+
+| Measure | Method | True | Estimated | Upper bound | Lower bound |
+|---|---|---|---|---|---|
+| Gross (all PERM errors are overpayments) | Expansion | $8.65B | $8.57B | $9.74B | $7.42B |
+|  | Ratio | $8.65B | $8.52B | $9.70B | $7.38B |
+|  | Regression | $8.65B | $8.57B | $9.71B | $7.44B |
+|  | Bootstrap simulation (fixed rates) | $8.65B | $8.48B | $8.63B | $8.34B |
+| Eligibility | Expansion | $4.34B | $4.33B | $5.18B | $3.48B |
+|  | Ratio | $4.34B | $4.33B | $5.18B | $3.48B |
+|  | Regression | $4.34B | $4.34B | $5.19B | $3.49B |
+|  | Bootstrap simulation (fixed rates) | $4.34B | $4.24B | $4.37B | $4.11B |
+| Claims | Expansion | $4.44B | $4.50B | $5.26B | $3.63B |
+|  | Ratio | $4.44B | $4.52B | $5.28B | $3.67B |
+|  | Regression | $4.44B | $4.53B | $5.28B | $3.75B |
+|  | Bootstrap simulation (fixed rates) | $4.44B | $4.42B | $4.48B | $4.36B |
+
+**Rates**
+
+| Measure | Method | True | Estimated | Upper bound | Lower bound |
+|---|---|---|---|---|---|
+| Gross (all PERM errors are overpayments) | Expansion | 6.09% | 6.04% | 6.86% | 5.23% |
+|  | Ratio | 6.09% | 6.00% | 6.83% | 5.20% |
+|  | Regression | 6.09% | 6.04% | 6.84% | 5.24% |
+|  | Bootstrap simulation (fixed rates) | 6.09% | 5.97% | 6.08% | 5.87% |
+| Eligibility | Expansion | 3.06% | 3.05% | 3.64% | 2.45% |
+|  | Ratio | 3.06% | 3.05% | 3.65% | 2.45% |
+|  | Regression | 3.06% | 3.06% | 3.65% | 2.46% |
+|  | Bootstrap simulation (fixed rates) | 3.06% | 2.99% | 3.07% | 2.89% |
+| Claims | Expansion | 3.13% | 3.17% | 3.70% | 2.55% |
+|  | Ratio | 3.13% | 3.18% | 3.72% | 2.58% |
+|  | Regression | 3.13% | 3.19% | 3.72% | 2.64% |
+|  | Bootstrap simulation (fixed rates) | 3.13% | 3.11% | 3.16% | 3.07% |
+
+**How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
+
+| Measure | Expansion | Ratio | Regression | Bootstrap simulation (fixed rates) |
+|---|---|---|---|---|
+| Gross (all PERM errors are overpayments) | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 3/25 (9/13) |
+| Eligibility | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 8/25 (7/10) |
+| Claims | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 2/25 (11/12) |
+
+From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).

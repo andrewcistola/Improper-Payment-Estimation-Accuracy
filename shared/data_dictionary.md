@@ -134,7 +134,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 | `method` | `expansion`, `ratio`, `regression` or `simulation` (the audit-finding bootstrap simulation) |
 | `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
 | `rep` | Audit year (Monte Carlo replicate) number |
-| `domain` | What is estimated: `national` (EIPM, CERT); `national\|over`, `national\|under`, `national\|gross`, `national\|net` (Part C and Part D: overpayments, underpayments, gross = over + under, net = over − under, each netted per enrollee or beneficiary first); or `<state>\|<component>` for PERM |
+| `domain` | What is estimated: `national` (EIPM, CERT); `national\|over`, `national\|under`, `national\|gross`, `national\|net` (Part C and Part D: overpayments, underpayments, gross = over + under, net = over − under, each netted per enrollee or beneficiary first); or `<state>\|<component>` for PERM (component = gross, eligibility, claims; `national\|<component>` pools the 9 states) |
 | `estimate` | Estimated improper payment rate (simulation: mean of the 1,000 iteration rates) |
 | `se` | Standard error: analytic for expansion, ratio and regression; standard deviation of the 1,000 iteration rates for simulation |
 | `lower`, `upper` | Two-sided 95% interval |

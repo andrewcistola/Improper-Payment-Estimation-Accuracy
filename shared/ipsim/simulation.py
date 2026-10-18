@@ -181,7 +181,7 @@ def run(con, v, kernel_module):
       prepare(rep, audited_mask) : called once per audit year, before its iterations
       iterate(donor_units, rng) -> {domain: rate}
     Writes table est_simulation(method, interval, rep, domain, estimate,
-    se, lower, upper).
+    se, lower, upper) and sim_draws(rep, iter, domain, rate).
     """
     # payment-function parameters: exactly those that built the population
     # (errors/output/<scenario>/config.yaml), then this run's variables
@@ -189,7 +189,7 @@ def run(con, v, kernel_module):
     n_iter, alpha = int(v["sim_iterations"]), float(v["alpha"])
     reps = sorted(r for (r,) in con.execute("SELECT DISTINCT rep FROM sample ORDER BY rep").fetchall())
     reps = reps[: int(v["sim_reps"])]
-    rows = []
+    rows, draw_rows = [], []
     for rep in reps:
         audited = kernel.audited(rep)
         audited_mask = np.zeros(kernel.units, dtype=bool)
@@ -197,9 +197,10 @@ def run(con, v, kernel_module):
         kernel.prepare(rep, audited_mask)
         rng = np.random.Generator(np.random.PCG64(np.random.SeedSequence([int(v["seed"]), rep])))
         draws = {}
-        for _ in range(n_iter):
+        for it in range(n_iter):
             for domain, rate in kernel.iterate(audited, rng).items():
                 draws.setdefault(domain, []).append(rate)
+                draw_rows.append((rep, it + 1, domain, rate))
         for domain, rates in draws.items():
             rates = np.asarray(rates)
             lo, hi = np.quantile(rates, [alpha / 2, 1 - alpha / 2])
@@ -213,3 +214,9 @@ def run(con, v, kernel_module):
     con.register("est_simulation_arrow", tbl)
     con.execute("CREATE OR REPLACE TABLE est_simulation AS SELECT * FROM est_simulation_arrow")
     con.unregister("est_simulation_arrow")
+    # every iteration's rates (table sim_draws), e.g. to pool PERM states
+    d = list(zip(*draw_rows)) if draw_rows else [[]] * 4
+    con.register("sim_draws_arrow", pa.table({"rep": pa.array(d[0], pa.int32()), "iter": pa.array(d[1], pa.int32()),
+                                              "domain": pa.array(d[2], pa.string()), "rate": pa.array(d[3], pa.float64())}))
+    con.execute("CREATE OR REPLACE TABLE sim_draws AS SELECT * FROM sim_draws_arrow")
+    con.unregister("sim_draws_arrow")
