@@ -10,6 +10,11 @@ standard benefit), per beneficiary, PDEs in fill order:
   payment error y = Medicare(submitted PDEs) - Medicare(corrected PDEs),
   netted within the beneficiary
 Cents and SQL rounding are reproduced exactly (shared/tests/test_simulation.py).
+
+Alternative design (benefit_design: pre_ira_2023, errors/pre_ira.yaml): the
+CY 2023 benefit of errors/sql/05_benefit_pre_ira.sql (deductible, initial
+coverage, coverage gap with the 70% manufacturer discount, 80% catastrophic
+reinsurance), in medicare_cents_pre_ira. The population's config selects it.
 Every method sums y over beneficiaries: over = sum of positive y, under =
 sum of -y where negative, gross = over + under, net = over - under, each
 divided by total payments X (direct subsidy + reinsurance + LICS).
@@ -50,11 +55,58 @@ N_STRATA = 3
 
 
 def benefit_params(v):
+    """(payment function, its parameters) for the population's benefit design."""
+    if str(v.get("benefit_design", "post_ira_2025")) == "pre_ira_2023":
+        D = round(float(v["deductible"]) * 100)
+        ICL = round(float(v["initial_coverage_limit"]) * 100)
+        L = round((float(v["oop_threshold"]) - float(v["deductible"])
+                   - float(v["init_enrollee_coins"]) * (float(v["initial_coverage_limit"]) - float(v["deductible"])))
+                  * 10000)                                            # cent-percent, as in the SQL
+        return medicare_cents_pre_ira, (D, ICL, L, float(v["init_enrollee_coins"]), float(v["gap_enrollee_coins"]),
+                                        float(v["gap_mfr_brand"]), float(v["cat_enrollee_coins"]),
+                                        float(v["cat_reins"]), float(v["lis_copay_brand"]),
+                                        float(v["lis_copay_generic"]))
     D = round(float(v["deductible"]) * 100)
     I = round((float(v["deductible"]) + (float(v["oop_threshold"]) - float(v["deductible"]))
                / float(v["init_enrollee_coins"])) * 100)
-    return (D, I, float(v["init_enrollee_coins"]), float(v["cat_reins_brand"]), float(v["cat_reins_generic"]),
-            float(v["lis_copay_brand"]), float(v["lis_copay_generic"]))
+    return medicare_cents, (D, I, float(v["init_enrollee_coins"]), float(v["cat_reins_brand"]),
+                            float(v["cat_reins_generic"]), float(v["lis_copay_brand"]), float(v["lis_copay_generic"]))
+
+
+@njit
+def medicare_cents_pre_ira(g, row_unit, lis, brand, n_units, D, ICL, L, coins, gap_coins, gap_mfr,
+                           cat_coins, cat_reins, copay_brand, copay_generic):
+    """Medicare PDE-driven payment per beneficiary (cents), CY 2023 benefit
+    (errors/sql/05_benefit_pre_ira.sql). g = GDC cents per PDE; rows sorted
+    by beneficiary, then fill order."""
+    out = np.zeros(n_units)
+    pre = 0
+    w = 0
+    last = -1
+    for i in range(len(g)):
+        u = row_unit[i]
+        if u != last:                     # new beneficiary: benefit year starts at 0
+            pre = 0
+            w = 0
+            last = u
+        post = pre + g[i]
+        ded = max(0, min(post, D) - min(pre, D))
+        ini = max(0, min(post, ICL) - max(pre, D))
+        above = max(0, post - max(pre, ICL))
+        r = 100 if lis[i] else (95 if brand[i] else 25)              # TrOOP accrual in the gap (percent)
+        w_post = w + r * above
+        gap = round_half_away_scalar((min(w_post, L) - min(w, L)) / r)
+        cat = above - gap
+        reins = round_half_away_scalar(cat_reins * cat)
+        lics = 0.0
+        if lis[i]:
+            std = ded / 100.0 + coins * (ini / 100.0) + 1.0 * (gap / 100.0)
+            copay = copay_brand if brand[i] else copay_generic
+            lics = round_half_away_scalar((std - min(std, copay)) * 100.0) + round_half_away_scalar(cat_coins * cat)
+        out[u] += reins + lics
+        pre = post
+        w = w_post
+    return out
 
 
 @njit
@@ -116,13 +168,13 @@ class Kernel:
         self.stratum = np.asarray(r["stratum_code"], dtype=np.int64)
         self.sub = np.asarray(r["sub_cents"], dtype=np.int64)
         self.cor = np.asarray(r["cor_cents"], dtype=np.int64)
-        self.p = benefit_params(v)
+        self.payment, self.p = benefit_params(v)        # post-IRA (default) or pre-IRA payment function
         self.units = len(self.sub)                      # audit units = PDEs
-        self.m_sub = medicare_cents(self.sub, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
+        self.m_sub = self.payment(self.sub, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
 
     def improper_cents(self, g_corrected):
         """y per beneficiary for a corrected GDC vector (all PDEs)."""
-        return self.m_sub - medicare_cents(g_corrected, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
+        return self.m_sub - self.payment(g_corrected, self.row_unit, self.lis, self.brand, self.n_benes, *self.p)
 
     def audited(self, rep):
         s = self.con.execute("SELECT row_idx FROM sim_audit_sample WHERE rep = ? ORDER BY row_idx",

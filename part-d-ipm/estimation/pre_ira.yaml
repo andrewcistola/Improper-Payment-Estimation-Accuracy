@@ -1,0 +1,36 @@
+# Part D IPM - estimation, ALTERNATIVE BENEFIT DESIGN: the same audits and
+# methods as config.yaml (same seed label and scenario name), run on the
+# pre-IRA CY 2023 population (errors/pre_ira.yaml). The payment function
+# follows the population's benefit_design. A reference result, not read by
+# shared/report.yaml or the README tables. Output: estimation/results_pre_ira/
+# (parametric rates); fixed rates: --out part-d-ipm/estimation/results_pre_ira_fixed
+# --set sim_rates=fixed.
+program: partd_estimation   # also the seed label for sampling and simulation
+seed: 20261016
+output_dir: results_pre_ira
+steps:
+  - sql: part-d-ipm/estimation/sql/01_frame.sql        # estimands + beneficiary audit design
+  - sql: shared/sql/sample_srs.sql                          # audit years: beneficiary audit (990)
+  - sql: part-d-ipm/estimation/sql/20_ratio.sql
+  - sql: part-d-ipm/estimation/sql/30_regression.sql
+  - sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql   # claim strata, Neyman PDE audit (5,000)
+  - {python: part-d-ipm/estimation/simulation.py, run: run_expansion}   # expansion: stratum rates, benefit rerun
+  - python: part-d-ipm/estimation/simulation.py # bootstrap simulation: benefit rerun 1,000x (numpy)
+  - sql: part-d-ipm/estimation/sql/90_score.sql
+exports:
+  - {table: estimates, order_by: "domain, method, interval, rep"}
+json:
+  - {table: metrics, order_by: "domain, method, interval", file: metrics.json}
+  - {table: frame_totals, order_by: domain, file: truth.json}
+defaults:
+  population_dir: part-d-ipm/errors/output_pre_ira/base
+  allocation:      # beneficiary audit for ratio and regression: SRS of 990
+    - {stratum: all, n_h: 990}
+  reps: 25         # audit years (Monte Carlo replicates)
+  sim_reps: 25     # audit years run through the PDE audit methods (all of them)
+  sim_iterations: 1000  # simulation iterations per audit year
+  sim_audit_size: 5000  # PDE audit per audit year: claim strata, Neyman allocation
+  sim_rates: parametric # parametric (reported): p and q redrawn as Binomial(n, p)/n, Binomial(f, q)/f | fixed (comparison; results_fixed/)
+  alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
+scenarios:
+  - name: base

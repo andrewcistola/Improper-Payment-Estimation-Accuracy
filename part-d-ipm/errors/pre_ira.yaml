@@ -1,0 +1,58 @@
+# Part D IPM - errors, ALTERNATIVE BENEFIT DESIGN: the same population and
+# PDE errors as config.yaml (same seed and draws), with the payment error
+# from the PRE-IRA CY 2023 standard benefit (deductible, initial coverage,
+# coverage gap with the manufacturer discount, 80% catastrophic
+# reinsurance). A reference scenario: the reported results use the
+# post-IRA benefit (config.yaml). Output: errors/output_pre_ira/base/ (scenario
+# name and seed label match config.yaml, so every random draw is the same).
+program: partd   # same seed label as config.yaml, so the population and errors are identical
+seed: 20261016
+output_dir: output_pre_ira
+steps:
+  - sql: part-d-ipm/errors/sql/01_population.sql        # population (error-free PDEs)
+  - sql: part-d-ipm/errors/sql/02_candidate_errors.sql  # fake errors: candidates
+  - sql: part-d-ipm/errors/sql/03_init_calibration.sql  # error rates as stated (no calibration)
+  - sql: part-d-ipm/errors/sql/04_apply_errors.sql      # activate errors at the stated rates
+  - sql: part-d-ipm/errors/sql/05_benefit_pre_ira.sql   # submitted vs corrected payments (CY 2023 benefit)
+  - sql: part-d-ipm/errors/sql/07_population_truth.sql  # truth
+  - sql: part-d-ipm/errors/sql/08_checks.sql            # calibration checks
+exports:
+  - {table: population, order_by: unit_id}
+  - {table: pde_detail, order_by: pde_id}
+json:
+  - {table: checks, order_by: metric, file: checks.json}
+truth: true
+defaults:
+  n_benes: 108000          # ~54M Part D enrollees, scaled 1:500
+  w_pop: 500.0
+  lis_share: 0.25
+  specialty_share: 0.03
+  ltc_share: 0.04          # beneficiaries in long-term care (illustrative)
+  ltc_pde_factor: 2.0      # LTC residents fill about twice as many PDEs
+  error_rate: 0.025        # share of non-LTC claims in error (lowest cost decile and other)
+  ltc_error_rate: 0.10     # share of LTC claims in error
+  full_error_share: 0.90   # 90% of errors are full (100% of GDC); the rest partial, uniform on [-1, 1)
+  payment_target: 105560000000.0   # FY 2025 Part D payments ($105.56B)
+  target_over: 3700000000.0        # FY 2025 overpayments ($3.70B): reported for comparison, not a target
+  target_under: 520000000.0        # FY 2025 underpayments ($0.52B): reported for comparison, not a target
+  # CY 2023 standard benefit before the Inflation Reduction Act (CMS 2023 parameters)
+  benefit_design: pre_ira_2023
+  deductible: 505.0
+  initial_coverage_limit: 4660.0
+  oop_threshold: 7400.0
+  init_enrollee_coins: 0.25
+  gap_enrollee_coins: 0.25     # non-LIS; LIS enrollees: 100% standard share in the gap (no discount)
+  gap_mfr_brand: 0.70          # Coverage Gap Discount Program (non-LIS, brand); counts toward TrOOP
+  cat_enrollee_coins: 0.05
+  cat_reins: 0.80              # Medicare reinsurance above the out-of-pocket threshold
+  lis_copay_generic: 4.15
+  lis_copay_brand: 10.35
+scenarios:
+  - name: base
+design:
+  unit: beneficiary (cluster of PDEs); PDE for the claim-level audit
+  frame: all Part D beneficiaries with PDEs
+  beneficiary_audit: {selection: srs_without_replacement, n: 990}   # ratio, regression; NOT public; illustrative
+  pde_audit: {selection: stratified_srs, n: 5000, allocation: neyman,
+              strata: [a_ltc, b_non_ltc_lowest_cost_decile, c_non_ltc_other]}   # expansion, bootstrap simulation
+  estimand: overpayments, underpayments, gross, net (y from re-running the benefit on corrected PDEs, netted per beneficiary) / total payments

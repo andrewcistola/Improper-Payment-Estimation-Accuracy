@@ -88,6 +88,8 @@ Strata: `low` / `medium` / `high` terciles of `risk_orig`.
 | `ded_sub` / `ini_sub` / `cat_sub` | Submitted GDC in the deductible, initial and catastrophic phases |
 | `*_sub` / `*_cor` | Liability by payer (reinsurance, LICS, plan, manufacturer), submitted vs corrected |
 
+**Alternative benefit design (reference only).** `part-d-ipm/errors/output_pre_ira/base` has the same files, beneficiaries, PDEs and errors, with payments under the pre-IRA CY 2023 benefit (`errors/pre_ira.yaml`). Under that design `ini_sub` is the initial coverage phase up to the $4,660 initial coverage limit, `cat_sub` is the phase above the $7,400 true out-of-pocket threshold, and the coverage gap between them is in `pde_benefit.gap_amt`, which is not exported. Its estimation results are in `part-d-ipm/estimation/results_pre_ira/` (parametric rates) and `results_pre_ira_fixed/`. They are not read by `shared/report.yaml`; see `part-d-ipm/pre-ira-reference.md`.
+
 ### perm (`perm-cert/errors/output/perm/state_elig_grid`)
 
 `population.parquet` has one row per payment:

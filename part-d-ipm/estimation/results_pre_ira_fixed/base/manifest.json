@@ -1,0 +1,27 @@
+{
+  "config_file": "part-d-ipm/estimation/pre_ira.yaml",
+  "config_sha256": "d06454db4fbc8f7a323885421100fb3d4ff8c9f53e03c6fb2e68aedeb73d88bc",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 731,
+      "sha256": "68b9b8eb3e045675ae53028dd5334612dc12570bab1e28ee32cbdb9306d1cd86"
+    },
+    "estimates.parquet": {
+      "bytes": 12114,
+      "rows": 400,
+      "sha256": "78acea49d09236903235a055f0988a846bea364956ce98f2f6fdf4c45b7ffdf6"
+    },
+    "metrics.json": {
+      "bytes": 8691,
+      "sha256": "b5f66f8d2c9cd3600097208e06bed8d3d7ab967ec9bf03cddce0463fbf4b89a5"
+    },
+    "truth.json": {
+      "bytes": 473,
+      "sha256": "0bee0c381fcaa52aed0ae9cca4ccb545804b6751310ce37aa81f91fb33140a4e"
+    }
+  },
+  "program": "partd_estimation",
+  "python": "3.13.16",
+  "scenario": "base"
+}
