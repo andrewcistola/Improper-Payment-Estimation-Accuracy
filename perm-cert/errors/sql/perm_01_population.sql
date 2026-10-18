@@ -8,7 +8,8 @@
 -- Payments:
 --   FFS : fee-for-service claims, lognormal amounts
 --   MC  : one managed-care capitation payment per enrolled month
--- Strata: within state x quarter x payment type, 5 equal-dollar
+-- Strata: within state x payment type, 5 equal-count quintiles of the
+-- amount paid (previously: within state x quarter x payment type, 5 equal-dollar
 -- payment-size strata (each holds ~1/5 of paid dollars).
 -- Output: states, perm_benes, perm_payments (error-free)
 -- =====================================================================
@@ -45,17 +46,12 @@ SELECT b.state_id, b.bene_id, b.fmap,
 FROM perm_benes b, LATERAL range(b.first_month, 13) t(m)
 WHERE b.mc_enrolled;
 
--- Step 3. Quarter and equal-dollar payment strata.
+-- Step 3. Quarter, and payment strata: within state x payment type, five
+-- equal-count quintiles of the amount paid (P1 lowest .. P5 highest).
 CREATE OR REPLACE TABLE perm_payments AS
-WITH q AS (SELECT *, ((month - 1) // 3 + 1)::INT AS quarter FROM perm_payments),
-c AS (
-    SELECT *,
-           sum(x) OVER (PARTITION BY state_id, quarter, payment_type ORDER BY x, payment_id
-                        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)::DOUBLE
-           / sum(x) OVER (PARTITION BY state_id, quarter, payment_type)::DOUBLE AS cum_share
-    FROM q
-)
+WITH q AS (SELECT *, ((month - 1) // 3 + 1)::INT AS quarter FROM perm_payments)
 SELECT state_id, bene_id, payment_id, payment_type, month, quarter,
-       concat(state_id, '_Q', quarter, '_', payment_type, '_S', least(5, floor(cum_share * 5)::INT + 1)) AS stratum,
+       concat(state_id, '_', payment_type, '_P',
+              ntile(5) OVER (PARTITION BY state_id, payment_type ORDER BY x, payment_id)) AS stratum,
        fmap, x
-FROM c;
+FROM q;

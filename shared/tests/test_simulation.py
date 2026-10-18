@@ -130,7 +130,13 @@ def test_perm_payment_function_exact():
     t = con.execute("SELECT (y * 100)::BIGINT AS y, (y_elig * 100)::BIGINT AS ye FROM read_parquet(?) "
                     "WHERE state_id = 5 ORDER BY unit_id",
                     [str(ROOT / "perm-cert/errors/output/perm/state_elig_grid/population.parquet")]).fetchnumpy()
-    assert np.array_equal(y["overall"], t["y"]) and np.array_equal(y["eligibility"], t["ye"])
+    assert np.array_equal(y["gross"], t["y"]) and np.array_equal(y["eligibility"], t["ye"])
+    # every payment audited: each keeps its own finding, so rates are exact
+    k.prepare(1, np.ones(k.units, bool))
+    for rates in (False, True):
+        k.parametric = rates
+        got = k.iterate(None, np.random.default_rng(1))
+        assert got["5|gross"] == t["y"].sum() / k.X and got["5|eligibility"] == t["ye"].sum() / k.X
 
 
 def test_bernoulli_positions():

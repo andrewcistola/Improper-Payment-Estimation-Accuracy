@@ -1,13 +1,10 @@
 unit: payment (FFS claim or MC capitation); eligibility case = beneficiary attached
   to a sampled payment
 frame: state x quarter universes (July-June year)
-strata: stratum column = state_Qq_type_Sk, 5 equal-dollar payment-size strata per
-  state x quarter x type
+strata: stratum column = state_type_Pk, 5 equal-count payment quintiles per state
+  x payment type (10 per state)
 selection: systematic_after_sort_by_x within stratum, random start
-sample_sizes_per_state_year:
-  FFS: 400
-  MC: 120
-  eligibility: 200
+sample_size_per_state_year: 520
 allocation: equal across quarters and strata
 estimand: state improper payment rates at federal share, sum y*fmap / sum x*fmap (overall,
   eligibility, claims)
