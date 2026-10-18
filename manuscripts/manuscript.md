@@ -1,5 +1,5 @@
 ---
-title: "Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Study of Analytic Estimators and Bootstrap Simulation"
+title: "Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation"
 author: "Andrew Cistola, PhD, MPH"
 date: "October 2026"
 ---
@@ -458,7 +458,7 @@ On the question of comparative accuracy, the answer is consistent across the fiv
 
 ## Data and code availability
 
-All code, configuration, synthetic populations (or their SHA-256 manifests where a population is too large to commit), results and the scripts that build every table and figure in this paper are in the public repository [andrewcistola/bootstrap-simulation-in-health-plan-payment-integrity](https://github.com/andrewcistola/bootstrap-simulation-in-health-plan-payment-integrity). The repository contains no protected health information, no unit-level data from any source and no non-public CMS material.
+All code, configuration, synthetic populations (or their SHA-256 manifests where a population is too large to commit), results and the scripts that build every table and figure in this paper are in the public repository [andrewcistola/comparing-improper-payment-estimators](https://github.com/andrewcistola/comparing-improper-payment-estimators). The repository contains no protected health information, no unit-level data from any source and no non-public CMS material.
 
 ## Funding, conflicts of interest and disclaimer
 

@@ -2,7 +2,7 @@
 title: "Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs"
 ---
 
-**Andrew Cistola, PhD, MPH · October 2026 · Full manuscript and code: [github.com/andrewcistola/bootstrap-simulation-in-health-plan-payment-integrity](https://github.com/andrewcistola/bootstrap-simulation-in-health-plan-payment-integrity)**
+**Andrew Cistola, PhD, MPH · October 2026 · Full manuscript and code: [github.com/andrewcistola/comparing-improper-payment-estimators](https://github.com/andrewcistola/comparing-improper-payment-estimators)**
 
 **The question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs? CMS audits samples of payments in five programs and projects the errors to a national improper payment rate with a 95% confidence interval: Medicare Part C, Medicare Part D, Medicaid (PERM), Marketplace APTC (EIPM) and Medicare FFS (CERT). The projection uses analytic estimators (expansion, ratio, regression) or *audit-finding bootstrap simulation*, which assigns the audit's findings at random across the whole population and reruns the payment rules many times. Accuracy means point accuracy and interval accuracy: whether the 95% interval contains the truth about 95% of the time, and how narrow it is.
 

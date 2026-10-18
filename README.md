@@ -1,4 +1,8 @@
-# Bootstrap Simulation in Health Plan Payment Integrity
+# Comparing Improper Payment Estimators
+
+**Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation**
+
+Andrew Cistola, PhD, MPH · Manuscript and one-page summary: [`manuscripts/`](manuscripts/)
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 

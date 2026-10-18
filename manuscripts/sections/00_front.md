@@ -1,5 +1,5 @@
 ---
-title: "Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Study of Analytic Estimators and Bootstrap Simulation"
+title: "Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation"
 author: "Andrew Cistola, PhD, MPH"
 date: "October 2026"
 ---
