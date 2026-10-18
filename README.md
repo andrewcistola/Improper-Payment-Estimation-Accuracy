@@ -122,6 +122,24 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 
 The tables come from [`shared/results/report/by_scenario.csv`](shared/results/report/by_scenario.csv) (audit years 1–25, the same audits for every method); `by_audit_year.parquet` has each audit year. These are illustrative designs; the configs say which values are not public.
 
+## Findings and recommendations
+
+**Findings** (gross rate, 25 audit years per program; details in [`manuscripts/`](manuscripts/)):
+
+1. **Point accuracy.** Every method estimated the gross rate closely. The bootstrap simulation was as accurate as or more accurate than the analytic estimators in every program: mean absolute error 1.5–6.6% of the true rate, and 16.6% in EIPM, where rare errors affected every method.
+2. **Coverage.** The parametric-rate bootstrap interval contained the truth in 121 of 125 audit years (96.8%), against 111 of 125 (88.8%) for the ratio estimator. The fixed-rate bootstrap, not shown in the tables, contained it in only 30 of 125: reusing the audited rates in every iteration leaves out their sampling error.
+3. **Width.** The parametric interval was 11–21% narrower than the ratio interval in Part C, PERM, EIPM and CERT, and 63% narrower than the Part D expansion interval from the same PDE audit.
+4. **Sparse measures.** Measures built from few audited errors (underpayments, EIPM technically improper payments) were undercovered by every method; the parametric bootstrap covered them in 19–20 of 25.
+
+**Recommendations:**
+
+1. **Use bootstrap simulation with parametric rates** for PIIA improper payment rates, reporting the analytic ratio or regression interval alongside it during a transition.
+2. **Do not use fixed-rate bootstrap intervals.**
+3. **Consider smaller audits.** At current precision, the narrower intervals would allow audits roughly 20–38% smaller (Part C, PERM, EIPM, CERT), lowering review costs. These are projections:
+   - confirm coverage directly at the reduced sizes first;
+   - check sparse components separately.
+4. **Next research:** find the optimal audit size for each program, and test model + simulation alternatives (hierarchical error rates, unit-level error models, resampled error sizes, calibrated intervals).
+
 ## Design principles
 
 1. **SQL does the work.** Generation, errors, the Part D benefit, calibration, sampling, the analytic estimators and scoring are DuckDB SQL. Python runs the files in order and runs the bootstrap simulation loop, which reruns each payment function 1,000 times per audit year (too slow in SQL).
