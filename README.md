@@ -1,8 +1,8 @@
-# Comparing Improper Payment Estimators
+# Improper Payment Estimation Accuracy
 
 **Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation**
 
-Andrew Cistola, PhD, MPH · Manuscript and one-page summary: [`manuscripts/`](manuscripts/)
+Andrew Cistola, PhD, MPH · Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/)
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 
@@ -38,8 +38,8 @@ Each of the four program folders has the same two parts:
 | [`perm-cert/`](perm-cert/) | Individual claim or benefit errors | PERM: state payment universes → claims and eligibility errors (9 states, true eligibility rates 2.00–4.00%). CERT: national Medicare FFS claims, four claim types → whole-claim and partial over- and underpayments calibrated to FY 2025 | PERM: Neyman allocation over payment type × quintile, systematic selection, 520 per state. CERT: 37,651 claims, FY 2025 count per claim type, Neyman across payment quintiles |
 | [`eipm/`](eipm/) | Beneficiary subsidy eligibility (Marketplace APTC) | FFE applications and APTC → rare overpayments: technically improper (whole APTC) and monetary (income) | Stratified SRS of 2,000, Neyman allocation over APTC quintiles |
 | [`shared/`](shared/) | Code used by all four | Runner, random numbers, samplers | **The methods, written once**: expansion, ratio and regression (GREG) with normal intervals; the audit-finding bootstrap simulation loop; scoring |
-| [`literature-review/`](literature-review/) | Background, program methods, evidence, bibliography | | |
-| [`manuscripts/`](manuscripts/) | Manuscript and one-page summary of the study | | |
+| [`literature-review/`](literature-review/) | Standalone narrative review of the comparative accuracy of improper payment estimation methods (Markdown, PDF, Word) | | |
+| [`manuscripts/`](manuscripts/) | Manuscript and one-page summary of the Monte Carlo study | | |
 
 Inside each program, the SQL files are numbered in the order they run, and each file's header states what it does and every probability or formula it uses. Each `config.yaml` lists the files it runs.
 

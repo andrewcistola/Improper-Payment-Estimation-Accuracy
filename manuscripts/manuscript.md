@@ -62,7 +62,7 @@ The approach is attractive for three reasons:
 - **Every measure at once.** It gives over-, under-, gross and net payments, and any subgroup, from one set of iterations.
 - **Traceability.** Every simulated dollar can be traced to an audited finding.
 
-To our knowledge, the comparative accuracy of these methods, and in particular the validity of the simulation's intervals, has not been tested against a known truth.
+To our knowledge, the comparative accuracy of these methods, and in particular the validity of the simulation's intervals, has not been tested against a known truth. A companion narrative review sets out each program's design and the evidence on interval accuracy in detail (Cistola 2026).
 
 ### 1.3 Why validity is in question
 
@@ -71,10 +71,12 @@ The audit-finding bootstrap differs from the textbook bootstrap (Efron and Tibsh
 ## 2. Purpose
 
 This study asks: **what is the comparative accuracy of the available methods for estimating improper payments in federal health programs?** The methods are:
+
 - the three design-based analytic estimators in use (expansion, ratio and regression);
 - audit-finding bootstrap simulation.
 
 Accuracy has two parts:
+
 - **Point accuracy:** how close the point estimate is to the true improper payment.
 - **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage) and, among intervals that do, how narrow it is (width). A narrower valid interval is more accurate, because the same precision can then be bought with a smaller, cheaper audit.
 
@@ -475,6 +477,7 @@ All code, configuration, synthetic populations (or their SHA-256 manifests where
 - CMS (2026a). Exchange Improper Payment Measurement: Program Background and Improper Payment Findings. Centers for Medicare & Medicaid Services.
 - CMS (2026b). Medicare Fee-for-Service Comprehensive Error Rate Testing (CERT) Methodology. Centers for Medicare & Medicaid Services.
 - CMS (2024). Payment Error Rate Measurement, Supporting Statement Part B (OMB ICR 202408-0938-026).
+- Cistola A (2026). Methods for estimating improper payments in federal health programs: a narrative review of their comparative accuracy. Companion review, `literature-review/` in the study repository.
 - Cochran WG (1977). *Sampling Techniques*, 3rd ed. Wiley.
 - Davison AC, Hinkley DV (1997). *Bootstrap Methods and Their Application*. Cambridge University Press.
 - Department of Education OIG (2025). U.S. Department of Education's Compliance with Payment Integrity Information Act Reporting Requirements for Fiscal Year 2025.
@@ -570,11 +573,13 @@ Values marked *illustrative* are not published by CMS. They are set to plausible
 ### B.1 Medicare Part C (Medicare Advantage risk adjustment)
 
 **Population** (330,253 enrollees × 100):
+
 - 550 contracts with lognormal enrollment and a coding-intensity factor.
 - HCCs from 10 illustrative families, each with a mild and a severe level.
 - Payment = risk score × county rate × months, scaled to $388.72B of payments subject to risk adjustment.
 
 **Errors:**
+
 - HCCs not supported by the record: deleted, or moved down the hierarchy (severe to mild).
 - Missing documentation: every coded HCC is lost.
 - HCCs supported by the record but not coded: underpayments.
@@ -584,10 +589,12 @@ Values marked *illustrative* are not published by CMS. They are set to plausible
 **Audit:** 990 enrollees, 330 per national tercile of the submitted risk score (stratified SRS). The real Part C IPM sample size and strata are not public. The terciles follow the 2012 RADV design.
 
 **Estimators:**
+
 - Expansion works in risk-score units: within each tercile, the mean over and under risk-score error × the tercile's size × the national mean county rate × months.
 - Ratio and regression use the enrollee payment.
 
 **Bootstrap simulation:**
+
 - One failure rate per HCC (20). A failed audited instance is one that was deleted, moved, or on a record with missing documentation, and it loses its HCC's mean audited loss.
 - One addition rate per family (10).
 - An HCC with no audited instance never fails. Rates are not extrapolated to unaudited HCCs.
@@ -595,6 +602,7 @@ Values marked *illustrative* are not published by CMS. They are set to plausible
 ### B.2 Medicare Part D (prescription drug event errors)
 
 **Population** (108,000 beneficiaries × 500; about 4.5 million PDEs):
+
 - Gross drug cost (GDC) = ingredient cost + dispensing fee + sales tax + vaccine administration fee.
 - 4% of beneficiaries are in long-term care (LTC) and fill about twice as many PDEs (illustrative).
 - The CY 2025 post-IRA standard benefit is run on submitted and corrected PDEs:
@@ -605,12 +613,14 @@ Values marked *illustrative* are not published by CMS. They are set to plausible
 - Payments are direct subsidy + reinsurance + LICS, $105.56B in all.
 
 **Errors:**
+
 - One candidate per PDE. 90% are full errors (GDC → 0) and 10% are partial, with the error share uniform on [−100%, 100%).
 - Error probability is 10% for LTC PDEs and 2.5% for other PDEs (illustrative).
 - No calibration: the truth is 1.38% gross ($1.46B).
 - The FY 2025 Part D result was 4.00%, so this population tests the method at a lower error rate than production.
 
 **Audits:**
+
 - PDE audit of 5,000, in three strata: LTC; non-LTC in the lowest decile of GDC; other non-LTC. Neyman allocation.
   - Used by expansion and by the bootstrap simulation.
   - Expansion applies each stratum's audited error rate to every PDE in the stratum and reruns the benefit. Its interval is a delta-method interval: each stratum rate is moved ±1 SE and the benefit rerun each way.
@@ -621,16 +631,19 @@ The two audits differ, so the comparison between methods is between designs as w
 ### B.3 Medicaid PERM (fee-for-service and managed care, claims and eligibility)
 
 **Population** (9 states, 3.09 million payments × 200; 264,565 beneficiaries):
+
 - FFS claims and monthly managed-care capitations.
 - Rates are measured at federal share, Σ*y*·FMAP / Σ*x*·FMAP, with $142.0B in federal payments.
 
 **Errors:**
+
 - Claims-review errors: FFS 6.5% of payments (70% all-or-nothing, 30% partial); MC 0.3%.
 - Eligibility errors, set beneficiary by beneficiary. Each state's true rate is set on a grid from 2.00% to 4.00%.
 - Gross = the whole payment if eligibility is in error, otherwise the claims error.
 - Calibrated to the Medicaid FY 2025 rate of 6.12%; the simulated truth is 6.09%.
 
 **Audit:**
+
 - Strata within each state: payment type (FFS, MC) × five equal-count payment quintiles (10 strata).
 - Neyman allocation of 520 payments per state-year, with systematic selection after sorting by amount within stratum.
 - National pooling:
@@ -638,27 +651,32 @@ The two audits differ, so the comparison between methods is between designs as w
   - The bootstrap simulation sums the states' iteration totals iteration by iteration.
 
 **Bootstrap simulation:**
+
 - Claims findings are matched within the payment stratum.
 - The eligibility error rate is taken from the audited beneficiaries of the state.
 
 ### B.4 Marketplace APTC (EIPM, Federally-facilitated Exchange)
 
 **Population** (142,152 applications × 100):
+
 - Households with income, size, age and benchmark premium.
 - APTC under the enhanced applicable-percentage schedule for 2021–2025.
 - APTC recipients only.
 
 **Errors:**
+
 - FY 2023–2025 public results report no underpayments, so every error is an overpayment.
 - *Technical* errors: a required data match was not run, so the whole APTC is improper. 48% of improper dollars, matching FY 2025 (0.43 of 0.89 points).
 - *Monetary* errors: the supported income is higher than the income used, by a lognormal factor, and APTC is recomputed. 52% of improper dollars.
 - The simulated truth is 0.92% gross, including technical 0.43%.
 
 **Audit:**
+
 - Stratified SRS of 2,000 applications, matching CMS's "approximately 2,000".
 - Strata are five equal-count quintiles of annual APTC (illustrative; the EIPM strata are not public), with Neyman allocation.
 
 **Bootstrap simulation:**
+
 - Within each quintile, an error is technical or monetary at the audited shares.
 - A monetary error transfers the donor's ratio of supported to used income, and APTC is recomputed for the recipient, clipped to 100–600% FPL.
 
@@ -677,6 +695,7 @@ The two audits differ, so the comparison between methods is between designs as w
 - MAC jurisdictions are not modeled.
 
 **Errors:**
+
 - At most one error per claim.
 - Whole-claim overpayments: no or insufficient documentation, medical necessity, other. These are 92% of overpayment dollars.
 - Partial coding overpayments: 8% of overpayment dollars, sized 5–60% of the payment.
@@ -685,6 +704,7 @@ The two audits differ, so the comparison between methods is between designs as w
 - The simulated truth is 6.50% gross (FY 2025: 6.55%), with $0.92B in underpayments (FY 2025: $1.0B).
 
 **Audit:**
+
 - 37,651 claims, the FY 2025 count of claims reviewed per claim type: IPPS 8,750; Part A excluding IPPS 8,651; Part B 11,600; DMEPOS 8,650.
 - Neyman allocation across five equal-count payment quintiles within each type. These stand in for CERT's roughly 100 service-level strata per type, which cannot be rebuilt from public data.
 - The production estimator reduces nationally to a separate ratio estimator.

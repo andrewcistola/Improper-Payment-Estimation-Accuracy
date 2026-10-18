@@ -36,7 +36,7 @@ The approach is attractive for three reasons:
 - **Every measure at once.** It gives over-, under-, gross and net payments, and any subgroup, from one set of iterations.
 - **Traceability.** Every simulated dollar can be traced to an audited finding.
 
-To our knowledge, the comparative accuracy of these methods, and in particular the validity of the simulation's intervals, has not been tested against a known truth.
+To our knowledge, the comparative accuracy of these methods, and in particular the validity of the simulation's intervals, has not been tested against a known truth. A companion narrative review sets out each program's design and the evidence on interval accuracy in detail (Cistola 2026).
 
 ### 1.3 Why validity is in question
 
@@ -45,10 +45,12 @@ The audit-finding bootstrap differs from the textbook bootstrap (Efron and Tibsh
 ## 2. Purpose
 
 This study asks: **what is the comparative accuracy of the available methods for estimating improper payments in federal health programs?** The methods are:
+
 - the three design-based analytic estimators in use (expansion, ratio and regression);
 - audit-finding bootstrap simulation.
 
 Accuracy has two parts:
+
 - **Point accuracy:** how close the point estimate is to the true improper payment.
 - **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage) and, among intervals that do, how narrow it is (width). A narrower valid interval is more accurate, because the same precision can then be bought with a smaller, cheaper audit.
 
