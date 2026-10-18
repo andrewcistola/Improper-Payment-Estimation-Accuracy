@@ -35,6 +35,7 @@ All code, configuration, synthetic populations (or their SHA-256 manifests where
 - CMS (2026a). Exchange Improper Payment Measurement: Program Background and Improper Payment Findings. Centers for Medicare & Medicaid Services.
 - CMS (2026b). Medicare Fee-for-Service Comprehensive Error Rate Testing (CERT) Methodology. Centers for Medicare & Medicaid Services.
 - CMS (2024). Payment Error Rate Measurement, Supporting Statement Part B (OMB ICR 202408-0938-026).
+- Cistola A (2026). Methods for estimating improper payments in federal health programs: a narrative review of their comparative accuracy. Companion review, `literature-review/` in the study repository.
 - Cochran WG (1977). *Sampling Techniques*, 3rd ed. Wiley.
 - Davison AC, Hinkley DV (1997). *Bootstrap Methods and Their Application*. Cambridge University Press.
 - Department of Education OIG (2025). U.S. Department of Education's Compliance with Payment Integrity Information Act Reporting Requirements for Fiscal Year 2025.

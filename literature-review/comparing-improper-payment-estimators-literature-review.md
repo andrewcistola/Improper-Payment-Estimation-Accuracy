@@ -1,24 +1,78 @@
-# Bootstrap Simulation for Improper Payment Estimation in CMS Programs
+---
+title: "Methods for Estimating Improper Payments in Federal Health Programs: A Narrative Review of Their Comparative Accuracy"
+author: "Andrew Cistola, PhD, MPH"
+date: "October 2026"
+---
 
-Oct 16, 2026 · @Drew
+**Affiliation:** [to be completed by the author]. **Corresponding author:** andrewcistola@pm.me
 
-## Purpose and scope
+**Running title:** Comparative accuracy of improper payment estimation methods: a review
 
-**Bottom line.** Bootstrap intervals are well supported for low-error, right-skewed audit samples and already appear to underpin Part D's published interval. No published study tests them in the high-error, small-sample regime of contract-level RADV or at PERM's new 3% eligibility threshold, so those two settings are where a validation study adds the most.
+**Companion study:** Cistola A (2026). *Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation* (this repository, [`manuscripts/`](../manuscripts/)).
 
-This review asks whether bootstrap simulation yields valid, accurate improper payment estimates (point estimates, confidence intervals and recovery amounts) for four federally subsidized, privately delivered programs measured through CMS's Office of Financial Management (OFM): Medicare Part C, Medicare Part D, Medicaid/CHIP and the Marketplace advance premium tax credit (APTC).
+## Abstract
 
-It is organized around three questions:
+**Background.** The Payment Integrity Information Act of 2019 requires statistically valid improper payment estimates, with confidence intervals, for federal programs at risk of significant improper payments. CMS produces five such estimates: Medicare Part C, Medicare Part D, Medicaid and CHIP (PERM), the Marketplace advance premium tax credit (EIPM) and Medicare fee-for-service (CERT). Each projects audited errors from a probability sample, using design-based analytic estimators (expansion, ratio, regression) or simulation that reruns the payment rules.
 
-1. **Terminology and practice.** What are the error-extrapolation techniques, and how does each program currently deploy them?
+**Objective.** To review what is known about the comparative accuracy of the available methods for estimating improper payments in federal health programs. Accuracy has two parts:
+
+- point accuracy;
+- interval accuracy: coverage at the nominal level, then width.
+
+**Methods.** We conducted a narrative review of two bodies of work:
+
+- public statute, OMB guidance and CMS, HHS, GAO and OIG methodology documents for the five programs and for contract-level RADV audits;
+- the statistical, audit-sampling and survey-bootstrap literature on interval accuracy for skewed, zero-inflated payment errors.
+
+**Findings.** All five programs use stratified probability samples and ratio-type estimators. Part D alone publicly describes a simulation-based interval; the others document or imply normal-theory intervals. Interval accuracy depends mainly on two things, not on the method's name:
+
+- the skew of the error distribution;
+- the number of nonzero errors in the sample.
+
+Normal-theory intervals are conservative at low error rates and liberal at high ones. Second-order bootstrap intervals (BCa, bootstrap-*t*) repair much of the low-error failure. No published study has compared these methods against a known truth in the designs CMS uses: risk-score, drug-benefit, eligibility, APTC or national claims estimates.
+
+**Conclusions.** The comparative accuracy of improper payment estimation methods in federal health programs is largely untested, and the methods in production rest on assumptions the evidence questions. We set out a research agenda: design-based Monte Carlo validation against synthetic populations, scored on the metric that matches each estimate's use.
+
+**Keywords:** improper payments; payment integrity; survey sampling; bootstrap; confidence intervals; Medicare; Medicaid; audit sampling
+
+## 1. Introduction
+
+Every improper payment estimate in a federal health program does three things:
+
+1. draws a probability sample of payments;
+2. establishes each sampled unit's payment error by review;
+3. projects the errors to the program with an uncertainty statement.
+
+The estimates matter. CMS's five measurements reported more than $90 billion in improper payments for FY 2025. Their confidence intervals are audited by Inspectors General. And in some settings the estimates become financial determinations: Medicare Advantage contract recoveries, and, from FY 2030, Medicaid federal match disallowances above a 3% eligibility error rate.
+
+This review asks: **what is known about the comparative accuracy of the available methods for estimating improper payments in federal health programs?** We define accuracy as in the companion Monte Carlo study:
+
+- **Point accuracy:** how close the estimate is to the true improper payment.
+- **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage), and, among intervals that do, how narrow it is (width).
+
+The review is organized around three questions:
+
+1. **Terminology and practice.** What are the estimation and extrapolation techniques, and how does each program deploy them?
 2. **Evidence.** What does the literature say about the accuracy and limitations of each technique?
-3. **Bootstrap fit.** Where would bootstrap simulation help or hurt in each program, and how could it be implemented?
+3. **Fit.** Where would simulation and bootstrap methods help or hurt in each program, and how should their accuracy be tested?
 
-Two inferential targets run through every section and should be kept apart. The first is the **national improper payment rate** reported under the Payment Integrity Information Act (a program-level ratio with a confidence interval). The second is the **contract- or entity-level recovery amount** (for example, RADV extrapolation against a Medicare Advantage contract), where the estimate becomes a legal demand and is usually taken at a lower confidence bound. A bootstrap that is adequate for the first can still be inadequate for the second, because coverage failures in one tail matter more than overall width.
+Two inferential targets run through every section and should be kept apart:
 
-The document runs: regulatory background → terminology → current program methods → accuracy evidence → bootstrap by program → implications for a validation study → annotated bibliography. Medicare fee-for-service (CERT) appears only as a comparator. Program methods change yearly; facts below are taken from public CMS, HHS, OMB, GAO and OIG documents, and anything that sits only in non-public contractor statements of work is flagged as an open question.
+- **The national improper payment rate** reported under the Payment Integrity Information Act: a program-level ratio with a two-sided confidence interval.
+- **The contract- or entity-level recovery amount,** for example a RADV extrapolation against a Medicare Advantage contract. Here the estimate becomes a legal demand and is usually taken at a lower confidence bound.
 
-## Regulatory and institutional background
+A method adequate for the first can still be inadequate for the second, because coverage failures in one tail matter more than overall width.
+
+## 2. Review approach
+
+This is a narrative, not systematic, review. Two bodies of evidence were searched and read in full where available:
+
+1. **Program sources.** Primary public sources on each program's design and estimation: statute and OMB guidance; CMS program pages, error-rate findings, methodology documents and manuals; OMB information-collection supporting statements; GAO and OIG reports; and court records on RADV extrapolation.
+2. **Methods literature.** Statistical, audit-sampling and survey-methods literature on the accuracy of estimators and intervals for skewed and zero-inflated payment errors, including finite-population and survey bootstraps.
+
+Sources were identified by targeted searches, from the references of key papers (especially Edwards, Liu and Delage 2023; Kvanli and Schauer; Mashreghi, Haziza and Léger 2016), and from CMS methodology documents. Program facts are taken only from public documents current to October 2026; anything that would require non-public contractor methodology plans is flagged as unknown. The review covers the PIIA national rate as its primary target and RADV recovery as context. Sixty-six sources are annotated in the reference list.
+
+## 3. Regulatory and institutional background
 
 Every estimate in scope exists because the Payment Integrity Information Act of 2019 (PIIA) requires a statistically valid improper payment estimate for programs at risk of significant improper payments, and OMB's Appendix C to Circular A-123 ([M-21-19](https://www.whitehouse.gov/wp-content/uploads/2021/03/M-21-19.pdf), March 2021) sets the rules. Payments are "significant" above $10 million and 1.5% of outlays, or above $100 million outright ([summary of the FY 2025 CMS release](https://www.mychesco.com/a/news/national/cms-reports-billions-in-improper-payments-but-says-most-are-paperwork-errors/)).
 
@@ -37,13 +91,13 @@ Every estimate in scope exists because the Payment Integrity Information Act of 
 | Medicaid | PERM | 6.12% | $37.39B | rolling 3 cycles |
 | CHIP | PERM | 7.05% | $1.37B | rolling 3 cycles |
 | Marketplace APTC (FFE only) | EIPM | 0.89% | $657.46M | CY 2023 |
-| Medicare FFS (comparator) | CERT | 6.55% | $28.83B | Jul 2023–Jun 2024 claims |
+| Medicare FFS | CERT | 6.55% (95% CI 5.9–7.2%) | $28.83B | Jul 2023–Jun 2024 claims |
 
 HHS was not fully PIIA-compliant for FY 2025 ([PaymentAccuracy.gov](https://paymentaccuracy.gov/agency/HHS)). State-based Exchange APTC is not yet measured; HHS plans to start no earlier than January 1, 2027 ([EIPM background](https://cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/exchange-improper-payment-measurement-eipm/program-background)).
 
-## Terminology of error estimation and extrapolation
+## 4. Terminology of error estimation and extrapolation
 
-Every measure in scope does the same three things: draw a probability sample, establish a payment error for each sampled unit by review, then project ("extrapolate") to the frame and attach an uncertainty statement. The programs differ in the estimator, the variance method and what the interval is *used for*. Those three choices are where bootstrap simulation either fits or does not.
+Every measure in scope does the same three things: draw a probability sample, establish a payment error for each sampled unit by review, then project ("extrapolate") to the frame and attach an uncertainty statement. The programs differ in the estimator, the variance method and what the interval is *used for*. Those three choices determine which method is most accurate in each setting.
 
 ### Sampling and review vocabulary
 
@@ -63,15 +117,15 @@ Every measure in scope does the same three things: draw a probability sample, es
 
 The **expansion (mean-per-unit, Horvitz–Thompson) estimator** weights each sampled error by the inverse of its selection probability. It is what 2012 RADV and PIM Chapter 8 contractors use.
 
-```math
+$$
 \hat T = \sum_{h=1}^{L} \frac{N_h}{n_h} \sum_{i \in s_h} y_{hi}, \qquad \hat V(\hat T) = \sum_{h=1}^{L} N_h^2 \left(1 - \frac{n_h}{N_h}\right) \frac{s_h^2}{n_h}
-```
+$$
 
 The **ratio estimator** divides projected improper dollars by projected paid dollars. Improper payment *rates* (PERM, Part C, Part D, APTC) are ratios, so their variance comes from linearization or replication, not the simple formula above. Current RADV (PY 2019 onward) estimates the mean change in risk score, then multiplies by the frame's summed county rates, a ratio-type estimator in disguise.
 
-```math
+$$
 \hat R = \frac{\sum_h \frac{N_h}{n_h} \sum_{i \in s_h} y_{hi}}{\sum_h \frac{N_h}{n_h} \sum_{i \in s_h} x_{hi}}
-```
+$$
 
 **Difference and regression estimators** use the known paid amount *x* as an auxiliary; they are standard in audit sampling but not documented in the public PARG methods. **Composite estimators** combine separately estimated components: PERM's overall rate is claims rate plus eligibility rate minus an overlap term, and the national rate rolls three state cycles together.
 
@@ -92,9 +146,26 @@ The **ratio estimator** divides projected improper dollars by projected paid dol
 
 The BCa lower limit replaces the nominal α with an adjusted level read off the bootstrap distribution:
 
-```math
+$$
 \alpha_{\mathrm{BCa}} = \Phi\!\left( \hat z_0 + \frac{\hat z_0 + z_{\alpha}}{1 - \hat a\,(\hat z_0 + z_{\alpha})} \right), \qquad \mathrm{LB} = \hat\theta^{*}_{(\alpha_{\mathrm{BCa}})}
-```
+$$
+
+### Simulation-based estimation
+
+A third family of methods simulates instead of projecting. In **audit-finding bootstrap simulation**, the audit's findings are assigned at random to the unaudited units of the whole population, the program's payment function is rerun, and the process is repeated many times. The findings are which HCCs failed, which drug claims were wrong and by how much, and which applications were ineligible. The estimate and interval are read from the distribution of simulated improper payments.
+
+The method has three attractions:
+
+- **Nonlinear payments.** It reruns the actual payment rules, such as Part D benefit phases, risk-score hierarchies and the APTC schedule.
+- **Every measure at once.** One set of iterations yields over-, under-, gross and net payments and any subgroup.
+- **Traceability.** Every simulated dollar can be traced to an audited finding.
+
+It differs from the survey bootstraps in the table above in one important way: the audit itself is not resampled. Two versions are possible:
+
+- **Fixed rates:** the error rates estimated from the audit are reused in every iteration.
+- **Parametric rates:** the rates are redrawn from their sampling distribution (for example, binomial) before each iteration, which represents the uncertainty of the audit itself (Efron and Tibshirani 1993, ch. 6).
+
+Whether either version's interval holds its nominal coverage is an empirical question taken up in Sections 6 and 8.
 
 ### Decision quantities and performance language
 
@@ -103,9 +174,9 @@ The BCa lower limit replaces the nominal α with an adjusted level read off the 
 - **Viability and recovery percent.** Edwards et al. call a design "viable" if it achieves at least 89% coverage at every tested error rate, and measure efficiency as average recovery as a share of the true overpayment.
 - **Monte Carlo vs bootstrap.** *Monte Carlo* here means simulating from a model or a synthetic population (used to validate designs and to propagate component uncertainty). *Bootstrap* means resampling the observed sample. CMS's Part D documents use "simulation" for both the benefit re-adjudication and the interval iterations, so the word alone does not tell you which is meant.
 
-## How each program measures improper payments
+## 5. How each program measures improper payments
 
-Only one of the five measures, Part D, publicly describes a simulation-based interval; the others document (or imply) analytic normal-theory intervals. RADV is the outlier in stakes: small samples, a one-sided decision rule and money changing hands on the result.
+Only one of the five PIIA measures, Part D, publicly describes a simulation-based interval; the others document (or imply) analytic normal-theory intervals. RADV is the outlier in stakes: small samples, a one-sided decision rule and money changing hands on the result.
 
 | Program | Sampling unit and design | Sample size | Estimator | Interval (public record) | What the interval decides |
 | --- | --- | --- | --- | --- | --- |
@@ -115,7 +186,8 @@ Only one of the five measures, Part D, publicly describes a simulation-based int
 | RADV, PY 2021 (CPI) | Same, frame widened to the top quartile | 35, 50, 100 or 200 by contract-size stratum | Same; Taylor linearization for partial-year enrollees | One-sided, *t* with *n*−1 df | Extrapolation designed; collection currently sample-only |
 | Part D IPM (PARG) | Beneficiary (random selection since FY 2025; cohort before); PDEs validated against prescriptions | Not stated publicly | Corrected PDEs re-run through a benefit simulation to get payment error | Simulation-based 95% interval, asymmetric | PIIA rate only |
 | PERM (PARG) | Two phases: states rotate in 3 cycles; within state, quarterly stratified samples of FFS claims and MC payments; eligibility cases attached to sampled payments | Set per state from expenditures and prior error; national target 95% ±3 pts | Stratified ratio (projected improper ÷ projected paid); claims + eligibility − overlap; 3-cycle rolling national rate | Analytic stratified ratio variance per the OMB supporting statement | PIIA rate; state CAPs; from FY 2030, disallowance above 3% eligibility error |
-| EIPM, APTC (PARG) | FFE application; stratified random sample | \~2,000 | Projected APTC in error ÷ APTC paid | Not stated | PIIA rate only |
+| EIPM, APTC (PARG) | FFE application; stratified random sample (strata not public) | \~2,000 | Projected APTC in error ÷ APTC paid | 95%; margin of error ±0.54 points (FY 2025) | PIIA rate only |
+| CERT, Medicare FFS (PARG) | Claim; stratified random sample by claim type (Part A IPPS, Part A excluding IPPS, Part B, DMEPOS), then about 100 service-level strata per type (type-of-bill strata for Part A excluding IPPS) | About 37,500–50,000 reviewed (37,651 in FY 2025) | Weighted projection; reduces nationally to the separate ratio estimator; contractor clusters weighted by expenditure share | 95%, designed for ±3 points | PIIA rate; MAC recoupment of sampled overpayments |
 
 ### Medicare Part C: national measure and contract audits
 
@@ -146,11 +218,29 @@ The stakes for state-level estimates changed in 2025. P.L. 119-21 §71106 disall
 
 ### Marketplace APTC (EIPM)
 
-EIPM reviews a stratified random sample of about 2,000 FFE applications to test whether eligibility determinations and APTC amounts were correct ([EIPM background](https://cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/exchange-improper-payment-measurement-eipm/program-background); [CMS 2022 release](https://www.cms.gov/newsroom/press-releases/federally-facilitated-exchange-improper-payment-rate-less-1-initial-data-release)). Rates have stayed under 1% (0.62% in the first FY 2022 report; 0.89% in FY 2025). At that rate a 2,000-unit sample holds only a few dozen errors, the regime in which normal-theory bounds are least reliable. State-based Exchanges come under a separate SEIPM rule (45 CFR 155 Subpart Q) with state-specific sample sizes and a three-year cycle, no earlier than January 1, 2027.
+EIPM reviews a stratified random sample of about 2,000 FFE applications to test whether eligibility determinations and APTC amounts were correct ([EIPM background](https://cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/exchange-improper-payment-measurement-eipm/program-background); [CMS 2022 release](https://www.cms.gov/newsroom/press-releases/federally-facilitated-exchange-improper-payment-rate-less-1-initial-data-release)). Rates have stayed under 1% (0.62% in the first FY 2022 report; 0.89% in FY 2025, margin of error ±0.54 points). No underpayments were reported for FY 2023–2025. In FY 2025, 0.43 of the 0.89 points were *technically improper* payments, where a required periodic data match was not run. The remainder came from manual errors such as income entered incorrectly or documents accepted despite name or date-of-birth discrepancies ([PaymentAccuracy.gov](https://paymentaccuracy.gov/program/hhs-centers-for-medicare-medicaid-services-cms-advance-premi-155942da)). At that rate a 2,000-unit sample holds only a few dozen errors, the regime in which normal-theory bounds are least reliable. State-based Exchanges come under a separate SEIPM rule (45 CFR 155 Subpart Q) with state-specific sample sizes and a three-year cycle, no earlier than January 1, 2027.
 
-**Open questions to fill from internal documents:** the Part C IPM sample size, strata and interval method; Part D's resampling algorithm and number of replicates; the PERM national variance formula; and EIPM's strata and interval method.
+### Medicare fee-for-service (CERT)
 
-## Accuracy and limitations: what the evidence says
+CERT reviews a stratified random sample of Medicare FFS claims submitted from July through June, including both paid and denied claims ([CERT introduction](https://www.cms.gov/files/document/introduction-comprehensive-error-rate-testing-cert-program.pdf)).
+
+- **Strata.** The first level is claim type: Part A hospital IPPS, Part A excluding IPPS, Part B and DMEPOS. Within each type there are about 100 service-level strata; Part A excluding IPPS uses two-digit type-of-bill strata, fewer than 20 ([CERT methodology](https://data.cms.gov/sites/default/files/2026-01/CERT%20Methodology.pdf)).
+- **Estimator.** A generalized estimator gives national, contractor-cluster and service-level rates. At the national level it reduces to the separate ratio estimator, with contractor clusters weighted by their share of expenditures.
+- **FY 2025 sample.** 49,061 claims were sampled and 37,651 reviewed: IPPS 8,750; Part A excluding IPPS 8,651; Part B 11,600; DMEPOS 8,650.
+- **FY 2025 results.** The gross rate was 6.55% (95% CI 5.9–7.2%), with $27.9B in overpayments and $1.0B in underpayments, counted gross ([2025 Supplemental Improper Payment Data](https://www.cms.gov/files/document/nov-2025-medicare-ffs-supplemental-improper-payment-data-2025922.pdf)). By type, the rates ranged from 3.1% (IPPS) to 24.1% (DMEPOS).
+- **Error categories.** Insufficient documentation accounted for 53% of improper dollars, medical necessity 15%, no documentation 12%, incorrect coding 11% and other 8.5%.
+
+Most CERT errors are therefore whole-claim, all-or-nothing errors, with partial errors coming mainly from coding. That is the Edwards, Liu and Delage (2023) error regime, but at a national sample size where the central limit theorem has far more to work with than in a 30-claim provider audit.
+
+**Unknown from the public record:**
+
+- the Part C IPM sample size, strata and interval method;
+- Part D's resampling algorithm and number of replicates;
+- the PERM national variance formula;
+- EIPM's strata;
+- CERT's allocation rule and variance method (described in an appendix to the Supplemental Improper Payment Data report).
+
+## 6. Evidence on comparative accuracy
 
 The literature converges on one rule: whether an interval holds its nominal coverage depends mainly on the skew of the error distribution and the number of nonzero errors in the sample, not on the method's name. Bootstrap intervals repair the low-error, right-skew failure well; they have barely been tested in the high-error, all-or-nothing regime that Medicare reviews actually produce.
 
@@ -195,9 +285,17 @@ Even at 60 expected errors the normal-theory bound misses less than half as ofte
 | MUS / Stringer-type bounds | Standard in financial audit for low-error overstatement | Conservative; ill-suited to frequent or two-sided errors | NRC Panel 1988 |
 | Model-based design testing | Monte Carlo under an all-or-nothing model reveals viability before sampling | Model must match the error process | Edwards et al. 2023 (R `samptest`) |
 
-**The gap this review identifies.** No published study evaluates bootstrap (or any non-normal) intervals for RADV-style risk-score extrapolation, Part D PDE-to-payment simulation, PERM eligibility rates, or APTC errors. The closest evidence is Medicare FFS provider audits (high error, all-or-nothing) and tax and accounting audits (low error, right skew). The PARG programs span both regimes.
+**The gap this review identifies.** No published study compares the accuracy of the available methods against a known truth in the settings CMS measures:
 
-## Bootstrap simulation in each program: benefits, drawbacks, implementation
+- RADV-style risk-score extrapolation;
+- Part D PDE-to-payment simulation;
+- PERM eligibility rates;
+- APTC errors;
+- the national CERT claims estimate.
+
+This covers analytic, bootstrap and audit-finding simulation methods alike. The closest evidence comes from Medicare FFS provider audits (high error, all-or-nothing) and tax and accounting audits (low error, right skew). The CMS programs span both regimes. Nor has the validity of audit-finding simulation intervals, with or without uncertainty in the rates, been tested.
+
+## 7. Fit of simulation and bootstrap methods by program
 
 The case for bootstrap is strongest where samples are small, errors are skewed and an interval drives a dollar decision: RADV first, then PERM state eligibility rates, then EIPM. Part D already relies on simulation, so its question is validation rather than adoption. Part C IPM gains least.
 
@@ -208,6 +306,7 @@ The case for bootstrap is strongest where samples are small, errors are skewed a
 | EIPM (APTC) | \~2,000 applications; rate under 1%; few dozen errors; right-skewed | PIIA rate; SBE state rates from 2027 | Medium–high | Stratified rescaled bootstrap with BCa; empirical likelihood as comparator |
 | Part D IPM | Beneficiary clusters of PDEs; 75% of errors are missing documentation; nonlinear benefit simulation | PIIA rate | Validate existing | Audit the current resampling scheme's coverage under a synthetic population |
 | Part C IPM | Large national stratified sample; ratio estimator | PIIA rate | Low | Rao–Wu–Yue replicate weights as a check on linearization |
+| CERT | National sample of about 37,500 claims in four claim types; mostly all-or-nothing errors; DMEPOS rate above 20% | PIIA rate (national and by claim type) | Low–medium | Stratified design bootstrap by claim type; check high-error strata (DMEPOS) separately |
 
 ### RADV contract audits
 
@@ -262,9 +361,9 @@ The case for bootstrap is strongest where samples are small, errors are skewed a
 
 **Implementation.** Stratified rescaled bootstrap with BCa and bootstrap-*t*; flag strata with zero or one error and compare against empirical likelihood and a zero-inflated parametric bound.
 
-## Implications for the empirical validation study
+## 8. Research agenda: validating comparative accuracy
 
-The strongest design is a design-based Monte Carlo study: build realistic finite populations for each program, rerun the program's actual sampling design and estimator thousands of times, and score every interval method against the known truth on the metric that matches how the interval is used. This is the approach Edwards et al. use for FFS audits, extended to bootstrap comparators and to the four PARG designs.
+The strongest design is a design-based Monte Carlo study: build realistic finite populations for each program, rerun the program's actual sampling design and estimator thousands of times, and score every interval method against the known truth on the metric that matches how the interval is used. This is the approach Edwards et al. use for FFS audits, extended to bootstrap and audit-finding simulation comparators and to the five CMS designs.
 
 ### Study pipeline
 
@@ -299,22 +398,38 @@ Define "viable" before running: for example, one-sided exceedance within nominal
 | Part D IPM | Historical PDE validation results with benefit simulation | Production size | Around 3–5% of payments; documentation failures dominant |
 | PERM | State universes and eligibility review history | Per-state production sizes | 1–15% eligibility; dense near 3% |
 | EIPM | FFE application history | \~2,000 total; SBE-sized state samples | 0.2–2% |
+| CERT | National claims universe by claim type | \~37,500 reviewed (FY 2025 counts by claim type) | About 3% (IPPS) to 25% (DMEPOS) by claim type |
 
 ### Computation
 
 A bootstrap inside a Monte Carlo study multiplies costs: 10,000 outer replications × 5,000 resamples is 5 × 10⁷ estimator evaluations per cell. Three things keep it tractable: precompute unit-level errors so each resample is a weighted sum; generate multinomial or rescaled weights in vectorized blocks; and run cells as independent batch jobs over Parquet-staged populations. The warp-speed method of Giacomini, Politis and White (2013) can screen percentile-type intervals with one resample per outer replication before full runs; it does not cover BCa.
 
-### Open items before the study starts
+### Data and access needs
 
-- [ ] Obtain the Part C and Part D IPM sampling and estimation methodology plans (sample sizes, strata, interval algorithm, replicate count).
-- [ ] Obtain the PERM statistical contractor's variance specification and the EIPM strata.
-- [ ] Secure unit-level historical review outcomes under the appropriate data use terms.
-- [ ] Agree the primary metric per program with PARG (reporting) and CPI (RADV recovery).
-- [ ] Confirm the OMB and OIG path for an S&EMP method change before recommending one.
+The study would be strongest with:
 
-## Annotated bibliography
+- **Methodology plans.** The programs' Sampling and Estimation Methodology Plans (sample sizes, strata, interval algorithms, replicate counts) and the PERM statistical contractor's variance specification.
+- **Historical review outcomes,** at the unit level, held under appropriate data use terms. They would be used to calibrate error models.
+- **Agreed metrics.** A primary metric for each program, agreed with the reporting and recovery offices.
 
-Sixty-one sources in six groups. Linked entries were opened for this review; unlinked classic references are cited from standard bibliographic records and should be checked against the originals before publication.
+Without these, a study can still proceed on synthetic populations calibrated to public aggregates, with illustrative strata where the real ones are not published. That is the approach of the companion Monte Carlo evaluation, which applies this agenda to all five programs.
+
+## 9. Conclusions
+
+The methods CMS uses to estimate improper payments are well established in survey sampling, but their accuracy in these settings is largely untested:
+
+- **Ratio-type analytic estimators** dominate production, with normal-theory intervals.
+- **Part D** relies on simulation.
+
+The evidence that exists points in a consistent direction. Interval accuracy depends on the skew of the errors and the number of nonzero errors in the sample. Normal-theory intervals are conservative when errors are rare and liberal when they are frequent. Second-order bootstrap intervals correct much of the rare-error failure, but have barely been tested where errors are frequent and all-or-nothing.
+
+Audit-finding simulation is attractive for nonlinear payment rules, yet its intervals have never been validated. Because it does not resample the audit, it carries a specific risk: understating uncertainty.
+
+The comparative accuracy of these methods should therefore be established empirically before any of them is relied on for new uses. The design is a Monte Carlo evaluation against populations with known truth, run under each program's actual design and scored on the metric that matches how the estimate is used. The new uses include smaller audits, state-level PERM disallowances, State-based Exchange measurement and contract-level recovery.
+
+## References (annotated)
+
+Sixty-six sources in seven groups. Linked entries were opened for this review; unlinked classic references are cited from standard bibliographic records and should be checked against the originals before publication.
 
 ### A. Statute, guidance and program methodology
 
@@ -331,6 +446,10 @@ Sixty-one sources in six groups. Linked entries were opened for this review; unl
 - **CMS (2025). [PERM Manual](https://www.cms.gov/files/document/perm-manual.pdf-2)** (April). Cycles, universes, components, contractor roles, rolling rate. *Use:* PERM design reference.
 - **CMS (2024). [PERM Supporting Statement B, OMB ICR](https://omb.report/icr/202408-0938-026/doc/145713901.pdf).** Two-phase design, state strata, systematic selection within payment strata, variance formulas. *Use:* the analytic benchmark a PERM bootstrap must match in the linear case.
 - **CMS. [PERM Improper Payment Rate Calculation](https://www.cms.gov/files/document/perm-error-rate-calculation-presentation.pdf).** How component, state, cycle and national rates combine. *Use:* specifies the composite a replicate method must reproduce.
+- **CMS (2025). [2025 Medicare Fee-for-Service Supplemental Improper Payment Data](https://www.cms.gov/files/document/nov-2025-medicare-ffs-supplemental-improper-payment-data-2025922.pdf).** CERT sample counts, rates, confidence intervals, overpayments and underpayments by claim type; error categories. *Use:* CERT targets and error mix.
+- **CMS (2026). [Medicare FFS CERT Methodology](https://data.cms.gov/sites/default/files/2026-01/CERT%20Methodology.pdf).** Claim-type and service-level stratification; generalized estimator reducing to the separate ratio estimator nationally. *Use:* CERT design reference.
+- **CMS. [Introduction to the CERT Program](https://www.cms.gov/files/document/introduction-comprehensive-error-rate-testing-cert-program.pdf).** Four claim-type strata, about 37,500 reviewed claims, ±3-point precision target, documentation timelines. *Use:* CERT design facts.
+- **PaymentAccuracy.gov (2026). [HHS CMS Advance Premium Tax Credit](https://paymentaccuracy.gov/program/hhs-centers-for-medicare-medicaid-services-cms-advance-premi-155942da).** FY 2022–2025 APTC results: overpayments, underpayments (none since FY 2023), technically improper payments, margins of error and root causes. *Use:* EIPM targets and error mix.
 - **CMS (2026). [EIPM Program Background](https://cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/exchange-improper-payment-measurement-eipm/program-background).** \~2,000 FFE applications; SBE measurement no earlier than 2027. *Use:* APTC design facts.
 - **45 CFR §§155.1600–155.1650 (SEIPM).** State Exchange improper payment measurement: state-specific sample sizes, three-year cycle, appeals. *Use:* the coming small-sample APTC setting.
 - **P.L. 119-21 §71106 (2025)**, summarized by **[Bipartisan Policy Center (2026)](https://bipartisanpolicy.org/article/understanding-medicaids-payment-error-rate-measurement-perm-program-and-changes-under-h-r-1/).** Disallows federal match above a 3% eligibility error rate from October 1, 2029 and removes the good-faith waiver. *Use:* turns state PERM eligibility estimates into financial determinations.
@@ -394,3 +513,7 @@ Sixty-one sources in six groups. Linked entries were opened for this review; unl
 - **Tian L (2005).** Inferences on the mean of zero-inflated lognormal data: the generalized variable approach. *Statistics in Medicine* 24(20):3223–3232. *Use:* small-sample zero-inflated intervals.
 - **Barber JA, Thompson SG (2000).** Analysis of cost data in randomized trials: an application of the non-parametric bootstrap. *Statistics in Medicine* 19(23):3219–3236. *Use:* bootstrap for skewed per-person health spending.
 - **Li X, Ding P (2017).** General forms of finite population central limit theorems with applications to causal inference. *JASA* 112(520):1759–1769. *Use:* conditions under which the normal bound is justified.
+
+### G. Companion study
+
+- **Cistola A (2026).** *Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation.* Manuscript, [`manuscripts/`](../manuscripts/) in this repository. *Use:* implements the research agenda in Section 8 on synthetic populations for all five programs.

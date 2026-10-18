@@ -1,6 +1,6 @@
 # Manuscripts
 
-The study written up for submission, plus a one-page summary for sharing.
+The Monte Carlo study written up for submission, plus a one-page summary for sharing. The companion narrative review is in [`literature-review/`](../literature-review/).
 
 | File | What it is |
 |---|---|
@@ -8,7 +8,7 @@ The study written up for submission, plus a one-page summary for sharing.
 | [`one-pager.md`](one-pager.md) | One-page summary of the findings and recommendation. Also [`one-pager.pdf`](one-pager.pdf) and `one-pager.html` |
 | `sections/` | Manuscript source, one file per part. Edit these, not `manuscript.md` |
 | `generated/` | Built from results, never edited by hand: `tables.md` (Tables 2–5 and C1), `results_long.csv` (every program × measure × method), `fig1_width.png`, `fig2_coverage.png` |
-| `scripts/` | `build_tables.py` (tables and figures from the results), `assemble.py` (sections + tables → `manuscript.md`), `render.sh` (PDF, Word and HTML) and the print stylesheets |
+| `scripts/` | `build_tables.py` (tables and figures from the results), `assemble.py` (sections + tables → `manuscript.md`), `render.sh` (PDF, Word and HTML for the manuscript, one-pager and literature review), `render_review.py` and the print stylesheets |
 
 ## Rebuild
 
