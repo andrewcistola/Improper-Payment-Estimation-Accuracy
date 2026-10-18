@@ -1,7 +1,7 @@
-## Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation**
+## Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation
 
-#### **Andrew Cistola, PhD, MPH**. 
-Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/). 
+#### **Andrew Cistola, PhD, MPH** 
+Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/) 
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 
