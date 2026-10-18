@@ -72,13 +72,27 @@ def test_part_c_bootstrap_rates():
     assert abs(net / (y.sum() / k.X) - 1) < 0.01
 
 
-def partd_kernel(extra=None):
-    cfg = yaml.safe_load((ROOT / "part-d-ipm/errors/config.yaml").read_text())["defaults"]
+def partd_kernel(extra=None, design="config.yaml", pop="part-d-ipm/errors/output/base"):
+    cfg = yaml.safe_load((ROOT / "part-d-ipm/errors" / design).read_text())["defaults"]
     v = {**cfg, "seed": 1, "sim_reps": 1, "sim_audit_size": 300, **(extra or {})}
-    if not (ROOT / "part-d-ipm/errors/output/base/pde_detail.parquet").exists():
-        pytest.skip("build part-d-ipm/errors first")
-    con = setup("part-d-ipm/errors/output/base", "part-d-ipm/estimation/sql/40_simulation_inputs.sql", v)
+    if not (ROOT / pop / "pde_detail.parquet").exists():
+        pytest.skip(f"build {pop} first")
+    con = setup(pop, "part-d-ipm/estimation/sql/40_simulation_inputs.sql", v)
     return con, load_kernel(ROOT / "part-d-ipm/estimation/simulation.py"), v
+
+
+def test_part_d_pre_ira_payment_function_exact():
+    """Alternative design: the numpy CY 2023 (pre-IRA) benefit reproduces
+    errors/sql/05_benefit_pre_ira.sql y to the cent; an audit of every PDE
+    gives the exact rates."""
+    con, mod, v = partd_kernel(design="pre_ira.yaml", pop="part-d-ipm/errors/output_pre_ira/base")
+    k = mod.Kernel(con, v)
+    assert k.payment is mod.medicare_cents_pre_ira
+    assert np.array_equal(k.improper_cents(k.cor), k.y_true)
+    k.prepare(1, np.ones(k.units, bool))
+    y = k.y_true.astype(float)
+    over, under = y[y > 0].sum(), -y[y < 0].sum()
+    assert k.iterate(None, np.random.default_rng(1))["national|gross"] == (over + under) / k.X
 
 
 def test_part_d_payment_function_exact():
