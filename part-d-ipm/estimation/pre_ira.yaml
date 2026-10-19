@@ -12,7 +12,8 @@ steps:
   - sql: part-d-ipm/estimation/sql/01_frame.sql        # estimands + beneficiary audit design
   - sql: shared/sql/sample_srs.sql                          # audit years: beneficiary audit (990)
   - sql: part-d-ipm/estimation/sql/20_ratio.sql
-  - sql: part-d-ipm/estimation/sql/30_regression.sql
+  - sql: part-d-ipm/estimation/sql/30_regression.sql   # regression inputs: predictors for every population unit
+  - {python: shared/ipsim/regression.py, run: run}   # regression: fit within strata, predict, residual interval
   - sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql   # claim strata, Neyman PDE audit (5,000)
   - {python: part-d-ipm/estimation/simulation.py, run: run_expansion}   # expansion: stratum rates, benefit rerun
   - python: part-d-ipm/estimation/simulation.py # bootstrap simulation: benefit rerun 1,000x (numpy)
@@ -31,6 +32,8 @@ defaults:
   sim_iterations: 1000  # simulation iterations per audit year
   sim_audit_size: 5000  # PDE audit per audit year: claim strata, Neyman allocation
   sim_rates: parametric # parametric (reported): p and q redrawn as Binomial(n, p)/n, Binomial(f, q)/f | fixed (comparison; results_fixed/)
+  reg_predictors: [x, gdc_sub, n_pde, catastrophic]   # regression: basic beneficiary variables + amount paid
+  reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 scenarios:
   - name: base

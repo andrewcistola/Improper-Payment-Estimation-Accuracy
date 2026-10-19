@@ -15,7 +15,7 @@ Before turning to intervals, it is worth establishing what the bootstrap simulat
 | Program | Bootstrap mean absolute error (% of truth) | Best analytic mean absolute error | Expansion |
 |---|---|---|---|
 | Part C | 5.6% | 5.7% | |
-| PERM | 4.4% | 5.5% | |
+| PERM | 4.4% | 5.3% (regression) | |
 | EIPM | 16.6% | 17.6% | |
 | CERT | 1.5% | 2.2% | |
 | Part D | 6.6% | 23.4% (ratio, on the 990-beneficiary audit) | 30.5% (on the same PDE audit) |
@@ -83,7 +83,7 @@ They achieved equal or higher coverage than the analytic intervals in every prog
 | PERM | 24/25 | 23/25 |
 | EIPM | 23/25 | 22/25 |
 | CERT | 25/25 | 24/25 (ratio), 25/25 (expansion) |
-| Part D | 25/25 | 18–20/25 |
+| Part D | 25/25 | 15–18/25 |
 
 In dollars (Appendix Table C1):
 
@@ -122,6 +122,16 @@ The exceptions are the sparse measures, those built from a handful of audited er
 
 Every method undercovers these measures, and the misses fall mainly below: the interval lies under the truth in audit years whose sample happened to contain few of the rare errors. This is the zero-inflated, right-skewed regime in which normal-theory intervals are known to fail (Kvanli et al. 1998; Hesterberg 2015). The parametric bootstrap does not escape it, because a binomial redraw centered on a low audited rate stays low. The gross rate is protected because the sparse component is a small share of it.
 
+### 4.5 Regression with beneficiary variables
+
+The regression estimator fits a least-squares model within each stratum on the ratio estimator's audit, using basic beneficiary variables and the amount paid. It then predicts every population unit and adds the weighted audit residuals. The extra variables changed little:
+- **Part C, PERM, EIPM and CERT:** coverage of the gross rate was 23, 23, 23 and 24 of 25. Width and point accuracy were within a few percent of the ratio estimator's.
+- **Part D:** drug cost and reaching the catastrophic phase explain part of the beneficiary payment error, and the interval narrowed from ±0.67 (ratio) to ±0.58 points. But coverage fell to 15 of 25, and the point estimate ran 7.8% high on average.
+
+With few large errors in a 990-beneficiary audit, a better-fitting model leaves residuals that understate the true sampling variance: the overfitting risk of model-assisted estimation with small samples (McConville et al. 2020). In PERM, all but the largest-payment fee-for-service stratum had too few audited errors for a model and used the intercept-only fallback, which equals expansion within the stratum.
+
+Across the five programs, regression covered the true gross rate in 108 of 125 audit years (86.4%), against 111 for the ratio estimator and 121 for the parametric bootstrap.
+
 ## 5. Discussion
 
 ### 5.1 Principal findings
@@ -132,7 +142,7 @@ Redrawing the rates from their binomial sampling distribution before each iterat
 
 ### 5.2 Recommendation
 
-We recommend that CMS improper payment measurements adopt **bootstrap simulation with parametric rates** for the gross improper payment rate and its interval, with the analytic ratio or regression interval reported alongside during a transition period. The recommendation rests on three findings:
+We recommend that CMS improper payment measurements adopt **bootstrap simulation with parametric rates** for the gross improper payment rate and its interval, with the analytic ratio interval reported alongside during a transition period. The recommendation rests on three findings:
 
 1. **Validity:** coverage at the nominal level for the gross rate in every program.
 2. **Accuracy:** the most accurate point estimates of the methods studied.

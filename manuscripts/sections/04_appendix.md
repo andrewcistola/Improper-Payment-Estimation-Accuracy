@@ -14,7 +14,7 @@ Each program folder has two stages, run by one YAML-driven runner (`ipsim`):
 2. **`estimation/`** draws the audits and estimates with each method.
    - Frame and design. Strata, the allocation (Neyman where stated), and the sample size.
    - Audits. 25 independent production audits ("audit years").
-   - Estimators. Expansion, ratio and regression (generalized regression with an intercept and payment as auxiliary), with normal 95% intervals from Taylor linearization. These are written once in `shared/sql/lib/02_estimators.sql` and tested against an independent numpy implementation.
+   - Estimators. Expansion and ratio, with normal 95% intervals, written once in `shared/sql/lib/02_estimators.sql` and tested against an independent numpy implementation. Regression: models fit within strata on beneficiary variables plus the amount paid, predicted for the population, with a residual interval (`shared/ipsim/regression.py`, predictors from each program's `30_regression.sql`; tested in `shared/tests/test_regression.py`).
    - Bootstrap simulation. Fixed and parametric rates, 1,000 iterations per audit year, run by the shared loop in `shared/ipsim/simulation.py` with each program's kernel.
    - Scoring against the truth.
 
@@ -51,7 +51,7 @@ Rates are scale-free. Dollars are reported at national scale: rate × synthetic 
   - Net = over − under
 - **Rates.** Each total is estimated in dollars with its interval first, then divided by the known total payments *X*.
 - **Overpayment-only programs.** PERM and EIPM have only overpayments, so gross = over = net. Their components are reported instead: eligibility and claims for PERM, technically improper and monetary for EIPM.
-- **Analytic estimators.** These estimate the rate directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or *[T̂_y + b(X − T̂_x)] / X* (regression), using stratified-SRS variance formulas with finite population correction.
+- **Analytic estimators.** These estimate the rate directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or *[Σ_U ŷ + Σ_s w (y − ŷ)] / X* (regression, with models fit within strata), using stratified-SRS variance formulas with finite population correction on *y* or on the residuals.
 
 ### A.5 Bootstrap simulation, step by step
 
@@ -94,7 +94,7 @@ Values marked *illustrative* are not published by CMS. They are set to plausible
 **Estimators:**
 
 - Expansion works in risk-score units: within each tercile, the mean over and under risk-score error × the tercile's size × the national mean county rate × months.
-- Ratio and regression use the enrollee payment.
+- Ratio uses the enrollee payment; regression uses payment, demographic score, months enrolled and number of HCCs within each tercile.
 
 **Bootstrap simulation:**
 

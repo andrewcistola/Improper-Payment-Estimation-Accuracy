@@ -10,7 +10,8 @@ steps:
   - sql: shared/sql/sample_srs.sql                          # audit years (Monte Carlo replicates)
   - sql: part-c-ipm/estimation/sql/10_expansion.sql
   - sql: part-c-ipm/estimation/sql/20_ratio.sql
-  - sql: part-c-ipm/estimation/sql/30_regression.sql
+  - sql: part-c-ipm/estimation/sql/30_regression.sql   # regression inputs: predictors for every population unit
+  - {python: shared/ipsim/regression.py, run: run}   # regression: fit within strata, predict, residual interval
   - sql: part-c-ipm/estimation/sql/40_simulation_inputs.sql   # audit findings + population rows
   - python: part-c-ipm/estimation/simulation.py # bootstrap simulation: HCC rates, payments rerun 1,000x (numpy)
   - sql: part-c-ipm/estimation/sql/90_score.sql
@@ -29,6 +30,8 @@ defaults:
   sim_reps: 25     # audit years run through the bootstrap simulation (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
   sim_rates: parametric # parametric (reported): rates redrawn as Binomial(n, rate)/n each iteration | fixed (comparison; results_fixed/)
+  reg_predictors: [x, demo_score, months, n_hcc]   # regression: basic beneficiary variables + amount paid
+  reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 scenarios:
   - name: base

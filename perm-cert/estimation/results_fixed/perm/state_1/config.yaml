@@ -14,6 +14,12 @@ variables:
   sim_iterations: 1000
   sim_rates: fixed
   sim_export_draws: true
+  reg_predictors:
+  - x
+  - month
+  - bene_n_pay
+  - bene_paid
+  reg_min_errors: 10
   alpha: 0.05
   state_id: 1
   scenario: state_1
@@ -23,6 +29,8 @@ steps:
 - sql: perm-cert/estimation/sql/perm_10_expansion.sql
 - sql: perm-cert/estimation/sql/perm_20_ratio.sql
 - sql: perm-cert/estimation/sql/perm_30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
 - sql: perm-cert/estimation/sql/perm_40_simulation_inputs.sql
 - python: perm-cert/estimation/perm_simulation.py
 - sql: perm-cert/estimation/sql/perm_90_score.sql

@@ -1,20 +1,20 @@
 {
   "config_file": "perm-cert/estimation/perm.yaml",
-  "config_sha256": "9fd9028bd689b2da9e66848e08f899de9cd500cd892fbba3e8265a0fd6404278",
+  "config_sha256": "befb77132a50f0354c83e82d5d82549901e3fc834de9bfb5eb2a9661cc770dff",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 807,
-      "sha256": "73741f31842a94ead3ce4fed510b7a756fae2090deed0dab0c0e7d37819ed3d0"
+      "bytes": 939,
+      "sha256": "8659be8347ad98fa1924263ad7a286316de949c09a3e7bfe37ad34d91b118c5b"
     },
     "estimates.parquet": {
-      "bytes": 10976,
-      "rows": 300,
-      "sha256": "896c150523ba1ff99cfcf07b618858764f31fc8ce6f528228cc4a941f5721daa"
+      "bytes": 8655,
+      "rows": 225,
+      "sha256": "7df5aacc67c9c7588c41e4c6b1f695a6f3b500ad7adfd8d1a28dc36c7e320933"
     },
     "metrics.json": {
-      "bytes": 6449,
-      "sha256": "3db8f15887dcae8bd746656fbea0e026a56e4422ed78524799120828c56a7237"
+      "bytes": 4848,
+      "sha256": "dab173f8aa1878d76e64ba9397e68fafbf4386d4dbfddef0044c4f94977a6751"
     },
     "sim_draws.parquet": {
       "bytes": 568630,

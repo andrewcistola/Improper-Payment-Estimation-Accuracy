@@ -52,7 +52,7 @@ Estimators and Bootstrap Simulation</h1>
 <p><strong>Running title:</strong> Comparative accuracy of improper
 payment estimation methods</p>
 <p><strong>Word count:</strong> about 4,400 (main text, excluding tables
-and references); abstract about 300; 5 tables, 2 figures; Appendices
+and references); abstract about 330; 5 tables, 2 figures; Appendices
 A–C.</p>
 <h2 id="abstract">Abstract</h2>
 <p><strong>Background.</strong> CMS estimates improper payments in
@@ -70,10 +70,12 @@ interval accuracy (coverage at the nominal 95%, then width).</p>
 <p><strong>Methods.</strong> We built five synthetic populations, one
 per program, with fabricated errors and calibrated to public FY 2025
 aggregates, and drew each program’s production-like audit (990 to 37,651
-units) in 25 independent audit years. We compared expansion, ratio and
-regression estimators with normal intervals against bootstrap simulation
-(1,000 iterations) with error rates held fixed at their audited values
-or redrawn each iteration from their binomial sampling distributions
+units) in 25 independent audit years. We compared expansion and ratio
+estimators with normal intervals and a model-assisted regression
+estimator (models fit within strata on basic beneficiary variables and
+the amount paid, residual interval) against bootstrap simulation (1,000
+iterations) with error rates held fixed at their audited values or
+redrawn each iteration from their binomial sampling distributions
 (parametric rates).</p>
 <p><strong>Results.</strong> Bootstrap point estimates were as accurate
 as or more accurate than the analytic estimates. Fixed-rate bootstrap
@@ -142,8 +144,10 @@ normal-theory intervals (Cochran 1977):</p>
 population.</li>
 <li><strong>Ratio</strong> divides the weighted errors by the weighted
 payments.</li>
-<li><strong>Regression</strong> (generalized regression, GREG)
-calibrates to a known auxiliary such as total payments.</li>
+<li><strong>Regression</strong> fits a model of the error on
+characteristics known for every unit, predicts the whole population, and
+adds the weighted sample residuals (model-assisted estimation; Särndal
+et al. 1992).</li>
 </ul>
 <p>Their intervals rely on a central limit argument that is weakest
 exactly where improper payment data live. Errors are rare, zero-inflated
@@ -190,8 +194,8 @@ the audit would have found had a different sample been drawn. Section
 available methods for estimating improper payments in federal health
 programs?</strong> The methods are:</p>
 <ul>
-<li>the three design-based analytic estimators in use (expansion, ratio
-and regression);</li>
+<li>three design-based analytic estimators (expansion, ratio and a
+model-assisted regression estimator);</li>
 <li>audit-finding bootstrap simulation.</li>
 </ul>
 <p>Accuracy has two parts:</p>
@@ -353,14 +357,38 @@ totals. Then:</p>
 <ul>
 <li><strong>Expansion:</strong> *θ̂ = T̂_y / X*.</li>
 <li><strong>Ratio:</strong> *θ̂ = T̂_y / T̂_x*.</li>
-<li><strong>Regression (GREG):</strong> <em>θ̂ = [T̂_y + b(X − T̂_x)] /
-X</em>, with <em>b</em> the weighted least-squares slope of <em>y</em>
-on <em>x</em> with an intercept.</li>
+<li><strong>Regression (model-assisted):</strong> within each model
+stratum <em>m</em>, the audited <em>y</em> is regressed by
+design-weighted least squares on an intercept and the unit’s predictors
+<strong>z</strong>: basic beneficiary variables plus the amount paid.
+The fitted models predict every population unit, and the estimate adds
+the weighted audit residuals: <em>θ̂ = [Σ_U ŷ + Σ_s w (y − ŷ)] / X</em>.
+The predictors are:
+<ul>
+<li>Part C: payment, demographic score, months enrolled and number of
+HCCs, within risk-score terciles.</li>
+<li>Part D: Medicare payment, gross drug cost, number of PDEs and
+reaching the catastrophic phase, within post-strata (long-term care,
+low-income subsidy, other).</li>
+<li>PERM: amount paid, month and the beneficiary’s number of payments
+and total paid.</li>
+<li>EIPM: APTC, age, household size, income and months.</li>
+<li>CERT: amount paid (the claims carry no beneficiary variables).</li>
+</ul>
+The model is fit on the same audit as the ratio estimator (for Part D,
+the 990-beneficiary audit). A stratum with fewer than 10 audited errors,
+or too few units for the model, uses an intercept-only model, which is
+expansion within that stratum. The approach follows model-assisted
+estimation as used in forest inventory (McConville et al. 2020) and
+model-based extrapolation of random audits in tax-gap estimation (Johns
+and Rosenbaum 2024).</li>
 </ul>
 <p>Variances use the stratified-SRS formula with finite population
-correction on <em>y</em>, on the ratio residual <em>y − θ̂x</em>, or on
-the regression residual (Taylor linearization). Each method reports
-<em>θ̂ ± 1.96·SE</em>.</p>
+correction on <em>y</em> (expansion), on the ratio residual <em>y −
+θ̂x</em> (ratio), or on the model residual <em>y − ŷ</em> (regression),
+all from the single audit. Expansion and ratio report <em>θ̂ ±
+1.96·SE</em>; regression uses a <em>t</em> multiplier with degrees of
+freedom reduced by the strata and model terms fitted.</p>
 <p>Two program-specific forms apply:</p>
 <ul>
 <li><strong>Part C expansion</strong> works in risk-score units: the
@@ -485,9 +513,9 @@ equivalents are in Appendix Table C1.</p>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>6.16%</td>
+<td>6.10%</td>
 <td>±1.02</td>
-<td>24/25 (1/0)</td>
+<td>23/25 (1/1)</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -526,9 +554,9 @@ beneficiaries)</td>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>1.41%</td>
-<td>±0.64</td>
-<td>20/25 (1/4)</td>
+<td>1.44%</td>
+<td>±0.58</td>
+<td>15/25 (4/6)</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -566,7 +594,7 @@ beneficiaries)</td>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>6.04%</td>
+<td>6.03%</td>
 <td>±0.79</td>
 <td>23/25 (0/2)</td>
 </tr>
@@ -606,9 +634,9 @@ beneficiaries)</td>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>0.83%</td>
-<td>±0.35</td>
-<td>22/25 (0/3)</td>
+<td>0.84%</td>
+<td>±0.34</td>
+<td>23/25 (0/2)</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -647,7 +675,7 @@ type))</td>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>6.57%</td>
+<td>6.58%</td>
 <td>±0.36</td>
 <td>24/25 (1/0)</td>
 </tr>
@@ -714,7 +742,7 @@ Part C and is more accurate in the other four (Table 3):</p>
 <tr class="even">
 <td>PERM</td>
 <td>4.4%</td>
-<td>5.5%</td>
+<td>5.3% (regression)</td>
 <td></td>
 </tr>
 <tr class="odd">
@@ -779,7 +807,7 @@ error)</strong></p>
 <td>Part C</td>
 <td>5.7% (+1.1%)</td>
 <td>6.0% (+0.9%)</td>
-<td>6.7% (+1.1%)</td>
+<td>6.3% (+1.2%)</td>
 <td>5.6% (-0.1%)</td>
 <td>5.6% (-0.1%)</td>
 </tr>
@@ -787,7 +815,7 @@ error)</strong></p>
 <td>Part D</td>
 <td>30.5% (-5.7%)</td>
 <td>23.4% (+0.1%)</td>
-<td>23.9% (+1.9%)</td>
+<td>27.9% (+7.8%)</td>
 <td>6.6% (-0.4%)</td>
 <td>6.6% (-0.4%)</td>
 </tr>
@@ -795,7 +823,7 @@ error)</strong></p>
 <td>PERM</td>
 <td>5.5% (-1.4%)</td>
 <td>5.6% (-1.4%)</td>
-<td>5.5% (-1.3%)</td>
+<td>5.3% (-1.5%)</td>
 <td>4.4% (-0.6%)</td>
 <td>4.4% (-0.6%)</td>
 </tr>
@@ -803,7 +831,7 @@ error)</strong></p>
 <td>EIPM</td>
 <td>17.7% (-5.5%)</td>
 <td>17.6% (-5.6%)</td>
-<td>17.6% (-5.6%)</td>
+<td>18.1% (-5.4%)</td>
 <td>16.6% (-7.9%)</td>
 <td>16.6% (-8.1%)</td>
 </tr>
@@ -811,7 +839,7 @@ error)</strong></p>
 <td>CERT</td>
 <td>2.2% (+0.6%)</td>
 <td>2.3% (+0.7%)</td>
-<td>2.3% (+0.6%)</td>
+<td>2.3% (+0.7%)</td>
 <td>1.5% (+0.3%)</td>
 <td>1.5% (+0.3%)</td>
 </tr>
@@ -1046,7 +1074,7 @@ every program:</p>
 <tr class="odd">
 <td>Part D</td>
 <td>25/25</td>
-<td>18–20/25</td>
+<td>15–18/25</td>
 </tr>
 </tbody>
 </table>
@@ -1132,7 +1160,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>6.06%</td>
 <td>25/25 (0/0)</td>
 <td>24/25 (1/0)</td>
-<td>24/25 (1/0)</td>
+<td>23/25 (1/1)</td>
 <td>3/25 (12/10)</td>
 <td>24/25 (0/1)</td>
 </tr>
@@ -1152,7 +1180,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>1.36%</td>
 <td>18/25 (0/7)</td>
 <td>18/25 (1/6)</td>
-<td>20/25 (1/4)</td>
+<td>16/25 (4/5)</td>
 <td>9/25 (9/7)</td>
 <td>25/25 (0/0)</td>
 </tr>
@@ -1162,7 +1190,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>0.02%</td>
 <td>0/25 (0/25)</td>
 <td>15/25 (0/10)</td>
-<td>15/25 (0/10)</td>
+<td>13/25 (2/10)</td>
 <td>10/25 (12/3)</td>
 <td>20/25 (4/1)</td>
 </tr>
@@ -1172,7 +1200,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>1.38%</td>
 <td>18/25 (0/7)</td>
 <td>18/25 (1/6)</td>
-<td>20/25 (1/4)</td>
+<td>15/25 (4/6)</td>
 <td>10/25 (8/7)</td>
 <td>25/25 (0/0)</td>
 </tr>
@@ -1182,7 +1210,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>1.34%</td>
 <td>19/25 (0/6)</td>
 <td>19/25 (1/5)</td>
-<td>20/25 (1/4)</td>
+<td>16/25 (4/5)</td>
 <td>11/25 (7/7)</td>
 <td>24/25 (0/1)</td>
 </tr>
@@ -1222,7 +1250,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>0.92%</td>
 <td>22/25 (0/3)</td>
 <td>22/25 (0/3)</td>
-<td>22/25 (0/3)</td>
+<td>23/25 (0/2)</td>
 <td>6/25 (5/14)</td>
 <td>23/25 (0/2)</td>
 </tr>
@@ -1312,7 +1340,7 @@ interval, out of 25 audit years; above / below)</strong></p>
 <td>6.62%</td>
 <td>24/25 (1/0)</td>
 <td>23/25 (2/0)</td>
-<td>23/25 (2/0)</td>
+<td>24/25 (1/0)</td>
 <td>9/25 (11/5)</td>
 <td>25/25 (0/0)</td>
 </tr>
@@ -1388,6 +1416,29 @@ right-skewed regime in which normal-theory intervals are known to fail
 escape it, because a binomial redraw centered on a low audited rate
 stays low. The gross rate is protected because the sparse component is a
 small share of it.</p>
+<h3 id="regression-with-beneficiary-variables">4.5 Regression with
+beneficiary variables</h3>
+<p>The regression estimator fits a least-squares model within each
+stratum on the ratio estimator’s audit, using basic beneficiary
+variables and the amount paid. It then predicts every population unit
+and adds the weighted audit residuals. The extra variables changed
+little: - <strong>Part C, PERM, EIPM and CERT:</strong> coverage of the
+gross rate was 23, 23, 23 and 24 of 25. Width and point accuracy were
+within a few percent of the ratio estimator’s. - <strong>Part
+D:</strong> drug cost and reaching the catastrophic phase explain part
+of the beneficiary payment error, and the interval narrowed from ±0.67
+(ratio) to ±0.58 points. But coverage fell to 15 of 25, and the point
+estimate ran 7.8% high on average.</p>
+<p>With few large errors in a 990-beneficiary audit, a better-fitting
+model leaves residuals that understate the true sampling variance: the
+overfitting risk of model-assisted estimation with small samples
+(McConville et al. 2020). In PERM, all but the largest-payment
+fee-for-service stratum had too few audited errors for a model and used
+the intercept-only fallback, which equals expansion within the
+stratum.</p>
+<p>Across the five programs, regression covered the true gross rate in
+108 of 125 audit years (86.4%), against 111 for the ratio estimator and
+121 for the parametric bootstrap.</p>
 <h2 id="discussion">5. Discussion</h2>
 <h3 id="principal-findings">5.1 Principal findings</h3>
 <p>In five synthetic populations designed after the five CMS improper
@@ -1410,8 +1461,8 @@ D.</p>
 <h3 id="recommendation">5.2 Recommendation</h3>
 <p>We recommend that CMS improper payment measurements adopt
 <strong>bootstrap simulation with parametric rates</strong> for the
-gross improper payment rate and its interval, with the analytic ratio or
-regression interval reported alongside during a transition period. The
+gross improper payment rate and its interval, with the analytic ratio
+interval reported alongside during a transition period. The
 recommendation rests on three findings:</p>
 <ol type="1">
 <li><strong>Validity:</strong> coverage at the nominal level for the
@@ -1583,7 +1634,7 @@ sizes.</p>
 <p>All code, configuration, synthetic populations (or their SHA-256
 manifests where a population is too large to commit), results and the
 scripts that build every table and figure in this paper are in the
-public repository <a href="https://github.com/andrewcistola/comparing-improper-payment-estimators">andrewcistola/comparing-improper-payment-estimators</a>.
+public repository <a href="https://github.com/andrewcistola/improper-payment-estimation-accuracy">andrewcistola/improper-payment-estimation-accuracy</a>.
 The repository contains no protected health information, no unit-level
 data from any source and no non-public CMS material.</p>
 <h2 id="funding-conflicts-of-interest-and-disclaimer">Funding, conflicts
@@ -1639,12 +1690,18 @@ intervals. <em>Annals of Statistics</em> 16(3):927–953.</li>
 <li>King B, Madansky A (2013). On sampling design issues when dealing
 with zeros. <em>Journal of Survey Statistics and Methodology</em>
 1(2):144–170.</li>
+<li>Johns D, Rosenbaum D (2024). <em>Distribution of Tax Year 2014–2015
+Individual Income Tax and Self-Employment Tax Underreporting Tax
+Gap</em>. Internal Revenue Service.</li>
 <li>Kvanli AH, Shen YK, Deng LY (1998). Construction of confidence
 intervals for the mean of a population containing many zero values.
 <em>Journal of Business &amp; Economic Statistics</em>
 16(3):362–368.</li>
 <li>Mashreghi Z, Haziza D, Léger C (2016). A survey of bootstrap methods
 in finite population sampling. <em>Statistics Surveys</em> 10:1–52.</li>
+<li>McConville KS, Moisen GG, Frescino TS (2020). A tutorial on
+model-assisted estimation with application to forest inventory.
+<em>Forests</em> 11(2):244.</li>
 <li>Neter J, Loebbecke JK (1975). <em>Behavior of Major Statistical
 Estimators in Sampling Accounting Populations: An Empirical Study</em>.
 AICPA.</li>
@@ -1655,6 +1712,8 @@ Budget.</li>
 <li>Rao JNK, Wu CFJ (1988). Resampling inference with complex survey
 data. <em>Journal of the American Statistical Association</em>
 83(401):231–241.</li>
+<li>Särndal CE, Swensson B, Wretman J (1992). <em>Model Assisted Survey
+Sampling</em>. Springer.</li>
 <li>Wolter KM (2007). <em>Introduction to Variance Estimation</em>, 2nd
 ed. Springer.</li>
 </ul>
@@ -1693,11 +1752,14 @@ estimates with each method.
 <li>Frame and design. Strata, the allocation (Neyman where stated), and
 the sample size.</li>
 <li>Audits. 25 independent production audits (“audit years”).</li>
-<li>Estimators. Expansion, ratio and regression (generalized regression
-with an intercept and payment as auxiliary), with normal 95% intervals
-from Taylor linearization. These are written once in
-<code>shared/sql/lib/02_estimators.sql</code> and tested against an
-independent numpy implementation.</li>
+<li>Estimators. Expansion and ratio, with normal 95% intervals, written
+once in <code>shared/sql/lib/02_estimators.sql</code> and tested against
+an independent numpy implementation. Regression: models fit within
+strata on beneficiary variables plus the amount paid, predicted for the
+population, with a residual interval
+(<code>shared/ipsim/regression.py</code>, predictors from each program’s
+<code>30_regression.sql</code>; tested in
+<code>shared/tests/test_regression.py</code>).</li>
 <li>Bootstrap simulation. Fixed and parametric rates, 1,000 iterations
 per audit year, run by the shared loop in
 <code>shared/ipsim/simulation.py</code> with each program’s kernel.</li>
@@ -1785,9 +1847,10 @@ overpayments, so gross = over = net. Their components are reported
 instead: eligibility and claims for PERM, technically improper and
 monetary for EIPM.</li>
 <li><strong>Analytic estimators.</strong> These estimate the rate
-directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or <em>[T̂_y + b(X
-− T̂_x)] / X</em> (regression), using stratified-SRS variance formulas
-with finite population correction.</li>
+directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or <em>[Σ_U ŷ +
+Σ_s w (y − ŷ)] / X</em> (regression, with models fit within strata),
+using stratified-SRS variance formulas with finite population correction
+on <em>y</em> or on the residuals.</li>
 </ul>
 <h3 id="a.5-bootstrap-simulation-step-by-step">A.5 Bootstrap simulation,
 step by step</h3>
@@ -1853,7 +1916,9 @@ design.</p>
 <li>Expansion works in risk-score units: within each tercile, the mean
 over and under risk-score error × the tercile’s size × the national mean
 county rate × months.</li>
-<li>Ratio and regression use the enrollee payment.</li>
+<li>Ratio uses the enrollee payment; regression uses payment,
+demographic score, months enrolled and number of HCCs within each
+tercile.</li>
 </ul>
 <p><strong>Bootstrap simulation:</strong></p>
 <ul>
@@ -2116,9 +2181,9 @@ results</h2>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>$23.94B</td>
-<td>$20.05B</td>
-<td>$27.78B</td>
+<td>$23.70B</td>
+<td>$19.97B</td>
+<td>$27.64B</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -2156,9 +2221,9 @@ results</h2>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>$1.48B</td>
-<td>$0.77B</td>
-<td>$2.22B</td>
+<td>$1.52B</td>
+<td>$0.89B</td>
+<td>$2.19B</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -2197,8 +2262,8 @@ results</h2>
 <td></td>
 <td>Regression</td>
 <td>$8.57B</td>
-<td>$7.44B</td>
-<td>$9.71B</td>
+<td>$7.43B</td>
+<td>$9.67B</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -2236,8 +2301,8 @@ results</h2>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>$0.68B</td>
-<td>$0.40B</td>
+<td>$0.69B</td>
+<td>$0.41B</td>
 <td>$0.96B</td>
 </tr>
 <tr class="odd">
@@ -2276,9 +2341,9 @@ results</h2>
 <td></td>
 <td></td>
 <td>Regression</td>
-<td>$28.92B</td>
-<td>$27.34B</td>
-<td>$30.48B</td>
+<td>$28.95B</td>
+<td>$27.35B</td>
+<td>$30.50B</td>
 </tr>
 <tr class="even">
 <td></td>

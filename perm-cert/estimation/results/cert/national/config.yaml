@@ -17,6 +17,9 @@ variables:
   sim_reps: 25
   sim_iterations: 1000
   sim_rates: parametric
+  reg_predictors:
+  - x
+  reg_min_errors: 10
   alpha: 0.05
   scenario: national
 steps:
@@ -25,6 +28,8 @@ steps:
 - sql: perm-cert/estimation/sql/cert_10_expansion.sql
 - sql: perm-cert/estimation/sql/cert_20_ratio.sql
 - sql: perm-cert/estimation/sql/cert_30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
 - sql: perm-cert/estimation/sql/cert_40_simulation_inputs.sql
 - python: perm-cert/estimation/cert_simulation.py
 - sql: perm-cert/estimation/sql/cert_90_score.sql

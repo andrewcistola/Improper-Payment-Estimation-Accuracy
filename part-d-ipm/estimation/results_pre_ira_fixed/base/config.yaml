@@ -12,6 +12,12 @@ variables:
   sim_iterations: 1000
   sim_audit_size: 5000
   sim_rates: fixed
+  reg_predictors:
+  - x
+  - gdc_sub
+  - n_pde
+  - catastrophic
+  reg_min_errors: 10
   alpha: 0.05
   scenario: base
 steps:
@@ -19,6 +25,8 @@ steps:
 - sql: shared/sql/sample_srs.sql
 - sql: part-d-ipm/estimation/sql/20_ratio.sql
 - sql: part-d-ipm/estimation/sql/30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
 - sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql
 - python: part-d-ipm/estimation/simulation.py
   run: run_expansion
