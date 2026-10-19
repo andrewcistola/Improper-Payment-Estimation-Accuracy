@@ -16,10 +16,12 @@ This repository is a Monte Carlo study of the accuracy of those methods. Accurac
 **Scope: PIIA improper payment rate estimation.** Recovery and extrapolation uses (contract-level RADV, provider overpayment demands) are out of scope. No PHI, no unit-level data from any source, and nothing non-public: every number is drawn from stated distributions and calibrated only to public aggregate results.
 
 **Methods Under Comparison**
-- **Expansion:** 
-- **Ratio:**
-- **Regression:**
-- **Bootstrap Simulation:**
+- **Expansion:** weights each audited unit's improper dollars up to the population (Horvitz–Thompson), then divides by the known total payments (Part C works in risk-score units and Part D reruns the benefit with stratum error rates; see their READMEs). It relies only on the audited errors, so it is unbiased but can be noisy when errors are rare or vary widely in size.
+- **Ratio:** divides weighted audited improper dollars by weighted audited payments. Errors that scale with payment size are captured, so its variance is usually smaller than expansion's. It is the form CMS documents for PERM and, nationally, for CERT.
+- **Regression:** a generalized regression (GREG) estimator. It adjusts the expansion estimate for how far the audit's payments differ from the known population total, using a fitted slope of improper dollars on payment, with an intercept.
+- **Bootstrap Simulation:** assigns the audit's findings (an error rate, a partial-error share and error sizes, by stratum) at random to every unaudited unit in the population, reruns the program's payment rules, and repeats 1,000 times. The estimate is the mean of the iterations and the 95% interval is their 2.5th–97.5th percentiles; audited units keep their own findings.
+
+Expansion, ratio and regression report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction).
 
 **Two approaches to bootstrap simulation.** The study compared two versions of the bootstrap simulation:
 - **Fixed rates:** the audited error rates are reused in every iteration. Its point estimates are as accurate as or more accurate than the analytic estimators, but its intervals contained the truth in only 24% of audit years, because they omit the sampling error of the audited rates.
