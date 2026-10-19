@@ -15,11 +15,11 @@ This repository is a Monte Carlo study of the accuracy of those methods. Accurac
 
 **Scope: PIIA improper payment rate estimation.** Recovery and extrapolation uses (contract-level RADV, provider overpayment demands) are out of scope. No PHI, no unit-level data from any source, and nothing non-public: every number is drawn from stated distributions and calibrated only to public aggregate results.
 
-**Methods Under Comparison:** The following approaches are comapared:
-- **Expansion:** An average error amount per beneficiary is calculated and then multiplied that by the population count. This can apply to payments directly or to elements of a payment function that are audited individually (ex. risk score error). 
-- **Ratio:** A complete annual improper payment amount in an audit of beneficiaries is identified. Then that amount is multiplied by a weight representing the portion of the population included in the sample.
-- **Regression:** A regression model is built with variables related to improper payments and fit on audit samples. Then it predicts improper payments in the population using the variables in the model. 
-- **Bootstrap Simulation:** assigns the audit's findings (an error rate, a partial-error share and error sizes, by stratum) at random to every unaudited unit in the population, reruns the program's payment rules, and repeats multiple iterations. The estimate is the mean of the iterations and the 95% interval is their 2.5th–97.5th percentiles.
+**Methods Under Comparison:** The following approaches are compared:
+- **Expansion:** The average error per audited unit (enrollee, beneficiary, claim or application) is multiplied by the number of units in the population, stratum by stratum. It can apply to payments directly or to parts of a payment function audited separately (for example, risk score error).
+- **Ratio:** The audited improper dollars are divided by the audited payments to get an improper payment rate. That rate is then applied to the program's known total payments.
+- **Regression:** Improper dollars in the audit are modeled as a straight line of the amount paid. The line is applied to the known population payments, which works out to the sum of predicted improper payments across every unit.
+- **Bootstrap Simulation:** The audit's findings (error rates, partial-error shares and error sizes) are assigned at random to every unaudited unit, and the payment rules are rerun many times; audited units keep their own findings. The estimate is the average across iterations, and the 95% interval runs from the 2.5th to the 97.5th percentile.
 
 **Confidence Intervals**
 Expansion, ratio and regression report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction). The study compared two versions of the bootstrap simulation:
