@@ -5,7 +5,7 @@ Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion lit
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 
-The Payment Integrity Information Act of 2019 requires a statistically valid estimate of improper payments, with a confidence interval, for every federal program at risk of significant improper payments. CMS produces five such estimates: Medicare Part C, Medicare Part D, Medicaid (PERM), the Marketplace advance premium tax credit (EIPM) and Medicare fee-for-service (CERT). Each one audits a probability sample of payments and projects the audited errors to the program. The projection uses design-based analytic estimators (expansion, ratio and regression) or audit-finding bootstrap simulation depending on the program.
+The Payment Integrity Information Act of 2019 requires a statistically valid estimate of improper payments, with a confidence interval, for every federal program at risk of significant improper payments. CMS produces five such estimates: Medicare Part C, Medicare Part D, Medicaid (PERM), the Marketplace advance premium tax credit (EIPM) and Medicare fee-for-service (CERT). Each one audits a probability sample of payments and projects the audited errors to the program. The projection uses design-based analytic estimators (expansion and ratio) or audit-finding bootstrap simulation depending on the program.
 
 This repository is a Monte Carlo study of the accuracy of those methods. Accuracy has two parts:
 - **Point accuracy:** how close the estimate is to the true improper payment.
@@ -18,11 +18,10 @@ This repository is a Monte Carlo study of the accuracy of those methods. Accurac
 **Methods Under Comparison:** The following approaches are compared:
 - **Expansion:** The average error per audited unit (enrollee, beneficiary, claim or application) is multiplied by the number of units in the population, stratum by stratum. It can apply to payments directly or to parts of a payment function audited separately (for example, risk score error).
 - **Ratio:** The audited improper dollars are divided by the audited payments to get an improper payment rate. That rate is then applied to the program's known total payments.
-- **Regression:** Improper dollars in the audit are modeled as a straight line of the amount paid. The line is applied to the known population payments, which works out to the sum of predicted improper payments across every unit. *(Results being reworked; not shown below.)*
 - **Bootstrap Simulation:** The audit's findings (error rates, partial-error shares and error sizes) are assigned at random to every unaudited unit, and the payment rules are rerun many times; audited units keep their own findings. The estimate is the average across iterations, and the 95% interval runs from the 2.5th to the 97.5th percentile.
 
 **Confidence Intervals**
-Expansion, ratio and regression report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction). The study compared two versions of the bootstrap simulation:
+Expansion and ratio report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction). The study compared two versions of the bootstrap simulation:
 - **Fixed rates:** the audited error rates are reused in every iteration. Its point estimates are as accurate as or more accurate than the analytic estimators, but its intervals contained the truth in only 24% of audit years, because they omit the sampling error of the audited rates.
 - **Parametric rates:** before each iteration, the audited error rates are redrawn from their binomial sampling distribution. Its intervals contained the true gross rate in 96.8% of audit years and were narrower than the analytic intervals from the same audit in all five programs.
 
@@ -41,7 +40,7 @@ Each of the four program folders has the same two parts:
 | [`part-d-ipm/`](part-d-ipm/) | Claim errors flowing through the benefit to reinsurance and subsidies | Beneficiaries, PDEs → PDE errors re-run through the post-IRA 2025 benefit | SRS of beneficiaries; the bootstrap simulation uses an audit sample of 5,000 PDEs and a beneficiary sample |
 | [`perm-cert/`](perm-cert/) | Individual claim or benefit errors | PERM: state payment universes → claims and eligibility errors (9 states, true eligibility rates 2.00–4.00%). CERT: national Medicare FFS claims, four claim types → whole-claim and partial over- and underpayments calibrated to FY 2025 | PERM: Neyman allocation over payment type × quintile, systematic selection, 520 per state. CERT: 37,651 claims, FY 2025 count per claim type, Neyman across payment quintiles |
 | [`eipm/`](eipm/) | Beneficiary subsidy eligibility (Marketplace APTC) | FFE applications and APTC → rare overpayments: technically improper (whole APTC) and monetary (income) | Stratified SRS of 2,000, Neyman allocation over APTC quintiles |
-| [`shared/`](shared/) | Code used by all four | Runner, random numbers, samplers | **The methods, written once**: expansion, ratio and regression (GREG) with normal intervals; the audit-finding bootstrap simulation loop; scoring |
+| [`shared/`](shared/) | Code used by all four | Runner, random numbers, samplers | **The methods, written once**: expansion and ratio with normal intervals; the audit-finding bootstrap simulation loop; scoring |
 | [`literature-review/`](literature-review/) | Standalone narrative review of the comparative accuracy of improper payment estimation methods (Markdown, PDF, Word) | | |
 | [`manuscripts/`](manuscripts/) | Manuscript and one-page summary of the Monte Carlo study | | |
 
@@ -53,7 +52,6 @@ Inside each program, the SQL files are numbered in the order they run, and each 
 |---|---|---|
 | Expansion | `ipm_expansion` in [`shared/sql/lib/02_estimators.sql`](shared/sql/lib/02_estimators.sql); Part C uses a risk-score expansion ([`part-c-ipm/estimation/sql/10_expansion.sql`](part-c-ipm/estimation/sql/10_expansion.sql)) | Normal (Taylor linearization) |
 | Ratio | `ipm_ratio`, same file | Normal (Taylor linearization) |
-| Regression (GREG) | `ipm_regression`, same file | Normal (Taylor linearization) |
 | Bootstrap simulation, parametric rates (`simulation`; reported) | [`shared/ipsim/simulation.py`](shared/ipsim/simulation.py) + each program's `estimation/*simulation.py`; `sim_rates: parametric` (default): each stratum's error rate and partial-error share redrawn as Binomial(n, rate)/n before every iteration | 2.5th–97.5th percentiles of 1,000 iterations |
 | Bootstrap simulation, fixed rates (comparison only) | Same, `--set sim_rates=fixed`: the audited rates in every iteration. Results in `<program>/estimation/results_fixed/` | Same |
 
@@ -76,7 +74,7 @@ Add `--set reps=20 sim_reps=3 sim_iterations=100` (20 audit years, 3 of them run
 
 ## Results
 
-Regression results are omitted while that method is reworked. Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee, beneficiary or claim first (EIPM and PERM have overpayments only). Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200, CERT × 200). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm-cert/README.md#perm-results-25-audit-years), [EIPM](eipm/README.md#results-25-audit-years), [CERT](perm-cert/README.md#cert-results-25-audit-years)).
+Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee, beneficiary or claim first (EIPM and PERM have overpayments only). Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200, CERT × 200). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm-cert/README.md#perm-results-25-audit-years), [EIPM](eipm/README.md#results-25-audit-years), [CERT](perm-cert/README.md#cert-results-25-audit-years)).
 
 **Gross improper payments (national dollars)**
 
