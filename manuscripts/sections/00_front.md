@@ -8,7 +8,7 @@ date: "October 2026"
 
 **Running title:** Comparative accuracy of improper payment estimation methods
 
-**Word count:** about 4,400 (main text, excluding tables and references); abstract about 300; 5 tables, 2 figures; Appendices A–C.
+**Word count:** about 4,400 (main text, excluding tables and references); abstract about 330; 5 tables, 2 figures; Appendices A–C.
 
 ## Abstract
 
@@ -16,7 +16,7 @@ date: "October 2026"
 
 **Purpose.** To answer the question: what is the comparative accuracy of the available methods for estimating improper payments in federal health programs? Accuracy means point accuracy and interval accuracy (coverage at the nominal 95%, then width).
 
-**Methods.** We built five synthetic populations, one per program, with fabricated errors and calibrated to public FY 2025 aggregates, and drew each program's production-like audit (990 to 37,651 units) in 25 independent audit years. We compared expansion, ratio and regression estimators with normal intervals against bootstrap simulation (1,000 iterations) with error rates held fixed at their audited values or redrawn each iteration from their binomial sampling distributions (parametric rates).
+**Methods.** We built five synthetic populations, one per program, with fabricated errors and calibrated to public FY 2025 aggregates, and drew each program's production-like audit (990 to 37,651 units) in 25 independent audit years. We compared expansion and ratio estimators with normal intervals and a model-assisted regression estimator (models fit within strata on basic beneficiary variables and the amount paid, residual interval) against bootstrap simulation (1,000 iterations) with error rates held fixed at their audited values or redrawn each iteration from their binomial sampling distributions (parametric rates).
 
 **Results.** Bootstrap point estimates were as accurate as or more accurate than the analytic estimates. Fixed-rate bootstrap intervals were 5–21% as wide as the analytic intervals and contained the true gross rate in 30 of 125 audit-years (24%), because they omit the sampling variance of the audited rates. Parametric-rate intervals contained it in 121 of 125 (96.8%; 23–25 of 25 in every program) and were 11–21% narrower than the ratio estimator's in four programs and 63% narrower than the same-audit expansion interval in Part D. Measures built from few errors, such as underpayments, were undercovered by every method.
 

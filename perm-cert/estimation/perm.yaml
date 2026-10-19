@@ -11,7 +11,8 @@ steps:
   - sql: shared/sql/sample_systematic.sql                   # audit years (Monte Carlo replicates)
   - sql: perm-cert/estimation/sql/perm_10_expansion.sql
   - sql: perm-cert/estimation/sql/perm_20_ratio.sql
-  - sql: perm-cert/estimation/sql/perm_30_regression.sql
+  - sql: perm-cert/estimation/sql/perm_30_regression.sql   # regression inputs: predictors for every population unit
+  - {python: shared/ipsim/regression.py, run: run}   # regression: fit within strata, predict, residual interval
   - sql: perm-cert/estimation/sql/perm_40_simulation_inputs.sql   # audit findings + population rows
   - python: perm-cert/estimation/perm_simulation.py # bootstrap simulation: payments rerun 1,000x (numpy)
   - sql: perm-cert/estimation/sql/perm_90_score.sql
@@ -30,6 +31,8 @@ defaults:
   sim_iterations: 1000  # simulation iterations per audit year
   sim_rates: parametric # parametric (reported): rates redrawn as Binomial(n, rate)/n each iteration | fixed (comparison; results_fixed/)
   sim_export_draws: true
+  reg_predictors: [x, month, bene_n_pay, bene_paid]   # regression: basic beneficiary variables + amount paid
+  reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)
 grid:   # one scenario per state; true eligibility rates 2.00%..4.00%
   name: "state_{state_id}"

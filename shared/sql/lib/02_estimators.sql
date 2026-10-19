@@ -14,7 +14,11 @@
 -- 2. ratio       theta = T_y / T_x                          (linearization)
 --                e = y - theta*x;  s2_e = s2_y - 2 theta s_xy + theta^2 s2_x
 --                se = sqrt(sum_h N_h^2 (1 - f_h) s2_e / n_h) / T_x
--- 3. regression  combined GREG with an intercept and one auxiliary (x):
+-- 3. regression  ipm_regression below is the single-auxiliary combined GREG,
+--                kept for reference and tests. The study's regression estimator
+--                (models fit within strata on beneficiary variables + amount
+--                paid, residual interval) is shared/ipsim/regression.py.
+--                Single-auxiliary GREG, intercept and one auxiliary (x):
 --                b = sum w(x - xbar)(y - ybar) / sum w(x - xbar)^2
 --                T_reg = T_y + b (X - T_x);  theta = T_reg / X
 --                s2_e = s2_y - 2 b s_xy + b^2 s2_x

@@ -24,7 +24,7 @@ The standard projection methods are design-based estimators with normal-theory i
 
 - **Expansion** weights each sampled error up to the population.
 - **Ratio** divides the weighted errors by the weighted payments.
-- **Regression** (generalized regression, GREG) calibrates to a known auxiliary such as total payments.
+- **Regression** fits a model of the error on characteristics known for every unit, predicts the whole population, and adds the weighted sample residuals (model-assisted estimation; Särndal et al. 1992).
 
 Their intervals rely on a central limit argument that is weakest exactly where improper payment data live. Errors are rare, zero-inflated and right-skewed, and often all-or-nothing (Neter and Loebbecke 1975; Kvanli et al. 1998; Edwards et al. 2023).
 
@@ -46,7 +46,7 @@ The audit-finding bootstrap differs from the textbook bootstrap (Efron and Tibsh
 
 This study asks: **what is the comparative accuracy of the available methods for estimating improper payments in federal health programs?** The methods are:
 
-- the three design-based analytic estimators in use (expansion, ratio and regression);
+- three design-based analytic estimators (expansion, ratio and a model-assisted regression estimator);
 - audit-finding bootstrap simulation.
 
 Accuracy has two parts:
@@ -117,9 +117,16 @@ The three analytic estimators use the program's stratified design. Let *N_h*, *n
 
 - **Expansion:** *θ̂ = T̂_y / X*.
 - **Ratio:** *θ̂ = T̂_y / T̂_x*.
-- **Regression (GREG):** *θ̂ = [T̂_y + b(X − T̂_x)] / X*, with *b* the weighted least-squares slope of *y* on *x* with an intercept.
+- **Regression (model-assisted):** within each model stratum *m*, the audited *y* is regressed by design-weighted least squares on an intercept and the unit's predictors **z**: basic beneficiary variables plus the amount paid. The fitted models predict every population unit, and the estimate adds the weighted audit residuals: *θ̂ = [Σ_U ŷ + Σ_s w (y − ŷ)] / X*. The predictors are:
+  - Part C: payment, demographic score, months enrolled and number of HCCs, within risk-score terciles.
+  - Part D: Medicare payment, gross drug cost, number of PDEs and reaching the catastrophic phase, within post-strata (long-term care, low-income subsidy, other).
+  - PERM: amount paid, month and the beneficiary's number of payments and total paid.
+  - EIPM: APTC, age, household size, income and months.
+  - CERT: amount paid (the claims carry no beneficiary variables).
 
-Variances use the stratified-SRS formula with finite population correction on *y*, on the ratio residual *y − θ̂x*, or on the regression residual (Taylor linearization). Each method reports *θ̂ ± 1.96·SE*.
+  The model is fit on the same audit as the ratio estimator (for Part D, the 990-beneficiary audit). A stratum with fewer than 10 audited errors, or too few units for the model, uses an intercept-only model, which is expansion within that stratum. The approach follows model-assisted estimation as used in forest inventory (McConville et al. 2020) and model-based extrapolation of random audits in tax-gap estimation (Johns and Rosenbaum 2024).
+
+Variances use the stratified-SRS formula with finite population correction on *y* (expansion), on the ratio residual *y − θ̂x* (ratio), or on the model residual *y − ŷ* (regression), all from the single audit. Expansion and ratio report *θ̂ ± 1.96·SE*; regression uses a *t* multiplier with degrees of freedom reduced by the strata and model terms fitted.
 
 Two program-specific forms apply:
 

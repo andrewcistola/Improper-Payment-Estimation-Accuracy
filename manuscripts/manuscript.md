@@ -8,7 +8,7 @@ date: "October 2026"
 
 **Running title:** Comparative accuracy of improper payment estimation methods
 
-**Word count:** about 4,400 (main text, excluding tables and references); abstract about 300; 5 tables, 2 figures; Appendices A–C.
+**Word count:** about 4,400 (main text, excluding tables and references); abstract about 330; 5 tables, 2 figures; Appendices A–C.
 
 ## Abstract
 
@@ -16,7 +16,7 @@ date: "October 2026"
 
 **Purpose.** To answer the question: what is the comparative accuracy of the available methods for estimating improper payments in federal health programs? Accuracy means point accuracy and interval accuracy (coverage at the nominal 95%, then width).
 
-**Methods.** We built five synthetic populations, one per program, with fabricated errors and calibrated to public FY 2025 aggregates, and drew each program's production-like audit (990 to 37,651 units) in 25 independent audit years. We compared expansion, ratio and regression estimators with normal intervals against bootstrap simulation (1,000 iterations) with error rates held fixed at their audited values or redrawn each iteration from their binomial sampling distributions (parametric rates).
+**Methods.** We built five synthetic populations, one per program, with fabricated errors and calibrated to public FY 2025 aggregates, and drew each program's production-like audit (990 to 37,651 units) in 25 independent audit years. We compared expansion and ratio estimators with normal intervals and a model-assisted regression estimator (models fit within strata on basic beneficiary variables and the amount paid, residual interval) against bootstrap simulation (1,000 iterations) with error rates held fixed at their audited values or redrawn each iteration from their binomial sampling distributions (parametric rates).
 
 **Results.** Bootstrap point estimates were as accurate as or more accurate than the analytic estimates. Fixed-rate bootstrap intervals were 5–21% as wide as the analytic intervals and contained the true gross rate in 30 of 125 audit-years (24%), because they omit the sampling variance of the audited rates. Parametric-rate intervals contained it in 121 of 125 (96.8%; 23–25 of 25 in every program) and were 11–21% narrower than the ratio estimator's in four programs and 63% narrower than the same-audit expansion interval in Part D. Measures built from few errors, such as underpayments, were undercovered by every method.
 
@@ -50,7 +50,7 @@ The standard projection methods are design-based estimators with normal-theory i
 
 - **Expansion** weights each sampled error up to the population.
 - **Ratio** divides the weighted errors by the weighted payments.
-- **Regression** (generalized regression, GREG) calibrates to a known auxiliary such as total payments.
+- **Regression** fits a model of the error on characteristics known for every unit, predicts the whole population, and adds the weighted sample residuals (model-assisted estimation; Särndal et al. 1992).
 
 Their intervals rely on a central limit argument that is weakest exactly where improper payment data live. Errors are rare, zero-inflated and right-skewed, and often all-or-nothing (Neter and Loebbecke 1975; Kvanli et al. 1998; Edwards et al. 2023).
 
@@ -72,7 +72,7 @@ The audit-finding bootstrap differs from the textbook bootstrap (Efron and Tibsh
 
 This study asks: **what is the comparative accuracy of the available methods for estimating improper payments in federal health programs?** The methods are:
 
-- the three design-based analytic estimators in use (expansion, ratio and regression);
+- three design-based analytic estimators (expansion, ratio and a model-assisted regression estimator);
 - audit-finding bootstrap simulation.
 
 Accuracy has two parts:
@@ -143,9 +143,16 @@ The three analytic estimators use the program's stratified design. Let *N_h*, *n
 
 - **Expansion:** *θ̂ = T̂_y / X*.
 - **Ratio:** *θ̂ = T̂_y / T̂_x*.
-- **Regression (GREG):** *θ̂ = [T̂_y + b(X − T̂_x)] / X*, with *b* the weighted least-squares slope of *y* on *x* with an intercept.
+- **Regression (model-assisted):** within each model stratum *m*, the audited *y* is regressed by design-weighted least squares on an intercept and the unit's predictors **z**: basic beneficiary variables plus the amount paid. The fitted models predict every population unit, and the estimate adds the weighted audit residuals: *θ̂ = [Σ_U ŷ + Σ_s w (y − ŷ)] / X*. The predictors are:
+  - Part C: payment, demographic score, months enrolled and number of HCCs, within risk-score terciles.
+  - Part D: Medicare payment, gross drug cost, number of PDEs and reaching the catastrophic phase, within post-strata (long-term care, low-income subsidy, other).
+  - PERM: amount paid, month and the beneficiary's number of payments and total paid.
+  - EIPM: APTC, age, household size, income and months.
+  - CERT: amount paid (the claims carry no beneficiary variables).
 
-Variances use the stratified-SRS formula with finite population correction on *y*, on the ratio residual *y − θ̂x*, or on the regression residual (Taylor linearization). Each method reports *θ̂ ± 1.96·SE*.
+  The model is fit on the same audit as the ratio estimator (for Part D, the 990-beneficiary audit). A stratum with fewer than 10 audited errors, or too few units for the model, uses an intercept-only model, which is expansion within that stratum. The approach follows model-assisted estimation as used in forest inventory (McConville et al. 2020) and model-based extrapolation of random audits in tax-gap estimation (Johns and Rosenbaum 2024).
+
+Variances use the stratified-SRS formula with finite population correction on *y* (expansion), on the ratio residual *y − θ̂x* (ratio), or on the model residual *y − ŷ* (regression), all from the single audit. Expansion and ratio report *θ̂ ± 1.96·SE*; regression uses a *t* multiplier with degrees of freedom reduced by the strata and model terms fitted.
 
 Two program-specific forms apply:
 
@@ -207,27 +214,27 @@ Table 2 gives, for each program, the gross rate's median point estimate, median 
 |---|---|---|---|---|---|
 | Part C (990 enrollees, 330 per risk-score tercile) | 6.06% | Expansion | 6.15% | ±1.05 | 25/25 (0/0) |
 |  |  | Ratio | 6.13% | ±1.03 | 24/25 (1/0) |
-|  |  | Regression | 6.16% | ±1.02 | 24/25 (1/0) |
+|  |  | Regression | 6.10% | ±1.02 | 23/25 (1/1) |
 |  |  | Bootstrap (fixed rates) | 6.06% | ±0.05 | 3/25 (12/10) |
 |  |  | Bootstrap (parametric rates) | 6.08% | ±0.92 | 24/25 (0/1) |
 | Part D (5,000 PDEs (Neyman, 3 strata); ratio and regression: 990 beneficiaries) | 1.38% | Expansion | 1.22% | ±0.60 | 18/25 (0/7) |
 |  |  | Ratio | 1.41% | ±0.67 | 18/25 (1/6) |
-|  |  | Regression | 1.41% | ±0.64 | 20/25 (1/4) |
+|  |  | Regression | 1.44% | ±0.58 | 15/25 (4/6) |
 |  |  | Bootstrap (fixed rates) | 1.38% | ±0.06 | 10/25 (8/7) |
 |  |  | Bootstrap (parametric rates) | 1.38% | ±0.22 | 25/25 (0/0) |
 | PERM (9 states x 520 payments (Neyman, 10 strata per state)) | 6.09% | Expansion | 6.04% | ±0.80 | 23/25 (0/2) |
 |  |  | Ratio | 6.00% | ±0.80 | 23/25 (0/2) |
-|  |  | Regression | 6.04% | ±0.79 | 23/25 (0/2) |
+|  |  | Regression | 6.03% | ±0.79 | 23/25 (0/2) |
 |  |  | Bootstrap (fixed rates) | 5.97% | ±0.10 | 3/25 (9/13) |
 |  |  | Bootstrap (parametric rates) | 5.96% | ±0.63 | 24/25 (0/1) |
 | EIPM (2,000 applications (Neyman, 5 APTC quintiles)) | 0.92% | Expansion | 0.83% | ±0.35 | 22/25 (0/3) |
 |  |  | Ratio | 0.83% | ±0.35 | 22/25 (0/3) |
-|  |  | Regression | 0.83% | ±0.35 | 22/25 (0/3) |
+|  |  | Regression | 0.84% | ±0.34 | 23/25 (0/2) |
 |  |  | Bootstrap (fixed rates) | 0.82% | ±0.05 | 6/25 (5/14) |
 |  |  | Bootstrap (parametric rates) | 0.81% | ±0.31 | 23/25 (0/2) |
 | CERT (37,651 claims (4 claim types x 5 quintiles, Neyman within type)) | 6.50% | Expansion | 6.56% | ±0.36 | 25/25 (0/0) |
 |  |  | Ratio | 6.58% | ±0.36 | 24/25 (1/0) |
-|  |  | Regression | 6.57% | ±0.36 | 24/25 (1/0) |
+|  |  | Regression | 6.58% | ±0.36 | 24/25 (1/0) |
 |  |  | Bootstrap (fixed rates) | 6.55% | ±0.07 | 8/25 (11/6) |
 |  |  | Bootstrap (parametric rates) | 6.55% | ±0.28 | 25/25 (0/0) |
 
@@ -242,7 +249,7 @@ Before turning to intervals, it is worth establishing what the bootstrap simulat
 | Program | Bootstrap mean absolute error (% of truth) | Best analytic mean absolute error | Expansion |
 |---|---|---|---|
 | Part C | 5.6% | 5.7% | |
-| PERM | 4.4% | 5.5% | |
+| PERM | 4.4% | 5.3% (regression) | |
 | EIPM | 16.6% | 17.6% | |
 | CERT | 1.5% | 2.2% | |
 | Part D | 6.6% | 23.4% (ratio, on the 990-beneficiary audit) | 30.5% (on the same PDE audit) |
@@ -257,11 +264,11 @@ In EIPM every method runs 5–8% low. Technically improper errors are rare (abou
 
 | Program | Expansion | Ratio | Regression | Bootstrap (fixed rates) | Bootstrap (parametric rates) |
 |---|---|---|---|---|---|
-| Part C | 5.7% (+1.1%) | 6.0% (+0.9%) | 6.7% (+1.1%) | 5.6% (-0.1%) | 5.6% (-0.1%) |
-| Part D | 30.5% (-5.7%) | 23.4% (+0.1%) | 23.9% (+1.9%) | 6.6% (-0.4%) | 6.6% (-0.4%) |
-| PERM | 5.5% (-1.4%) | 5.6% (-1.4%) | 5.5% (-1.3%) | 4.4% (-0.6%) | 4.4% (-0.6%) |
-| EIPM | 17.7% (-5.5%) | 17.6% (-5.6%) | 17.6% (-5.6%) | 16.6% (-7.9%) | 16.6% (-8.1%) |
-| CERT | 2.2% (+0.6%) | 2.3% (+0.7%) | 2.3% (+0.6%) | 1.5% (+0.3%) | 1.5% (+0.3%) |
+| Part C | 5.7% (+1.1%) | 6.0% (+0.9%) | 6.3% (+1.2%) | 5.6% (-0.1%) | 5.6% (-0.1%) |
+| Part D | 30.5% (-5.7%) | 23.4% (+0.1%) | 27.9% (+7.8%) | 6.6% (-0.4%) | 6.6% (-0.4%) |
+| PERM | 5.5% (-1.4%) | 5.6% (-1.4%) | 5.3% (-1.5%) | 4.4% (-0.6%) | 4.4% (-0.6%) |
+| EIPM | 17.7% (-5.5%) | 17.6% (-5.6%) | 18.1% (-5.4%) | 16.6% (-7.9%) | 16.6% (-8.1%) |
+| CERT | 2.2% (+0.6%) | 2.3% (+0.7%) | 2.3% (+0.7%) | 1.5% (+0.3%) | 1.5% (+0.3%) |
 
 ### 4.2 The bootstrap interval problem
 
@@ -326,7 +333,7 @@ They achieved equal or higher coverage than the analytic intervals in every prog
 | PERM | 24/25 | 23/25 |
 | EIPM | 23/25 | 22/25 |
 | CERT | 25/25 | 24/25 (ratio), 25/25 (expansion) |
-| Part D | 25/25 | 18–20/25 |
+| Part D | 25/25 | 15–18/25 |
 
 In dollars (Appendix Table C1):
 
@@ -351,16 +358,16 @@ Coverage of every reported measure is in Table 5. For the large components, the 
 |---|---|---|---|---|---|---|---|
 | Part C | Overpayments | 5.49% | 25/25 (0/0) | 25/25 (0/0) | 24/25 (1/0) | 3/25 (13/9) | 24/25 (1/0) |
 | Part C | Underpayments | 0.57% | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 2/25 (4/19) | 19/25 (0/6) |
-| Part C | Gross | 6.06% | 25/25 (0/0) | 24/25 (1/0) | 24/25 (1/0) | 3/25 (12/10) | 24/25 (0/1) |
+| Part C | Gross | 6.06% | 25/25 (0/0) | 24/25 (1/0) | 23/25 (1/1) | 3/25 (12/10) | 24/25 (0/1) |
 | Part C | Net | 4.91% | 25/25 (0/0) | 25/25 (0/0) | 25/25 (0/0) | 2/25 (15/8) | 24/25 (1/0) |
-| Part D | Overpayments | 1.36% | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 9/25 (9/7) | 25/25 (0/0) |
-| Part D | Underpayments | 0.02% | 0/25 (0/25) | 15/25 (0/10) | 15/25 (0/10) | 10/25 (12/3) | 20/25 (4/1) |
-| Part D | Gross | 1.38% | 18/25 (0/7) | 18/25 (1/6) | 20/25 (1/4) | 10/25 (8/7) | 25/25 (0/0) |
-| Part D | Net | 1.34% | 19/25 (0/6) | 19/25 (1/5) | 20/25 (1/4) | 11/25 (7/7) | 24/25 (0/1) |
+| Part D | Overpayments | 1.36% | 18/25 (0/7) | 18/25 (1/6) | 16/25 (4/5) | 9/25 (9/7) | 25/25 (0/0) |
+| Part D | Underpayments | 0.02% | 0/25 (0/25) | 15/25 (0/10) | 13/25 (2/10) | 10/25 (12/3) | 20/25 (4/1) |
+| Part D | Gross | 1.38% | 18/25 (0/7) | 18/25 (1/6) | 15/25 (4/6) | 10/25 (8/7) | 25/25 (0/0) |
+| Part D | Net | 1.34% | 19/25 (0/6) | 19/25 (1/5) | 16/25 (4/5) | 11/25 (7/7) | 24/25 (0/1) |
 | PERM | Gross | 6.09% | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 3/25 (9/13) | 24/25 (0/1) |
 | PERM | Eligibility | 3.06% | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 8/25 (7/10) | 24/25 (0/1) |
 | PERM | Claims | 3.13% | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 2/25 (11/12) | 23/25 (1/1) |
-| EIPM | Gross | 0.92% | 22/25 (0/3) | 22/25 (0/3) | 22/25 (0/3) | 6/25 (5/14) | 23/25 (0/2) |
+| EIPM | Gross | 0.92% | 22/25 (0/3) | 22/25 (0/3) | 23/25 (0/2) | 6/25 (5/14) | 23/25 (0/2) |
 | EIPM | Technically improper | 0.43% | 19/25 (1/5) | 19/25 (1/5) | 19/25 (1/5) | 6/25 (5/14) | 20/25 (1/4) |
 | EIPM | Monetary | 0.48% | 22/25 (0/3) | 22/25 (0/3) | 22/25 (0/3) | 7/25 (5/13) | 22/25 (1/2) |
 | CERT | Overpayments | 6.30% | 24/25 (1/0) | 24/25 (1/0) | 24/25 (1/0) | 9/25 (10/6) | 25/25 (0/0) |
@@ -369,7 +376,7 @@ Coverage of every reported measure is in Table 5. For the large components, the 
 | CERT | Net | 6.09% | 24/25 (1/0) | 24/25 (1/0) | 24/25 (1/0) | 8/25 (10/7) | 25/25 (0/0) |
 | CERT | Gross: DMEPOS | 24.44% | 24/25 (0/1) | 24/25 (0/1) | 24/25 (0/1) | 14/25 (2/9) | 25/25 (0/0) |
 | CERT | Gross: Part A IPPS | 3.02% | 24/25 (1/0) | 24/25 (1/0) | 24/25 (1/0) | 18/25 (6/1) | 24/25 (1/0) |
-| CERT | Gross: Part A excl. IPPS | 6.62% | 24/25 (1/0) | 23/25 (2/0) | 23/25 (2/0) | 9/25 (11/5) | 25/25 (0/0) |
+| CERT | Gross: Part A excl. IPPS | 6.62% | 24/25 (1/0) | 23/25 (2/0) | 24/25 (1/0) | 9/25 (11/5) | 25/25 (0/0) |
 | CERT | Gross: Part B | 8.45% | 25/25 (0/0) | 23/25 (0/2) | 23/25 (0/2) | 5/25 (6/14) | 25/25 (0/0) |
 
 
@@ -390,6 +397,16 @@ The exceptions are the sparse measures, those built from a handful of audited er
 
 Every method undercovers these measures, and the misses fall mainly below: the interval lies under the truth in audit years whose sample happened to contain few of the rare errors. This is the zero-inflated, right-skewed regime in which normal-theory intervals are known to fail (Kvanli et al. 1998; Hesterberg 2015). The parametric bootstrap does not escape it, because a binomial redraw centered on a low audited rate stays low. The gross rate is protected because the sparse component is a small share of it.
 
+### 4.5 Regression with beneficiary variables
+
+The regression estimator fits a least-squares model within each stratum on the ratio estimator's audit, using basic beneficiary variables and the amount paid. It then predicts every population unit and adds the weighted audit residuals. The extra variables changed little:
+- **Part C, PERM, EIPM and CERT:** coverage of the gross rate was 23, 23, 23 and 24 of 25. Width and point accuracy were within a few percent of the ratio estimator's.
+- **Part D:** drug cost and reaching the catastrophic phase explain part of the beneficiary payment error, and the interval narrowed from ±0.67 (ratio) to ±0.58 points. But coverage fell to 15 of 25, and the point estimate ran 7.8% high on average.
+
+With few large errors in a 990-beneficiary audit, a better-fitting model leaves residuals that understate the true sampling variance: the overfitting risk of model-assisted estimation with small samples (McConville et al. 2020). In PERM, all but the largest-payment fee-for-service stratum had too few audited errors for a model and used the intercept-only fallback, which equals expansion within the stratum.
+
+Across the five programs, regression covered the true gross rate in 108 of 125 audit years (86.4%), against 111 for the ratio estimator and 121 for the parametric bootstrap.
+
 ## 5. Discussion
 
 ### 5.1 Principal findings
@@ -400,7 +417,7 @@ Redrawing the rates from their binomial sampling distribution before each iterat
 
 ### 5.2 Recommendation
 
-We recommend that CMS improper payment measurements adopt **bootstrap simulation with parametric rates** for the gross improper payment rate and its interval, with the analytic ratio or regression interval reported alongside during a transition period. The recommendation rests on three findings:
+We recommend that CMS improper payment measurements adopt **bootstrap simulation with parametric rates** for the gross improper payment rate and its interval, with the analytic ratio interval reported alongside during a transition period. The recommendation rests on three findings:
 
 1. **Validity:** coverage at the nominal level for the gross rate in every program.
 2. **Accuracy:** the most accurate point estimates of the methods studied.
@@ -460,7 +477,7 @@ On the question of comparative accuracy, the answer is consistent across the fiv
 
 ## Data and code availability
 
-All code, configuration, synthetic populations (or their SHA-256 manifests where a population is too large to commit), results and the scripts that build every table and figure in this paper are in the public repository [andrewcistola/comparing-improper-payment-estimators](https://github.com/andrewcistola/comparing-improper-payment-estimators). The repository contains no protected health information, no unit-level data from any source and no non-public CMS material.
+All code, configuration, synthetic populations (or their SHA-256 manifests where a population is too large to commit), results and the scripts that build every table and figure in this paper are in the public repository [andrewcistola/improper-payment-estimation-accuracy](https://github.com/andrewcistola/improper-payment-estimation-accuracy). The repository contains no protected health information, no unit-level data from any source and no non-public CMS material.
 
 ## Funding, conflicts of interest and disclaimer
 
@@ -487,12 +504,15 @@ All code, configuration, synthetic populations (or their SHA-256 manifests where
 - Hall P (1988). Theoretical comparison of bootstrap confidence intervals. *Annals of Statistics* 16(3):927–953.
 - Hesterberg TC (2015). What teachers should know about the bootstrap. *The American Statistician* 69(4):371–386.
 - King B, Madansky A (2013). On sampling design issues when dealing with zeros. *Journal of Survey Statistics and Methodology* 1(2):144–170.
+- Johns D, Rosenbaum D (2024). *Distribution of Tax Year 2014–2015 Individual Income Tax and Self-Employment Tax Underreporting Tax Gap*. Internal Revenue Service.
 - Kvanli AH, Shen YK, Deng LY (1998). Construction of confidence intervals for the mean of a population containing many zero values. *Journal of Business & Economic Statistics* 16(3):362–368.
 - Mashreghi Z, Haziza D, Léger C (2016). A survey of bootstrap methods in finite population sampling. *Statistics Surveys* 10:1–52.
+- McConville KS, Moisen GG, Frescino TS (2020). A tutorial on model-assisted estimation with application to forest inventory. *Forests* 11(2):244.
 - Neter J, Loebbecke JK (1975). *Behavior of Major Statistical Estimators in Sampling Accounting Populations: An Empirical Study*. AICPA.
 - OMB (2021). Memorandum M-21-19, Appendix C to Circular A-123: Requirements for Payment Integrity Improvement. Office of Management and Budget.
 - Payment Integrity Information Act of 2019, Pub. L. 116-117.
 - Rao JNK, Wu CFJ (1988). Resampling inference with complex survey data. *Journal of the American Statistical Association* 83(401):231–241.
+- Särndal CE, Swensson B, Wretman J (1992). *Model Assisted Survey Sampling*. Springer.
 - Wolter KM (2007). *Introduction to Variance Estimation*, 2nd ed. Springer.
 
 ## Appendix A. Data process
@@ -511,7 +531,7 @@ Each program folder has two stages, run by one YAML-driven runner (`ipsim`):
 2. **`estimation/`** draws the audits and estimates with each method.
    - Frame and design. Strata, the allocation (Neyman where stated), and the sample size.
    - Audits. 25 independent production audits ("audit years").
-   - Estimators. Expansion, ratio and regression (generalized regression with an intercept and payment as auxiliary), with normal 95% intervals from Taylor linearization. These are written once in `shared/sql/lib/02_estimators.sql` and tested against an independent numpy implementation.
+   - Estimators. Expansion and ratio, with normal 95% intervals, written once in `shared/sql/lib/02_estimators.sql` and tested against an independent numpy implementation. Regression: models fit within strata on beneficiary variables plus the amount paid, predicted for the population, with a residual interval (`shared/ipsim/regression.py`, predictors from each program's `30_regression.sql`; tested in `shared/tests/test_regression.py`).
    - Bootstrap simulation. Fixed and parametric rates, 1,000 iterations per audit year, run by the shared loop in `shared/ipsim/simulation.py` with each program's kernel.
    - Scoring against the truth.
 
@@ -548,7 +568,7 @@ Rates are scale-free. Dollars are reported at national scale: rate × synthetic 
   - Net = over − under
 - **Rates.** Each total is estimated in dollars with its interval first, then divided by the known total payments *X*.
 - **Overpayment-only programs.** PERM and EIPM have only overpayments, so gross = over = net. Their components are reported instead: eligibility and claims for PERM, technically improper and monetary for EIPM.
-- **Analytic estimators.** These estimate the rate directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or *[T̂_y + b(X − T̂_x)] / X* (regression), using stratified-SRS variance formulas with finite population correction.
+- **Analytic estimators.** These estimate the rate directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or *[Σ_U ŷ + Σ_s w (y − ŷ)] / X* (regression, with models fit within strata), using stratified-SRS variance formulas with finite population correction on *y* or on the residuals.
 
 ### A.5 Bootstrap simulation, step by step
 
@@ -591,7 +611,7 @@ Values marked *illustrative* are not published by CMS. They are set to plausible
 **Estimators:**
 
 - Expansion works in risk-score units: within each tercile, the mean over and under risk-score error × the tercile's size × the national mean county rate × months.
-- Ratio and regression use the enrollee payment.
+- Ratio uses the enrollee payment; regression uses payment, demographic score, months enrolled and number of HCCs within each tercile.
 
 **Bootstrap simulation:**
 
@@ -727,27 +747,27 @@ The two audits differ, so the comparison between methods is between designs as w
 |---|---|---|---|---|---|
 | Part C | $23.57B | Expansion | $23.92B | $19.69B | $27.96B |
 |  |  | Ratio | $23.82B | $19.83B | $27.81B |
-|  |  | Regression | $23.94B | $20.05B | $27.78B |
+|  |  | Regression | $23.70B | $19.97B | $27.64B |
 |  |  | Bootstrap (fixed rates) | $23.56B | $23.35B | $23.76B |
 |  |  | Bootstrap (parametric rates) | $23.62B | $20.09B | $27.23B |
 | Part D | $1.46B | Expansion | $1.28B | $0.57B | $1.95B |
 |  |  | Ratio | $1.49B | $0.74B | $2.22B |
-|  |  | Regression | $1.48B | $0.77B | $2.22B |
+|  |  | Regression | $1.52B | $0.89B | $2.19B |
 |  |  | Bootstrap (fixed rates) | $1.46B | $1.39B | $1.52B |
 |  |  | Bootstrap (parametric rates) | $1.46B | $1.23B | $1.69B |
 | PERM | $8.65B | Expansion | $8.57B | $7.42B | $9.74B |
 |  |  | Ratio | $8.52B | $7.38B | $9.70B |
-|  |  | Regression | $8.57B | $7.44B | $9.71B |
+|  |  | Regression | $8.57B | $7.43B | $9.67B |
 |  |  | Bootstrap (fixed rates) | $8.48B | $8.34B | $8.63B |
 |  |  | Bootstrap (parametric rates) | $8.46B | $7.59B | $9.39B |
 | EIPM | $0.75B | Expansion | $0.68B | $0.40B | $0.96B |
 |  |  | Ratio | $0.68B | $0.40B | $0.96B |
-|  |  | Regression | $0.68B | $0.40B | $0.96B |
+|  |  | Regression | $0.69B | $0.41B | $0.96B |
 |  |  | Bootstrap (fixed rates) | $0.67B | $0.63B | $0.71B |
 |  |  | Bootstrap (parametric rates) | $0.66B | $0.43B | $0.94B |
 | CERT | $28.61B | Expansion | $28.85B | $27.22B | $30.47B |
 |  |  | Ratio | $28.94B | $27.38B | $30.50B |
-|  |  | Regression | $28.92B | $27.34B | $30.48B |
+|  |  | Regression | $28.95B | $27.35B | $30.50B |
 |  |  | Bootstrap (fixed rates) | $28.83B | $28.49B | $29.16B |
 |  |  | Bootstrap (parametric rates) | $28.81B | $27.47B | $30.02B |
 

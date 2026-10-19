@@ -1,11 +1,17 @@
 -- =====================================================================
--- eipm estimation/30_regression.sql : regression (GREG) estimator
+-- eipm estimation/30_regression.sql : regression estimator inputs
 -- ---------------------------------------------------------------------
--- Estimands: gross, technical and monetary APTC improper payment rates, sum y / sum x (01_frame.sql).
--- theta_hat = [T_y + b (X - T_x)] / X: y regressed on the amount paid x
--- (intercept + slope), calibrated to the KNOWN total APTC paid X.
--- Residual-based standard error. Normal 95% interval.
--- Formula: shared/sql/lib/02_estimators.sql (ipm_regression).
+-- Regression (model-assisted): on the same audit as the ratio estimator,
+-- improper dollars are regressed, within each model stratum, on an
+-- intercept and basic beneficiary variables plus the amount paid; the
+-- fitted models predict every population unit and the audit residuals
+-- correct the total. Interval from the audit's residuals (one audit).
+-- Fitting, prediction and the interval: shared/ipsim/regression.py.
+-- Unit: application (audit of 2,000). Model strata = design strata (APTC
+-- quintiles). Predictors: annual APTC x, applicant age, household size,
+-- income (% FPL), months enrolled.
+-- Output: reg_population(unit_id, stratum, model_stratum, <predictors>)
 -- =====================================================================
-CREATE OR REPLACE TABLE est_regression AS
-SELECT * FROM ipm_regression(getvariable('alpha'));
+CREATE OR REPLACE TABLE reg_population AS
+SELECT unit_id, stratum, stratum AS model_stratum, x, age, hh_size, fpl_pct, months
+FROM eipm_frame;

@@ -45,10 +45,13 @@ All code, configuration, synthetic populations (or their SHA-256 manifests where
 - Hall P (1988). Theoretical comparison of bootstrap confidence intervals. *Annals of Statistics* 16(3):927–953.
 - Hesterberg TC (2015). What teachers should know about the bootstrap. *The American Statistician* 69(4):371–386.
 - King B, Madansky A (2013). On sampling design issues when dealing with zeros. *Journal of Survey Statistics and Methodology* 1(2):144–170.
+- Johns D, Rosenbaum D (2024). *Distribution of Tax Year 2014–2015 Individual Income Tax and Self-Employment Tax Underreporting Tax Gap*. Internal Revenue Service.
 - Kvanli AH, Shen YK, Deng LY (1998). Construction of confidence intervals for the mean of a population containing many zero values. *Journal of Business & Economic Statistics* 16(3):362–368.
 - Mashreghi Z, Haziza D, Léger C (2016). A survey of bootstrap methods in finite population sampling. *Statistics Surveys* 10:1–52.
+- McConville KS, Moisen GG, Frescino TS (2020). A tutorial on model-assisted estimation with application to forest inventory. *Forests* 11(2):244.
 - Neter J, Loebbecke JK (1975). *Behavior of Major Statistical Estimators in Sampling Accounting Populations: An Empirical Study*. AICPA.
 - OMB (2021). Memorandum M-21-19, Appendix C to Circular A-123: Requirements for Payment Integrity Improvement. Office of Management and Budget.
 - Payment Integrity Information Act of 2019, Pub. L. 116-117.
 - Rao JNK, Wu CFJ (1988). Resampling inference with complex survey data. *Journal of the American Statistical Association* 83(401):231–241.
+- Särndal CE, Swensson B, Wretman J (1992). *Model Assisted Survey Sampling*. Springer.
 - Wolter KM (2007). *Introduction to Variance Estimation*, 2nd ed. Springer.

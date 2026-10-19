@@ -14,6 +14,13 @@ variables:
   reps: 25
   sim_reps: 25
   sim_iterations: 1000
+  sim_rates: fixed
+  reg_predictors:
+  - x
+  - demo_score
+  - months
+  - n_hcc
+  reg_min_errors: 10
   alpha: 0.05
   scenario: base
 steps:
@@ -22,6 +29,8 @@ steps:
 - sql: part-c-ipm/estimation/sql/10_expansion.sql
 - sql: part-c-ipm/estimation/sql/20_ratio.sql
 - sql: part-c-ipm/estimation/sql/30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
 - sql: part-c-ipm/estimation/sql/40_simulation_inputs.sql
 - python: part-c-ipm/estimation/simulation.py
 - sql: part-c-ipm/estimation/sql/90_score.sql

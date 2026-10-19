@@ -115,7 +115,8 @@ L += ["", "## Conclusion", "",
       f"doubles in width with it. The ranking is unchanged:",
       f"- **Parametric-rate bootstrap:** contains the true gross rate in {pg.inside} of 25 audit years, with a median "
       f"half-width of ±{100 * pg.hw:.2f} points, against ±{100 * pa.hw:.2f} for the ratio estimator.",
-      f"- **Analytic estimators:** cover in 18–19 of 25 and run low.",
+      f"- **Analytic estimators:** cover in {min(get(list(RUNS)[1], 'gross', m).inside for m in ('expansion', 'ratio', 'regression'))}–"
+      f"{max(get(list(RUNS)[1], 'gross', m).inside for m in ('expansion', 'ratio', 'regression'))} of 25.",
       f"- **Fixed-rate bootstrap:** remains far too narrow ({get(list(RUNS)[1], 'gross', 'fixed').inside} of 25).",
       f"- **Underpayments:** stay hard for every method.",
       "",
