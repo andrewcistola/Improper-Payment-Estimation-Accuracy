@@ -15,13 +15,12 @@ This repository is a Monte Carlo study of the accuracy of those methods. Accurac
 
 **Scope: PIIA improper payment rate estimation.** Recovery and extrapolation uses (contract-level RADV, provider overpayment demands) are out of scope. No PHI, no unit-level data from any source, and nothing non-public: every number is drawn from stated distributions and calibrated only to public aggregate results.
 
-**Methods Under Comparison:** The following approaches are compared:
+**Methods Under Comparison:** The following approaches are compared in this study.
 - **Expansion:** The average error per audited unit (enrollee, beneficiary, claim or application) is multiplied by the number of units in the population, stratum by stratum. It can apply to payments directly or to parts of a payment function audited separately (for example, risk score error).
 - **Ratio:** The audited improper dollars are divided by the audited payments to get an improper payment rate. That rate is then applied to the program's known total payments.
 - **Bootstrap Simulation:** The audit's findings (error rates, partial-error shares and error sizes) are assigned at random to every unaudited unit, and the payment rules are rerun many times; audited units keep their own findings. The estimate is the average across iterations, and the 95% interval runs from the 2.5th to the 97.5th percentile.
 
-**Confidence Intervals**
-Expansion and ratio report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction). The study compared two versions of the bootstrap simulation:
+**Confidence Intervals:** Expansion and ratio report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction). The study compared two versions of the bootstrap simulation:
 - **Fixed rates:** the audited error rates are reused in every iteration. Its point estimates are as accurate as or more accurate than the analytic estimators, but its intervals contained the truth in only 24% of audit years, because they omit the sampling error of the audited rates.
 - **Parametric rates:** before each iteration, the audited error rates are redrawn from their binomial sampling distribution. Its intervals contained the true gross rate in 96.8% of audit years and were narrower than the analytic intervals from the same audit in all five programs.
 
