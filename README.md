@@ -18,7 +18,7 @@ This repository is a Monte Carlo study of the accuracy of those methods. Accurac
 **Methods Under Comparison:** The following approaches are compared:
 - **Expansion:** The average error per audited unit (enrollee, beneficiary, claim or application) is multiplied by the number of units in the population, stratum by stratum. It can apply to payments directly or to parts of a payment function audited separately (for example, risk score error).
 - **Ratio:** The audited improper dollars are divided by the audited payments to get an improper payment rate. That rate is then applied to the program's known total payments.
-- **Regression:** Improper dollars in the audit are modeled as a straight line of the amount paid. The line is applied to the known population payments, which works out to the sum of predicted improper payments across every unit.
+- **Regression:** Improper dollars in the audit are modeled as a straight line of the amount paid. The line is applied to the known population payments, which works out to the sum of predicted improper payments across every unit. *(Results being reworked; not shown below.)*
 - **Bootstrap Simulation:** The audit's findings (error rates, partial-error shares and error sizes) are assigned at random to every unaudited unit, and the payment rules are rerun many times; audited units keep their own findings. The estimate is the average across iterations, and the 95% interval runs from the 2.5th to the 97.5th percentile.
 
 **Confidence Intervals**
@@ -76,7 +76,7 @@ Add `--set reps=20 sim_reps=3 sim_iterations=100` (20 audit years, 3 of them run
 
 ## Results
 
-Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee, beneficiary or claim first (EIPM and PERM have overpayments only). Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200, CERT × 200). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm-cert/README.md#perm-results-25-audit-years), [EIPM](eipm/README.md#results-25-audit-years), [CERT](perm-cert/README.md#cert-results-25-audit-years)).
+Regression results are omitted while that method is reworked. Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee, beneficiary or claim first (EIPM and PERM have overpayments only). Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200, CERT × 200). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm-cert/README.md#perm-results-25-audit-years), [EIPM](eipm/README.md#results-25-audit-years), [CERT](perm-cert/README.md#cert-results-25-audit-years)).
 
 **Gross improper payments (national dollars)**
 
@@ -84,23 +84,18 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 |---|---|---|---|---|---|
 | Part C (audit of 990) | Expansion | $23.57B | $23.92B | $27.96B | $19.69B |
 |  | Ratio | $23.57B | $23.82B | $27.81B | $19.83B |
-|  | Regression | $23.57B | $23.94B | $27.78B | $20.05B |
 |  | Bootstrap simulation (parametric rates) | $23.57B | $23.62B | $27.23B | $20.09B |
 | Part D (PDE audit of 5,000; beneficiary audit of 990) | Expansion | $1.46B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.46B | $1.49B | $2.22B | $0.74B |
-|  | Regression | $1.46B | $1.48B | $2.22B | $0.77B |
 |  | Bootstrap simulation (parametric rates) | $1.46B | $1.46B | $1.69B | $1.23B |
 | PERM (9 states, 520 payments each) | Expansion | $8.65B | $8.57B | $9.74B | $7.42B |
 |  | Ratio | $8.65B | $8.52B | $9.70B | $7.38B |
-|  | Regression | $8.65B | $8.57B | $9.71B | $7.44B |
 |  | Bootstrap simulation (parametric rates) | $8.65B | $8.46B | $9.39B | $7.59B |
 | EIPM (2,000 applications) | Expansion | $0.75B | $0.68B | $0.96B | $0.40B |
 |  | Ratio | $0.75B | $0.68B | $0.96B | $0.40B |
-|  | Regression | $0.75B | $0.68B | $0.96B | $0.40B |
 |  | Bootstrap simulation (parametric rates) | $0.75B | $0.66B | $0.94B | $0.43B |
 | CERT (37,651 claims) | Expansion | $28.61B | $28.85B | $30.47B | $27.22B |
 |  | Ratio | $28.61B | $28.94B | $30.50B | $27.38B |
-|  | Regression | $28.61B | $28.92B | $30.48B | $27.34B |
 |  | Bootstrap simulation (parametric rates) | $28.61B | $28.81B | $30.02B | $27.47B |
 
 **Gross improper payment rates (÷ total payments)**
@@ -109,23 +104,18 @@ Each row gives the true gross improper payment and, over the 25 audit years, the
 |---|---|---|---|---|---|
 | Part C (audit of 990) | Expansion | 6.06% | 6.15% | 7.19% | 5.06% |
 |  | Ratio | 6.06% | 6.13% | 7.16% | 5.10% |
-|  | Regression | 6.06% | 6.16% | 7.15% | 5.16% |
 |  | Bootstrap simulation (parametric rates) | 6.06% | 6.08% | 7.01% | 5.17% |
 | Part D (PDE audit of 5,000; beneficiary audit of 990) | Expansion | 1.38% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.38% | 1.41% | 2.10% | 0.70% |
-|  | Regression | 1.38% | 1.41% | 2.11% | 0.73% |
 |  | Bootstrap simulation (parametric rates) | 1.38% | 1.38% | 1.60% | 1.16% |
 | PERM (9 states, 520 payments each) | Expansion | 6.09% | 6.04% | 6.86% | 5.23% |
 |  | Ratio | 6.09% | 6.00% | 6.83% | 5.20% |
-|  | Regression | 6.09% | 6.04% | 6.84% | 5.24% |
 |  | Bootstrap simulation (parametric rates) | 6.09% | 5.96% | 6.61% | 5.34% |
 | EIPM (2,000 applications) | Expansion | 0.92% | 0.83% | 1.17% | 0.49% |
 |  | Ratio | 0.92% | 0.83% | 1.17% | 0.49% |
-|  | Regression | 0.92% | 0.83% | 1.17% | 0.49% |
 |  | Bootstrap simulation (parametric rates) | 0.92% | 0.81% | 1.16% | 0.53% |
 | CERT (37,651 claims) | Expansion | 6.50% | 6.56% | 6.93% | 6.19% |
 |  | Ratio | 6.50% | 6.58% | 6.93% | 6.22% |
-|  | Regression | 6.50% | 6.57% | 6.93% | 6.21% |
 |  | Bootstrap simulation (parametric rates) | 6.50% | 6.55% | 6.82% | 6.25% |
 
 The tables come from [`shared/results/report/by_scenario.csv`](shared/results/report/by_scenario.csv) (audit years 1–25, the same audits for every method); `by_audit_year.parquet` has each audit year. These are illustrative designs; the configs say which values are not public.
@@ -141,7 +131,7 @@ The tables come from [`shared/results/report/by_scenario.csv`](shared/results/re
 
 **Recommendations:**
 
-1. **Use bootstrap simulation with parametric rates** for PIIA improper payment rates, reporting the analytic ratio or regression interval alongside it during a transition.
+1. **Use bootstrap simulation with parametric rates** for PIIA improper payment rates, reporting the analytic ratio interval alongside it during a transition.
 2. **Do not use fixed-rate bootstrap intervals.**
 3. **Consider smaller audits.** At current precision, the narrower intervals would allow audits roughly 20–38% smaller (Part C, PERM, EIPM, CERT), lowering review costs. These are projections:
    - confirm coverage directly at the reduced sizes first;
