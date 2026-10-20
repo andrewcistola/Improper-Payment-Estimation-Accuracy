@@ -2,7 +2,7 @@
 
 This guide explains how to reproduce every result in this study on your own computer, from an empty machine to the final tables. No programming experience is needed. You will install two free programs, download the project, and type a handful of commands that are given below exactly as you should type them.
 
-Replication takes about **{{T_SETUP}}** of hands-on setup and about **{{T_FULL}}** of unattended computing (measured on a 2-core laptop-class machine; a faster computer will finish sooner). At the end, a check script compares your results with the published results and reports whether they match.
+Replication takes about **20 to 30 minutes** of hands-on setup and about **3½ to 4 hours** of unattended computing (measured on a computer with 2 processor cores and 8 GB of memory; a computer with more cores will finish sooner). At the end, a check script compares your results with the published results and reports whether they match.
 
 | Step | What you do | Time |
 |---|---|---|
@@ -11,8 +11,8 @@ Replication takes about **{{T_SETUP}}** of hands-on setup and about **{{T_FULL}}
 | [3. Download the project](#3-download-the-project) | Download and unzip the project folder | 2 minutes |
 | [4. Open a terminal in the project folder](#4-open-a-terminal-in-the-project-folder) | Open the window where you type commands | 2 minutes |
 | [5. Set up the project](#5-set-up-the-project) | Create a private Python environment and install the packages | 5 minutes |
-| [6. Run a trial](#6-run-a-trial) | Confirm that everything works | {{T_QUICK}} |
-| [7. Run the full replication](#7-run-the-full-replication) | Reproduce every result | {{T_FULL}} |
+| [6. Run a trial](#6-run-a-trial) | Confirm that everything works | 5 minutes |
+| [7. Run the full replication](#7-run-the-full-replication) | Reproduce every result | 3½ to 4 hours |
 | [8. Check and view your results](#8-check-and-view-your-results) | Compare your results with the published results | 5 minutes |
 
 If something goes wrong at any point, see [Troubleshooting](#troubleshooting).
@@ -25,7 +25,7 @@ You need:
 
 - **Operating system:** Windows 10 or 11, macOS 12 (Monterey) or later, or a recent Linux distribution.
 - **Memory (RAM):** at least 8 GB. Close other large programs (for example, web browsers with many tabs) during the full run.
-- **Free disk space:** at least {{T_DISK}}.
+- **Free disk space:** at least 3 GB.
 - **Internet connection:** only for steps 2, 3, and 5 (downloading the software and packages). The replication itself runs offline.
 - **Permission to install software.** On a work computer, you may need your IT department's help.
 
@@ -167,7 +167,7 @@ The commands below are written the macOS and Linux way. **On Windows, replace `.
 
 ## 6. Run a trial
 
-The trial runs every part of the study on a much smaller scale (3 audit years and 100 iterations, instead of 25 audit years and 1,000 iterations). It confirms that the software is installed correctly before you start the long run. It takes about {{T_QUICK}}, and it writes its results to `start-here/_quick/`, leaving the published results untouched.
+The trial runs every part of the study on a much smaller scale (3 audit years and 100 iterations, instead of 25 audit years and 1,000 iterations). It confirms that the software is installed correctly before you start the long run. It takes about 5 minutes. It builds the synthetic populations exactly as the full run does and writes its trial estimates to `start-here/_quick/`, leaving the published estimates untouched. Before it starts, it saves a copy of the published results to `start-here/_reference/` for the check in step 8.
 
 ```bash
 .venv/bin/python start-here/run_all.py --quick
@@ -191,18 +191,18 @@ This one command runs the whole study, in eight stages. Leave the terminal windo
 
 | Stage | What it does | Files it writes | Time |
 |---|---|---|---|
-| 1 | Builds the five synthetic populations with their fabricated errors (and the Part D population under the pre-IRA benefit), and checks each against the public figures it is calibrated to | `*/errors/output*/` | {{T1}} |
-| 2 | Draws 25 audit years for each program and estimates improper payments with expansion, ratio, regression, and bootstrap simulation with parametric rates | `*/estimation/results/` | {{T2}} |
-| 3 | Repeats stage 2 on the same audits with fixed-rate bootstrap simulation (the comparison in the manuscript) | `*/estimation/results_fixed/` | {{T3}} |
-| 4 | Repeats Part D under the pre-IRA benefit design (the robustness reference) | `part-d-ipm/estimation/results_pre_ira*/`, `part-d-ipm/pre-ira-reference.md` | {{T4}} |
-| 5 | Joins every estimate to the true value | `shared/results/` (the README tables come from `shared/results/report/by_scenario.csv`) | {{T5}} |
-| 6 | Builds the manuscript's tables and figures | `manuscripts/generated/`, `manuscripts/manuscript.md` | {{T6}} |
-| 7 | Runs the automated tests of the estimators and payment functions | none | {{T7}} |
-| 8 | Compares your results with the published results | none | {{T8}} |
+| 1 | Builds the five synthetic populations with their fabricated errors (and the Part D population under the pre-IRA benefit), and checks each against the public figures it is calibrated to | `*/errors/output*/` | 1 minute |
+| 2 | Draws 25 audit years for each program and estimates improper payments with expansion, ratio, regression, and bootstrap simulation with parametric rates | `*/estimation/results/` | 1 hour 10 minutes |
+| 3 | Repeats stage 2 on the same audits with fixed-rate bootstrap simulation (the comparison in the manuscript) | `*/estimation/results_fixed/` | 1 hour 15 minutes |
+| 4 | Repeats Part D under the pre-IRA benefit design (the robustness reference) | `part-d-ipm/estimation/results_pre_ira*/`, `part-d-ipm/pre-ira-reference.md` | 1 hour 10 minutes |
+| 5 | Joins every estimate to the true value | `shared/results/` (the README tables come from `shared/results/report/by_scenario.csv`) | under 1 minute |
+| 6 | Builds the manuscript's tables and figures | `manuscripts/generated/`, `manuscripts/manuscript.md` | under 1 minute |
+| 7 | Runs the automated tests of the estimators and payment functions | none | 1 minute |
+| 8 | Compares your results with the published results | none | seconds |
 
 Each stage's run time is recorded in `start-here/run_log.txt`.
 
-Before stage 1 begins, the script copies the published results into `start-here/_reference/`, so that stage 8 can compare them with what your run produces. Your run then overwrites the result files in the project folder with the files it computes.
+If the trial has not already done so, the script first copies the published results into `start-here/_reference/`, so that stage 8 can compare them with what your run produces. Your run then overwrites the result files in the project folder with the files it computes.
 
 **If the run is interrupted** (for example, the computer restarted), you do not have to start over. Open a terminal in the project folder again and continue from the stage that was running, for example stage 3:
 
@@ -237,7 +237,7 @@ To run the check again at any time:
 | Gross improper payments by program and method (the tables in the main README) | `shared/results/report/by_scenario.csv` | Excel, Numbers, or Google Sheets. The README uses the rows where `domain` ends in `gross` and the columns `median_estimate`, `median_lower`, `median_upper` (and their `_usd` versions) |
 | Every table in the manuscript (Tables 2 to 5 and C1) | `manuscripts/generated/tables.md` | Any text editor, or view it on GitHub |
 | Every program, measure, and method in one table | `manuscripts/generated/results_long.csv` | Excel, Numbers, or Google Sheets |
-| Figures 1 and 2 | `manuscripts/generated/fig1_width.png`, `fig2_coverage.png` | Any image viewer |
+| Figures 1 and 2 | `manuscripts/generated/fig1_width.png`, `fig2_coverage.png` | Any image viewer. The check does not compare the figures, because text in an image is drawn slightly differently by different library builds; the values they show come from `results_long.csv`, which is compared |
 | Part D under the pre-IRA benefit | `part-d-ipm/pre-ira-reference.md` | Any text editor |
 | Each program's detailed results | `*/estimation/results/*/metrics.json` and `estimates.parquet` | Described in [`shared/data_dictionary.md`](../shared/data_dictionary.md) |
 
@@ -274,7 +274,7 @@ On Windows, run the commands listed inside `manuscripts/scripts/render.sh` one a
 **The run stops with `FAILED`.** The lines just above `FAILED` describe the problem, and the last line tells you how to continue once it is fixed. The most common causes are:
 
 - *Out of memory* (`Out of Memory Error`, `MemoryError`, or the computer becoming very slow): close other programs and continue with `--from` the stage that failed.
-- *Out of disk space* (`No space left on device`): free at least {{T_DISK}} and continue.
+- *Out of disk space* (`No space left on device`): free at least 3 GB and continue.
 
 **Stage 8 reports `NOT REPRODUCED`.** First make sure every stage ran to completion (`start-here/run_log.txt` should end with "All stages finished"). If it did, check that DuckDB is version 1.5.6: `.venv/bin/python -c "import duckdb; print(duckdb.__version__)"`. The random draws depend on DuckDB's hash function, so a different version produces different (equally valid) synthetic data, and therefore different numbers. If the versions are correct and the results still differ, please open an issue at <https://github.com/andrewcistola/improper-payment-estimation-accuracy/issues> and attach `start-here/run_log.txt` and the printed `RESULT CHECK`.
 
@@ -286,4 +286,4 @@ On Windows, run the commands listed inside `manuscripts/scripts/render.sh` one a
 
 Every number in the study comes from synthetic data. Each population is built from stated probability distributions, and every random draw is a fixed function of a seed, so the same software produces the same data and the same results on every run. No real or non-public data are used, and nothing needs to be downloaded besides the project and its packages. The main [README](../README.md) describes the study and its design, and each program's folder (`part-c-ipm`, `part-d-ipm`, `perm-cert`, `eipm`) has a README describing its population, audit, and methods. The commands that `run_all.py` runs are the same commands listed in the main README's **Run** section and in [`manuscripts/README.md`](../manuscripts/README.md), so an experienced user can also run each step by hand.
 
-This replication package has been tested on Linux (Ubuntu) with Python 3.13. The scripts use only Python and are written to run unchanged on Windows and macOS.
+This replication package was tested by downloading the project into an empty folder, installing the packages into a new environment exactly as in step 5, and running steps 6 to 8 on Linux with Python 3.13. The run reproduced all 183 published output files byte for byte (`REPRODUCED EXACTLY`) in 3 hours 32 minutes. The scripts use only Python and are written to run unchanged on Windows and macOS.

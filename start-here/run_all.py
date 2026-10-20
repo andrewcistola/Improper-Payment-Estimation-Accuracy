@@ -26,9 +26,10 @@ Before stage 1, the published results are copied to start-here/_reference/
 so that stage 8 can compare them with the files your run produces. Each
 stage's run time is written to start-here/run_log.txt.
 
-The full run overwrites the committed result files with identical copies. The
-quick run writes to start-here/_quick/ instead and leaves the published
-results untouched.
+The full run overwrites the committed result files with the files it
+computes. The quick run rebuilds the populations the same way and writes its
+trial estimates to start-here/_quick/, leaving the published estimates
+untouched.
 """
 import argparse
 import shutil
@@ -141,7 +142,7 @@ def main():
 
     if not (ROOT / "shared" / "ipsim" / "engine.py").exists():
         sys.exit("Run this from the repository's top folder (the one that contains README.md).")
-    if not a.quick and first == 1 and not (HERE / "_reference").exists():
+    if first == 1 and not (HERE / "_reference").exists():
         subprocess.run([PY, "start-here/verify.py", "snapshot"], cwd=ROOT, check=True)
     if a.quick:
         shutil.rmtree(ROOT / "start-here" / "_quick", ignore_errors=True)

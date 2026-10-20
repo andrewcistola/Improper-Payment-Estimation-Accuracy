@@ -8,8 +8,8 @@
       "sha256": "44c9dc4c215a1b32785cb717695c7e62d26ae4cf4581e8104c776082c4e567ea"
     },
     "summary.json": {
-      "bytes": 99114,
-      "sha256": "c451b983d0758a71296bc4e715558185c12737c4233697ef773f704b5a95066d"
+      "bytes": 94766,
+      "sha256": "a08e1fa4ceb5f0f6fe5f9858ef971414c1c0e5ec1d6fb7094716139aef9236bc"
     }
   },
   "program": "summary",

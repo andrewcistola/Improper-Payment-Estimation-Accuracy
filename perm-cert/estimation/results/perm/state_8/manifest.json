@@ -8,13 +8,13 @@
       "sha256": "6afb71c149ffd573476b91bd072b28ce974825f926f6541cd2cc24a36fb27670"
     },
     "estimates.parquet": {
-      "bytes": 8655,
-      "rows": 225,
-      "sha256": "61438aef50c61b31f1d532066d9cf1fa0967561d72b2d6b2c077f07abf813e34"
+      "bytes": 10969,
+      "rows": 300,
+      "sha256": "b853f4074d52a8594866366f198c461db235512fc7a24b10771db517f627084f"
     },
     "metrics.json": {
-      "bytes": 4790,
-      "sha256": "8e7aa41ccdfe899a312a9e98dfdaac1f288b0b25893c67c85483a80106d23649"
+      "bytes": 6413,
+      "sha256": "ff4d254817c00b73b3fd57635310ddee72a6fdef225d625d086302e5d412a75c"
     },
     "sim_draws.parquet": {
       "bytes": 568627,
