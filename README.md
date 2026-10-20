@@ -1,7 +1,7 @@
 ## Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation
 
 #### **Andrew Cistola, PhD, MPH** 
-Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/) 
+Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/) · **Replicate the study step by step: [`start-here/`](start-here/)** 
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 
@@ -43,6 +43,7 @@ Each of the four program folders has the same two parts:
 | [`shared/`](shared/) | Code used by all four | Runner, random numbers, samplers | **The methods, written once**: expansion and ratio with normal intervals; regression (models fit within strata, residual interval); the audit-finding bootstrap simulation loop; scoring |
 | [`literature-review/`](literature-review/) | Standalone narrative review of the comparative accuracy of improper payment estimation methods (Markdown, PDF, Word) | | |
 | [`manuscripts/`](manuscripts/) | Manuscript and one-page summary of the Monte Carlo study | | |
+| [`start-here/`](start-here/) | Step-by-step replication guide for readers with no programming experience: software to install, one command that runs every stage, and a check against the published results | | |
 
 Inside each program, the SQL files are numbered in the order they run, and each file's header states what it does and every probability or formula it uses. Each `config.yaml` lists the files it runs.
 
@@ -58,8 +59,10 @@ Inside each program, the SQL files are numbered in the order they run, and each 
 
 ## Run
 
+For a step-by-step guide that assumes no programming experience, see [`start-here/`](start-here/README.md). The whole study also runs with one command, `python start-here/run_all.py`. The individual steps are:
+
 ```bash
-pip install -e .                              # duckdb (pinned), pyarrow, numpy, numba, pyyaml
+pip install -e ".[all]"                       # duckdb (pinned), pyarrow, numpy, numba, pyyaml, scipy; [all] adds pandas, matplotlib, pytest
 # 1. populations (a few minutes)
 ipsim part-c-ipm/errors/config.yaml part-d-ipm/errors/config.yaml eipm/errors/config.yaml \
       perm-cert/errors/perm.yaml perm-cert/errors/cert.yaml

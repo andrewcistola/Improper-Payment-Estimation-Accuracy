@@ -26,3 +26,9 @@ perm-cert/errors/output/cert/**/*.parquet
 # per-audit-year report as CSV is large; the same rows are in by_audit_year.parquet
 shared/results/report/by_sample.csv
 shared/results/report/by_audit_year.csv
+
+# start-here/run_all.py: trial outputs, the snapshot of published results, the run log
+start-here/_quick/
+start-here/_reference/
+start-here/run_log.txt
+.venv/
