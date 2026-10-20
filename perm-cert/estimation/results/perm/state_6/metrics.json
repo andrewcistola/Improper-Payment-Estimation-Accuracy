@@ -57,6 +57,25 @@
     "empirical_se": 0.008181846680964179
   },
   {
+    "domain": "6|claims",
+    "method": "simulation",
+    "interval": "percentile",
+    "reps": 25,
+    "theta": 0.031790071767791105,
+    "mean_estimate": 0.03323661748508735,
+    "rel_bias": 0.045503065481023786,
+    "rel_rmse": 0.20618121992768887,
+    "coverage": 0.96,
+    "mc_se_coverage": 0.039191835884530866,
+    "above": 0.0,
+    "below": 0.04,
+    "n_undefined": 0,
+    "rel_width": 0.8362809877313498,
+    "median_rel_width": 0.8521239666416675,
+    "mean_se": 0.006808746953219817,
+    "empirical_se": 0.006524727211781168
+  },
+  {
     "domain": "6|eligibility",
     "method": "expansion",
     "interval": "normal",
@@ -114,6 +133,25 @@
     "empirical_se": 0.0087638611680319
   },
   {
+    "domain": "6|eligibility",
+    "method": "simulation",
+    "interval": "percentile",
+    "reps": 25,
+    "theta": 0.03245979714273566,
+    "mean_estimate": 0.03363876048373959,
+    "rel_bias": 0.036320724242966174,
+    "rel_rmse": 0.18433852702764544,
+    "coverage": 1.0,
+    "mc_se_coverage": 0.0,
+    "above": 0.0,
+    "below": 0.0,
+    "n_undefined": 0,
+    "rel_width": 0.9422527046027009,
+    "median_rel_width": 0.9253297818432565,
+    "mean_se": 0.007855363076292941,
+    "empirical_se": 0.005987261564878143
+  },
+  {
     "domain": "6|gross",
     "method": "expansion",
     "interval": "normal",
@@ -169,5 +207,24 @@
     "median_rel_width": 0.7665396934052875,
     "mean_se": 0.012990192664437399,
     "empirical_se": 0.010306758668669756
+  },
+  {
+    "domain": "6|gross",
+    "method": "simulation",
+    "interval": "percentile",
+    "reps": 25,
+    "theta": 0.06324465336012447,
+    "mean_estimate": 0.06575447792987886,
+    "rel_bias": 0.039684375459583476,
+    "rel_rmse": 0.14661539151365574,
+    "coverage": 0.96,
+    "mc_se_coverage": 0.039191835884530866,
+    "above": 0.0,
+    "below": 0.04,
+    "n_undefined": 0,
+    "rel_width": 0.6281046752972085,
+    "median_rel_width": 0.6375806153357488,
+    "mean_se": 0.01018631730253863,
+    "empirical_se": 0.009110583705209936
   }
 ]

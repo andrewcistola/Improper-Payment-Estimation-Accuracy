@@ -57,6 +57,25 @@
     "empirical_se": 0.00635787189426197
   },
   {
+    "domain": "1|claims",
+    "method": "simulation",
+    "interval": "percentile",
+    "reps": 25,
+    "theta": 0.0313651824816496,
+    "mean_estimate": 0.032694162260171564,
+    "rel_bias": 0.04237117954915437,
+    "rel_rmse": 0.16470900115359358,
+    "coverage": 1.0,
+    "mc_se_coverage": 0.0,
+    "above": 0.0,
+    "below": 0.0,
+    "n_undefined": 0,
+    "rel_width": 0.8149273836847094,
+    "median_rel_width": 0.8167497982919925,
+    "mean_se": 0.006563007822456104,
+    "empirical_se": 0.005095207101972038
+  },
+  {
     "domain": "1|eligibility",
     "method": "expansion",
     "interval": "normal",
@@ -114,6 +133,25 @@
     "empirical_se": 0.008970466313384877
   },
   {
+    "domain": "1|eligibility",
+    "method": "simulation",
+    "interval": "percentile",
+    "reps": 25,
+    "theta": 0.019980828736945254,
+    "mean_estimate": 0.020865997509209054,
+    "rel_bias": 0.04430090382723173,
+    "rel_rmse": 0.3104084481526308,
+    "coverage": 0.92,
+    "mc_se_coverage": 0.05425863986500213,
+    "above": 0.04,
+    "below": 0.04,
+    "n_undefined": 0,
+    "rel_width": 1.1789040910549529,
+    "median_rel_width": 1.2175419605402729,
+    "mean_se": 0.006076645404029768,
+    "empirical_se": 0.006265313312961897
+  },
+  {
     "domain": "1|gross",
     "method": "expansion",
     "interval": "normal",
@@ -169,5 +207,24 @@
     "median_rel_width": 0.8017981388025219,
     "mean_se": 0.010884417897184494,
     "empirical_se": 0.0101955368816489
+  },
+  {
+    "domain": "1|gross",
+    "method": "simulation",
+    "interval": "percentile",
+    "reps": 25,
+    "theta": 0.050680502152966676,
+    "mean_estimate": 0.05288075896527223,
+    "rel_bias": 0.043414266213555264,
+    "rel_rmse": 0.13863340121460557,
+    "coverage": 1.0,
+    "mc_se_coverage": 0.0,
+    "above": 0.0,
+    "below": 0.0,
+    "n_undefined": 0,
+    "rel_width": 0.6706627058332231,
+    "median_rel_width": 0.6903888665911065,
+    "mean_se": 0.008668655245078944,
+    "empirical_se": 0.006810201595648933
   }
 ]
