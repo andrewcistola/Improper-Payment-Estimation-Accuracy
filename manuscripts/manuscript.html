@@ -51,48 +51,51 @@ Estimators and Bootstrap Simulation</h1>
 <strong>Corresponding author:</strong> andrewcistola@pm.me</p>
 <p><strong>Running title:</strong> Comparative accuracy of improper
 payment estimation methods</p>
-<p><strong>Word count:</strong> about 4,400 (main text, excluding tables
-and references); abstract about 330; 5 tables, 2 figures; Appendices
+<p><strong>Word count:</strong> about 4,600 (main text, excluding tables
+and references); abstract about 380; 5 tables, 2 figures; Appendices
 A–C.</p>
 <h2 id="abstract">Abstract</h2>
-<p><strong>Background.</strong> CMS estimates improper payments in
-Medicare Part C, Part D, Medicaid (PERM), Marketplace APTC (EIPM) and
-Medicare fee-for-service (CERT) from audited samples, with 95%
-confidence intervals required by law. The available projection methods,
-the analytic expansion, ratio and regression estimators and
-audit-finding bootstrap simulation (which assigns audited findings
-across the population and reruns the payment rules), have not been
-compared against a known truth.</p>
-<p><strong>Purpose.</strong> To answer the question: what is the
-comparative accuracy of the available methods for estimating improper
-payments in federal health programs? Accuracy means point accuracy and
-interval accuracy (coverage at the nominal 95%, then width).</p>
-<p><strong>Methods.</strong> We built five synthetic populations, one
-per program, with fabricated errors and calibrated to public FY 2025
-aggregates, and drew each program’s production-like audit (990 to 37,651
-units) in 25 independent audit years. We compared expansion and ratio
+<p><strong>Background.</strong> The Centers for Medicare &amp; Medicaid
+Services (CMS) estimates improper payments in Medicare Part C, Medicare
+Part D, Medicaid (PERM), Marketplace advance premium tax credits (EIPM),
+and Medicare fee-for-service (CERT) from audited samples, and the law
+requires that each estimate include a 95% confidence interval. The
+available projection methods include the analytic expansion, ratio, and
+regression estimators and audit-finding bootstrap simulation (which
+assigns audited findings across the population and reruns the payment
+rules). These methods have not been compared against a known truth.</p>
+<p><strong>Purpose.</strong> The purpose of this study is to answer the
+question: what is the comparative accuracy of the available methods for
+estimating improper payments in federal health programs? In this study,
+accuracy includes both point accuracy and interval accuracy (coverage at
+the nominal 95% and, after that, width).</p>
+<p><strong>Methods.</strong> This study built five synthetic populations
+(one per program) with fabricated errors, calibrated each to public FY
+2025 aggregates, and drew each program’s production-like audit (990 to
+37,651 units) in 25 independent audit years. Expansion and ratio
 estimators with normal intervals and a model-assisted regression
 estimator (models fit within strata on basic beneficiary variables and
-the amount paid, residual interval) against bootstrap simulation (1,000
-iterations) with error rates held fixed at their audited values or
-redrawn each iteration from their binomial sampling distributions
-(parametric rates).</p>
+the amount paid, with a residual interval) were compared against
+bootstrap simulation (1,000 iterations). The bootstrap simulation either
+held error rates fixed at their audited values or redrew them each
+iteration from their binomial sampling distributions (parametric
+rates).</p>
 <p><strong>Results.</strong> Bootstrap point estimates were as accurate
 as or more accurate than the analytic estimates. Fixed-rate bootstrap
 intervals were 5–21% as wide as the analytic intervals and contained the
-true gross rate in 30 of 125 audit-years (24%), because they omit the
-sampling variance of the audited rates. Parametric-rate intervals
-contained it in 121 of 125 (96.8%; 23–25 of 25 in every program) and
-were 11–21% narrower than the ratio estimator’s in four programs and 63%
-narrower than the same-audit expansion interval in Part D. Measures
-built from few errors, such as underpayments, were undercovered by every
-method.</p>
+true gross rate in only 30 of 125 audit-years (24%) because they omit
+the sampling variance of the audited rates. Parametric-rate intervals
+contained the true gross rate in 121 of 125 audit-years (96.8%; 23–25 of
+25 in every program). These intervals were also 11–21% narrower than the
+ratio estimator’s in four programs and 63% narrower than the same-audit
+expansion interval in Part D. Measures built from few errors (for
+example, underpayments) were undercovered by every method.</p>
 <p><strong>Conclusions.</strong> Fixed-rate bootstrap intervals should
-not be used. Bootstrap simulation with parametric rates gives valid,
-narrower intervals, and we recommend it for PIIA improper payment rates.
-Its precision would permit audits roughly 20–38% smaller at current
-precision, reducing review costs without sacrificing accuracy, pending
-confirmation at reduced sizes.</p>
+not be used. Bootstrap simulation with parametric rates produces valid
+and narrower intervals, and this study recommends it for PIIA improper
+payment rates. At current precision, this method would permit audits
+roughly 20–38% smaller, which would reduce review costs without
+sacrificing accuracy (pending confirmation at reduced sizes).</p>
 <p><strong>Keywords:</strong> improper payments; bootstrap; Monte Carlo
 simulation; survey sampling; Medicare; Medicaid; payment integrity;
 confidence intervals</p>
@@ -101,10 +104,10 @@ confidence intervals</p>
 payment measurement in CMS programs</h3>
 <p>The Payment Integrity Information Act of 2019 (PIIA) requires a
 statistically valid estimate of improper payments for every federal
-program at risk of significant improper payments. OMB’s Appendix C to
-Circular A-123 sets out how agencies produce it (OMB 2021). The Centers
-for Medicare &amp; Medicaid Services (CMS) runs five such
-measurements:</p>
+program at risk of significant improper payments. Appendix C to the
+Office of Management and Budget (OMB) Circular A-123 sets out how
+agencies produce this estimate (OMB 2021). The Centers for Medicare
+&amp; Medicaid Services (CMS) runs five such measurements:</p>
 <ul>
 <li><strong>Medicare Part C</strong> (the Part C Improper Payment
 Measure, for Medicare Advantage risk adjustment);</li>
@@ -117,24 +120,25 @@ Improper Payment Measurement, EIPM);</li>
 <li><strong>Medicare fee-for-service</strong> (Comprehensive Error Rate
 Testing, CERT).</li>
 </ul>
-<p>Together these programs reported more than $90 billion in improper
+<p>Together, these programs reported more than $90 billion in improper
 payments for FY 2025 (CMS 2025a). Each measurement follows the same
 three steps:</p>
 <ol type="1">
 <li>Draw a probability sample (the audit).</li>
-<li>Establish each sampled unit’s payment error by medical or
+<li>Establish the payment error for each sampled unit through medical or
 eligibility review.</li>
 <li>Project the sample errors to the program and attach a 95% confidence
 interval.</li>
 </ol>
 <p>The interval is not a formality. Inspectors General review sampling
 and estimation plans every year, and interval accuracy is an auditable
-item: the Department of Education OIG has found estimates unreliable
-because their confidence intervals were inaccurate (ED OIG 2025).
-Interval width also sets the cost of measurement. Medical record review
-is the dominant cost of every program, and audit sizes are chosen to
-meet precision targets, for example ±3 percentage points at 95%
-confidence for CERT (CMS 2025b).</p>
+item. For example, the Department of Education Office of Inspector
+General (OIG) has found estimates unreliable because their confidence
+intervals were inaccurate (ED OIG 2025). Interval width also sets the
+cost of measurement. Medical record review is the dominant cost of every
+program, and audit sizes are chosen to meet precision targets (for
+example, ±3 percentage points at 95% confidence for CERT; CMS
+2025b).</p>
 <h3 id="analytic-estimators-and-bootstrap-simulation">1.2 Analytic
 estimators and bootstrap simulation</h3>
 <p>The standard projection methods are design-based estimators with
@@ -149,83 +153,85 @@ characteristics known for every unit, predicts the whole population, and
 adds the weighted sample residuals (model-assisted estimation; Särndal
 et al. 1992).</li>
 </ul>
-<p>Their intervals rely on a central limit argument that is weakest
-exactly where improper payment data live. Errors are rare, zero-inflated
-and right-skewed, and often all-or-nothing (Neter and Loebbecke 1975;
-Kvanli et al. 1998; Edwards et al. 2023).</p>
-<p>A second family of methods simulates instead of projecting. The
-audit’s findings (which HCCs failed, which drug claims were wrong and by
-how much, which applications were ineligible) are assigned at random to
-the unaudited units of the whole population, and the program’s payment
-function is rerun. Repeating this many times gives a distribution of
-improper payments. We call this <strong>audit-finding bootstrap
-simulation</strong>. Part D’s published interval is already simulation
-based (CMS 2023, 2025c).</p>
-<p>The approach is attractive for three reasons:</p>
+<p>The intervals for these estimators rely on a central limit argument
+that is weakest exactly where improper payment data are found. Errors
+are rare, zero-inflated, right-skewed, and often all-or-nothing (Neter
+and Loebbecke 1975; Kvanli et al. 1998; Edwards et al. 2023).</p>
+<p>A second family of methods simulates (as opposed to projects). The
+audit findings (which HCCs failed, which drug claims were wrong and by
+how much, and which applications were ineligible) are assigned at random
+to the unaudited units of the whole population, and the program’s
+payment function is rerun. Repeating this process many times produces a
+distribution of improper payments. This study calls this approach
+<strong>audit-finding bootstrap simulation</strong>. The published Part
+D interval is already simulation based (CMS 2023, 2025c).</p>
+<p>This approach is attractive for three reasons:</p>
 <ul>
-<li><strong>Nonlinear payments.</strong> It reruns the actual payment
-rules, so effects such as the Part D benefit phases, risk-score
-hierarchies and the APTC schedule are handled exactly rather than
-through a linear approximation.</li>
-<li><strong>Every measure at once.</strong> It gives over-, under-,
-gross and net payments, and any subgroup, from one set of
-iterations.</li>
+<li><strong>Nonlinear payments.</strong> The simulation reruns the
+actual payment rules, so effects such as the Part D benefit phases,
+risk-score hierarchies, and the APTC schedule are handled exactly (as
+opposed to through a linear approximation).</li>
+<li><strong>Every measure at once.</strong> One set of iterations
+produces over-, under-, gross, and net payments, along with any
+subgroup.</li>
 <li><strong>Traceability.</strong> Every simulated dollar can be traced
 to an audited finding.</li>
 </ul>
-<p>To our knowledge, the comparative accuracy of these methods, and in
-particular the validity of the simulation’s intervals, has not been
-tested against a known truth. A companion narrative review sets out each
-program’s design and the evidence on interval accuracy in detail
-(Cistola 2026).</p>
+<p>To the author’s knowledge, the comparative accuracy of these methods
+(and in particular the validity of the simulation intervals) has not
+been tested against a known truth. A companion narrative review
+describes the design of each program and the evidence on interval
+accuracy in detail (Cistola 2026).</p>
 <h3 id="why-validity-is-in-question">1.3 Why validity is in
 question</h3>
 <p>The audit-finding bootstrap differs from the textbook bootstrap
-(Efron and Tibshirani 1993; Mashreghi et al. 2016) in one respect that
-matters. It never resamples the audit. Each iteration reuses the same
+(Efron and Tibshirani 1993; Mashreghi et al. 2016) in one important
+respect: it never resamples the audit. Each iteration reuses the same
 audited findings, and the error rates estimated from them, so the spread
 across iterations reflects only which unaudited units happen to receive
-errors. The uncertainty in the rates themselves is not represented, and
-that is the uncertainty a confidence interval is meant to express: what
-the audit would have found had a different sample been drawn. Section
-4.1 shows that this omission is large and predictable.</p>
+errors. The uncertainty in the rates themselves is not represented.
+However, this is the uncertainty a confidence interval is meant to
+express, namely what the audit would have found had a different sample
+been drawn. Section 4.1 shows that this omission is large and
+predictable.</p>
 <h2 id="purpose">2. Purpose</h2>
-<p>This study asks: <strong>what is the comparative accuracy of the
-available methods for estimating improper payments in federal health
-programs?</strong> The methods are:</p>
+<p>The purpose of this study is to answer the question: <strong>what is
+the comparative accuracy of the available methods for estimating
+improper payments in federal health programs?</strong> The methods
+are:</p>
 <ul>
-<li>three design-based analytic estimators (expansion, ratio and a
+<li>three design-based analytic estimators (expansion, ratio, and a
 model-assisted regression estimator);</li>
 <li>audit-finding bootstrap simulation.</li>
 </ul>
-<p>Accuracy has two parts:</p>
+<p>In this study, accuracy has two parts:</p>
 <ul>
 <li><strong>Point accuracy:</strong> how close the point estimate is to
 the true improper payment.</li>
 <li><strong>Interval accuracy:</strong> whether the 95% interval
 contains the truth in about 95% of repeated audits (coverage) and, among
-intervals that do, how narrow it is (width). A narrower valid interval
-is more accurate, because the same precision can then be bought with a
-smaller, cheaper audit.</li>
+intervals that do, how narrow the interval is (width). A narrower valid
+interval is more accurate because the same precision can then be
+achieved with a smaller and less costly audit.</li>
 </ul>
-<p>The specific aims are to:</p>
+<p>The specific aims of this study are to:</p>
 <ol type="1">
 <li>measure the point and interval accuracy of each method in five
 synthetic populations designed after the five CMS measurements;</li>
 <li>explain any failure of the bootstrap simulation interval;</li>
-<li>test a parametric alternative that corrects it;</li>
-<li>judge whether the most accurate method could support smaller
+<li>test a parametric alternative that corrects this failure;</li>
+<li>determine whether the most accurate method could support smaller
 audits.</li>
 </ol>
 <p>Recovery uses of extrapolation (contract-level RADV demands and
 provider overpayment demands) are out of scope.</p>
 <h2 id="methods">3. Methods</h2>
 <h3 id="study-design">3.1 Study design</h3>
-<p>This is a Monte Carlo validation study in the design of Edwards et
-al. (2023):</p>
+<p>This study is a Monte Carlo validation study that follows the design
+of Edwards et al. (2023):</p>
 <ol type="1">
 <li><strong>Population.</strong> For each program, a synthetic
-population is built and errors are fabricated on it with stated
+population is built, and errors are fabricated on it with stated
 probabilities. The true improper payment is therefore known to the
 cent.</li>
 <li><strong>Audit years.</strong> The program’s production audit design
@@ -233,21 +239,21 @@ is then applied 25 times, each time drawing an independent sample. Each
 draw is an <strong>audit year</strong>, so the 25 draws show how each
 estimator behaves when the audit is repeated.</li>
 <li><strong>One audit per year.</strong> Each audit year has exactly one
-audit, and every method gets only that audit. The analytic methods
-estimate their variance from it. The bootstrap simulation assigns its
-findings exactly as audited.</li>
+audit, and every method uses only that audit. The analytic methods
+estimate their variance from this audit. The bootstrap simulation
+assigns the audit findings exactly as audited.</li>
 </ol>
 <p>All methods are scored on the same 25 audit years. An interval is
 counted as containing the truth if <em>lower</em> ≤ <em>θ</em> ≤
 <em>upper</em>. With 25 audit years, 24 of 25 is the nearest count to
 the nominal 95% (23.75), and the Monte Carlo standard error of a
 coverage estimate near 95% is about 4.4 percentage points.</p>
-<p>No real data are used. Populations are calibrated only to public
-aggregate results (Appendix A). Every number in this paper can be
+<p>This study uses no real data. Populations are calibrated only to
+public aggregate results (Appendix A). Every number in this paper can be
 regenerated from the public repository (Data and code availability).</p>
 <h3 id="synthetic-populations">3.2 Synthetic populations</h3>
-<p>Table 1 summarizes the five populations; Appendix B gives every
-assumption.</p>
+<p>Table 1 summarizes the five populations, and Appendix B provides
+every assumption.</p>
 <p><strong>Table 1. Populations, audits and true gross improper payment
 rates</strong></p>
 <table style="width:100%;">
@@ -322,21 +328,22 @@ per type, Neyman</td>
 </tbody>
 </table>
 <p>Each population is calibrated to its FY 2025 public results where
-those exist:</p>
+those results exist:</p>
 <ul>
 <li>Part C: 6.09%; overpayments $21.43B and underpayments $2.23B.</li>
 <li>Medicaid: 6.12%.</li>
 <li>EIPM: 0.89%, of which 0.43 points was technically improper.</li>
 <li>CERT: 6.55% overall, with each of the four claim types matched.</li>
 </ul>
-<p>Part D is set below its published 4.00% so that the method is tested
-in a lower-error regime. Strata that CMS does not publish are
-illustrative and labeled as such: the EIPM strata, the Part C IPM strata
-and CERT’s service-level strata.</p>
+<p>Part D is set below its published 4.00% so that the methods are
+tested in a lower-error setting. Strata that CMS does not publish (the
+EIPM strata, the Part C IPM strata, and the CERT service-level strata)
+are illustrative and labeled as such.</p>
 <h3 id="estimands">3.3 Estimands</h3>
-<p><strong>Netting and measures.</strong> For each program the payment
-error is netted within the payment unit first: the enrollee,
-beneficiary, payment, application or claim. Then:</p>
+<p><strong>Netting and measures.</strong> For each program, the payment
+error is first netted within the payment unit (the enrollee,
+beneficiary, payment, application, or claim). The measures are then
+defined as:</p>
 <ul>
 <li>over = Σ max(<em>y</em>, 0)</li>
 <li>under = Σ max(−<em>y</em>, 0)</li>
@@ -345,90 +352,92 @@ beneficiary, payment, application or claim. Then:</p>
 </ul>
 <p>Every measure is estimated in dollars with its interval and then
 divided by the known total payments <em>X</em>. The gross rate is the
-PIIA estimand and the primary outcome. PERM and EIPM errors are all
-overpayments, so their components are reported instead of over and
-under: eligibility and claims for PERM, technically improper and
-monetary for EIPM. CERT also reports gross by claim type.</p>
+PIIA estimand and the primary outcome. Because PERM and EIPM errors are
+all overpayments, their components are reported instead of over and
+under (eligibility and claims for PERM; technically improper and
+monetary for EIPM). CERT also reports gross by claim type.</p>
 <h3 id="analytic-estimators">3.4 Analytic estimators</h3>
 <p>The three analytic estimators use the program’s stratified design.
-Let <em>N_h</em>, <em>n_h</em> and <em>w_h = N_h/n_h</em> be stratum
-sizes and weights, and let *T̂_y = Σ_h w_h Σ y* and *T̂_x* be the weighted
-totals. Then:</p>
+Let <em>N_h</em>, <em>n_h</em>, and <em>w_h = N_h/n_h</em> be the
+stratum sizes and weights, and let *T̂_y = Σ_h w_h Σ y* and *T̂_x* be the
+weighted totals. The estimators are:</p>
 <ul>
 <li><strong>Expansion:</strong> *θ̂ = T̂_y / X*.</li>
 <li><strong>Ratio:</strong> *θ̂ = T̂_y / T̂_x*.</li>
-<li><strong>Regression (model-assisted):</strong> within each model
+<li><strong>Regression (model-assisted):</strong> Within each model
 stratum <em>m</em>, the audited <em>y</em> is regressed by
 design-weighted least squares on an intercept and the unit’s predictors
-<strong>z</strong>: basic beneficiary variables plus the amount paid.
+<strong>z</strong> (basic beneficiary variables plus the amount paid).
 The fitted models predict every population unit, and the estimate adds
 the weighted audit residuals: <em>θ̂ = [Σ_U ŷ + Σ_s w (y − ŷ)] / X</em>.
 The predictors are:
 <ul>
-<li>Part C: payment, demographic score, months enrolled and number of
+<li>Part C: payment, demographic score, months enrolled, and number of
 HCCs, within risk-score terciles.</li>
-<li>Part D: Medicare payment, gross drug cost, number of PDEs and
+<li>Part D: Medicare payment, gross drug cost, number of PDEs, and
 reaching the catastrophic phase, within post-strata (long-term care,
 low-income subsidy, other).</li>
-<li>PERM: amount paid, month and the beneficiary’s number of payments
+<li>PERM: amount paid, month, and the beneficiary’s number of payments
 and total paid.</li>
-<li>EIPM: APTC, age, household size, income and months.</li>
+<li>EIPM: APTC, age, household size, income, and months.</li>
 <li>CERT: amount paid (the claims carry no beneficiary variables).</li>
 </ul>
 The model is fit on the same audit as the ratio estimator (for Part D,
 the 990-beneficiary audit). A stratum with fewer than 10 audited errors,
-or too few units for the model, uses an intercept-only model, which is
-expansion within that stratum. The approach follows model-assisted
-estimation as used in forest inventory (McConville et al. 2020) and
-model-based extrapolation of random audits in tax-gap estimation (Johns
-and Rosenbaum 2024).</li>
+or with too few units for the model, uses an intercept-only model, which
+is equivalent to expansion within that stratum. This approach follows
+model-assisted estimation as used in forest inventory (McConville et
+al. 2020) and model-based extrapolation of random audits in tax-gap
+estimation (Johns and Rosenbaum 2024).</li>
 </ul>
-<p>Variances use the stratified-SRS formula with finite population
-correction on <em>y</em> (expansion), on the ratio residual <em>y −
-θ̂x</em> (ratio), or on the model residual <em>y − ŷ</em> (regression),
-all from the single audit. Expansion and ratio report <em>θ̂ ±
-1.96·SE</em>; regression uses a <em>t</em> multiplier with degrees of
-freedom reduced by the strata and model terms fitted.</p>
+<p>Variances use the stratified-SRS formula with a finite population
+correction applied to <em>y</em> (expansion), to the ratio residual
+<em>y − θ̂x</em> (ratio), or to the model residual <em>y − ŷ</em>
+(regression), all from the single audit. Expansion and ratio report
+<em>θ̂ ± 1.96·SE</em>. Regression uses a <em>t</em> multiplier, with
+degrees of freedom reduced by the strata and model terms fitted.</p>
 <p>Two program-specific forms apply:</p>
 <ul>
-<li><strong>Part C expansion</strong> works in risk-score units: the
-mean audited over- and under-risk-score error in each tercile × the
-tercile’s size × the national mean county rate × months.</li>
-<li><strong>Part D expansion</strong> applies each stratum’s audited PDE
-error rate to every PDE in the population, reruns the benefit, and uses
-a delta-method interval: each stratum’s rate is moved by ±1 SE and the
-benefit is rerun each way.</li>
+<li><strong>Part C expansion</strong> works in risk-score units. The
+mean audited over- and under-risk-score error in each tercile is
+multiplied by the tercile’s size, the national mean county rate, and
+months.</li>
+<li><strong>Part D expansion</strong> applies the audited PDE error rate
+for each stratum to every PDE in the population, reruns the benefit, and
+uses a delta-method interval. Each stratum’s rate is moved by ±1 SE, and
+the benefit is rerun each way.</li>
 </ul>
 <h3 id="audit-finding-bootstrap-simulation-fixed-rates">3.5
 Audit-finding bootstrap simulation (fixed rates)</h3>
-<p>Within each donor kind <em>k</em>, take the audit’s <em>n_k</em>
-audited units:</p>
+<p>Within each donor kind <em>k</em>, take the <em>n_k</em> audited
+units from the audit:</p>
 <ul>
 <li><em>f_k</em> of them are in error;</li>
 <li><em>g_k</em> of those errors are partial, with sizes <em>s_1, …,
 s_{g_k}</em>.</li>
 </ul>
-<p>The donor kind is the sampling stratum. In Part C it is the HCC (20
-HCC failure rates and 10 family addition rates).</p>
+<p>The donor kind is the sampling stratum. In Part C, the donor kind is
+the HCC (20 HCC failure rates and 10 family addition rates).</p>
 <p>In each of 1,000 iterations:</p>
 <ol type="1">
 <li>Every non-audited unit of kind <em>k</em> is in error with
 probability <em>p_k = f_k/n_k</em>.</li>
-<li>Given an error, it is partial with probability <em>q_k =
+<li>Given an error, the unit is partial with probability <em>q_k =
 g_k/f_k</em>, with its size drawn uniformly from the audited partial
-sizes. Otherwise it is a whole error.</li>
+sizes. Otherwise, the error is whole.</li>
 <li>Audited units keep their own findings.</li>
 <li>The payment function is rerun for every unit, and the measures are
 summed.</li>
 </ol>
-<p>These two steps are the same as giving every unit the finding of a
-uniformly drawn audited donor of its kind. They only touch units that
-receive an error, so a 5-million-claim iteration takes milliseconds.</p>
+<p>Steps 1 and 2 are equivalent to giving every unit the finding of a
+uniformly drawn audited donor of its kind. These steps only touch units
+that receive an error, so a 5-million-claim iteration takes
+milliseconds.</p>
 <p>The estimate is the mean of the iteration rates, and the interval is
 their 2.5th and 97.5th percentiles. When every unit is audited, every
-iteration returns the exact true rate; this is tested. In Part D, all
-PDEs of the full population are simulated and the benefit is rerun for
-every beneficiary.</p>
+iteration returns the exact true rate (this property is tested). In Part
+D, all PDEs of the full population are simulated, and the benefit is
+rerun for every beneficiary.</p>
 <h3 id="the-parametric-rate-alternative">3.6 The parametric-rate
 alternative</h3>
 <p>The parametric version changes only one thing. Before each iteration,
@@ -437,17 +446,19 @@ audit:</p>
 <p>*p̃_k = Binomial(n_k, p_k)/n_k<em>, </em>q̃_k = Binomial(f_k,
 q_k)/f_k*</p>
 <p>Steps 1–4 then run with *p̃_k* and *q̃_k*. Each iteration therefore
-represents a different plausible audit outcome as well as a different
-assignment. Rates with no audited failures stay at zero: no failures are
-extrapolated to HCCs the audit never saw. Partial sizes are still drawn
-from the audited list.</p>
-<p>This is a parametric bootstrap of the rate parameters (Efron and
-Tibshirani 1993, ch. 6), applied inside the simulation. We call the two
-versions <strong>bootstrap simulation (fixed rates)</strong> and
-<strong>bootstrap simulation (parametric rates)</strong>. It is not a
-Bayesian bootstrap, and it needs no prior.</p>
+represents a different plausible audit outcome in addition to a
+different assignment. Rates with no audited failures stay at zero, so no
+failures are extrapolated to HCCs the audit never observed. Partial
+sizes are still drawn from the audited list.</p>
+<p>This version is a parametric bootstrap of the rate parameters (Efron
+and Tibshirani 1993, ch. 6) applied inside the simulation. This study
+calls the two versions <strong>bootstrap simulation (fixed
+rates)</strong> and <strong>bootstrap simulation (parametric
+rates)</strong>. The parametric version is not a Bayesian bootstrap and
+requires no prior.</p>
 <h3 id="outcomes">3.7 Outcomes</h3>
-<p>For each program, measure and method, over the 25 audit years:</p>
+<p>For each program, measure, and method, the following outcomes are
+calculated over the 25 audit years:</p>
 <ul>
 <li><strong>Coverage:</strong> the number of intervals containing the
 truth, and how many lie entirely above or entirely below it.</li>
@@ -456,21 +467,21 @@ percentage points of payments and in national dollars.</li>
 <li><strong>Point accuracy:</strong> the median point estimate, and the
 mean absolute and mean signed error relative to the true rate.</li>
 </ul>
-<p>For the audit-size question, we compare the parametric interval with
-the analytic interval from the same audit:</p>
+<p>To address the audit-size question, this study compares the
+parametric interval with the analytic interval from the same audit:</p>
 <ul>
-<li>the ratio estimator for Part C, PERM, EIPM and CERT;</li>
-<li>expansion for Part D, the analytic method that uses the same PDE
-audit.</li>
+<li>the ratio estimator for Part C, PERM, EIPM, and CERT;</li>
+<li>expansion for Part D (the analytic method that uses the same PDE
+audit).</li>
 </ul>
 <p>If interval width scales with 1/√<em>n</em>, the audit size at which
 the parametric method would match the analytic width is
 (<em>w_parametric / w_analytic</em>)² of the current audit.</p>
 <h2 id="results">4. Results</h2>
-<p>Table 2 gives, for each program, the gross rate’s median point
-estimate, median interval half-width and coverage under every method.
+<p>Table 2 provides, for each program, the median point estimate, median
+interval half-width, and coverage of the gross rate under every method.
 Figures 1 and 2 summarize width and coverage. National-dollar
-equivalents are in Appendix Table C1.</p>
+equivalents are provided in Appendix Table C1.</p>
 <p><strong>Table 2. Gross improper payment rate: median estimate, median
 95% interval half-width and coverage over 25 audit years</strong></p>
 <table style="width:100%;">
@@ -713,10 +724,10 @@ dashed line marks the nominal 95% (23.75 of 25).</figcaption>
 </figure>
 <h3 id="the-bootstrap-point-estimate-is-accurate">4.1 The bootstrap
 point estimate is accurate</h3>
-<p>Before turning to intervals, it is worth establishing what the
-bootstrap simulation does well. Its point estimate is at least as
-accurate as the best analytic estimator in every program: it ties in
-Part C and is more accurate in the other four (Table 3):</p>
+<p>Before evaluating intervals, it is important to establish what the
+bootstrap simulation does well. The bootstrap point estimate is at least
+as accurate as the best analytic estimator in every program. It ties in
+Part C and is more accurate in the other four programs (Table 3):</p>
 <table>
 <colgroup>
 <col style="width: 25%" />
@@ -765,21 +776,23 @@ Part C and is more accurate in the other four (Table 3):</p>
 </tr>
 </tbody>
 </table>
-<p>The Part D gap reflects the benefit. A PDE error changes Medicare’s
-liability by an amount that depends on where the beneficiary sits in the
-benefit, and only rerunning the benefit captures it. Expansion’s
-stratum-average rates run 5.7% low.</p>
-<p>The fixed and parametric versions give the same point estimate to
-within 0.2 percentage points of relative error, because the binomial
-redraw is centered on the audited rates. Signed errors are within ±1% of
-the truth for the bootstrap in every program except EIPM.</p>
-<p>In EIPM every method runs 5–8% low. Technically improper errors are
+<p>The Part D difference reflects the benefit design. A PDE error
+changes Medicare’s liability by an amount that depends on where the
+beneficiary sits in the benefit, and only rerunning the benefit captures
+this effect. The stratum-average rates used by expansion run 5.7%
+low.</p>
+<p>The fixed and parametric versions produce the same point estimate to
+within 0.2 percentage points of relative error because the binomial
+redraw is centered on the audited rates. Signed errors for the bootstrap
+are within ±1% of the truth in every program except EIPM.</p>
+<p>In EIPM, every method runs 5–8% low. Technically improper errors are
 rare (about 9 per audit) and large (the whole APTC), so in most audit
-years the sample holds fewer than the expected number and the median
+years the sample contains fewer than the expected number, and the median
 estimate falls below the mean. This is a small-sample property of the
-data, not of any one method. The bootstrap’s further 2–3% shortfall in
-EIPM comes from moving a monetary error’s income ratio to an application
-at a different point of the APTC schedule (Appendix B.4).</p>
+data (as opposed to a property of any one method). The further 2–3%
+shortfall for the bootstrap in EIPM comes from moving the income ratio
+of a monetary error to an application at a different point of the APTC
+schedule (Appendix B.4).</p>
 <p><strong>Table 3. Accuracy of the gross point estimate: average
 absolute error, as % of the true rate (average signed
 error)</strong></p>
@@ -848,12 +861,13 @@ error)</strong></p>
 <h3 id="the-bootstrap-interval-problem">4.2 The bootstrap interval
 problem</h3>
 <p>The fixed-rate bootstrap interval is far too narrow in every program.
-Its median half-width is 5% to 21% of the analytic interval’s from the
-same audit (Table 4), and it contains the true gross rate in only 3 to
-10 of 25 audit years (Figure 2). The misses fall on both sides about
-equally: in Part C, 12 intervals lie entirely above the truth and 10
-entirely below. So the problem is not bias. The interval is centered
-correctly and is simply too short.</p>
+Its median half-width is 5% to 21% of the half-width of the analytic
+interval from the same audit (Table 4), and it contains the true gross
+rate in only 3 to 10 of 25 audit years (Figure 2). The misses fall on
+both sides about equally. For example, in Part C, 12 intervals lie
+entirely above the truth and 10 lie entirely below. These results show
+that the problem is not bias. Rather, the interval is centered correctly
+and is simply too short.</p>
 <p><strong>Table 4. The fixed-rate interval problem and the parametric
 alternative (gross rate)</strong></p>
 <table>
@@ -932,21 +946,23 @@ alternative (gross rate)</strong></p>
 </tr>
 </tbody>
 </table>
-<p>The cause is structural. Write the true sampling variance of an
-estimated improper total <em>T̂</em> by the law of total variance,
+<p>The cause is structural. The true sampling variance of an estimated
+improper total <em>T̂</em> can be written by the law of total variance,
 conditioning on the audit <em>A</em>:</p>
 <p>Var(<em>T̂</em>) = E[Var(<em>T̂</em> | <em>A</em>)] + Var(E[<em>T̂</em>
 | <em>A</em>]).</p>
 <p>The fixed-rate bootstrap holds the audit, and therefore the rates
 <em>p_k</em> and <em>q_k</em>, fixed. Its iterations vary only in which
-unaudited units receive errors. Its spread therefore estimates only the
-first term, the <em>reassignment</em> variance. That term grows with the
-population size <em>N</em>, roughly <em>N p(1 − p)</em> times the mean
-squared error size. The second term is the variance of the rates
-themselves across possible audits, the term a confidence interval exists
-to express. It grows with <em>N²/n</em>.</p>
+unaudited units receive errors. As a result, its spread estimates only
+the first term (the <em>reassignment</em> variance). This term grows
+with the population size <em>N</em>, roughly as <em>N p(1 − p)</em>
+times the mean squared error size. The second term is the variance of
+the rates themselves across possible audits, which is the term a
+confidence interval exists to express. This term grows with
+<em>N²/n</em>.</p>
 <p>The ratio of the two standard deviations is therefore roughly
-√(<em>n</em>/<em>N</em>), and the observed ratios follow it:</p>
+√(<em>n</em>/<em>N</em>), and the observed ratios follow this
+pattern:</p>
 <table>
 <thead>
 <tr class="header">
@@ -986,28 +1002,29 @@ to express. It grows with <em>N²/n</em>.</p>
 <p>The ratio is higher than √(<em>n</em>/<em>N</em>) in three
 programs:</p>
 <ul>
-<li><strong>CERT:</strong> inpatient claims are sampled at 22%, which
-inflates the reassignment term there.</li>
-<li><strong>PERM and Part D:</strong> error sizes vary more, because
+<li><strong>CERT:</strong> Inpatient claims are sampled at 22%, which
+inflates the reassignment term.</li>
+<li><strong>PERM and Part D:</strong> Error sizes vary more because
 whole payments of very different amounts can be in error and the benefit
 is nonlinear.</li>
 </ul>
-<p>None comes close to the analytic width.</p>
-<p>More iterations do not help. They estimate the reassignment spread
-more precisely; they do not add the missing term. The interval also gets
-<em>narrower</em> as the population grows relative to the audit, the
-opposite of what a sampling interval should do. A larger program with
-the same audit would report greater precision than a smaller one.</p>
+<p>None of these programs comes close to the analytic width.</p>
+<p>More iterations do not solve this problem. Additional iterations
+estimate the reassignment spread more precisely but do not add the
+missing term. In addition, the interval becomes <em>narrower</em> as the
+population grows relative to the audit, which is the opposite of what a
+sampling interval should do. A larger program with the same audit would
+report greater precision than a smaller one.</p>
 <h3 id="the-parametric-alternative">4.3 The parametric alternative</h3>
 <p>The parametric version adds the missing term directly. Before each
 iteration, each rate is redrawn from its binomial sampling distribution
 given the audit (Section 3.6), so the iteration distribution spans
-plausible audit outcomes as well as plausible assignments.</p>
-<p>The change restores coverage of the gross rate in every program: 24,
-25, 24, 23 and 25 of 25 audit years for Part C, Part D, PERM, EIPM and
-CERT. That is 121 of 125 audit-years in all (96.8%), against 30 of 125
-(24%) with fixed rates. No parametric interval for the gross rate lay
-entirely above the truth; the four misses were below.</p>
+plausible audit outcomes in addition to plausible assignments.</p>
+<p>This change restores coverage of the gross rate in every program: 24,
+25, 24, 23, and 25 of 25 audit years for Part C, Part D, PERM, EIPM, and
+CERT. In total, this is 121 of 125 audit-years (96.8%), as opposed to 30
+of 125 (24%) with fixed rates. No parametric interval for the gross rate
+lay entirely above the truth, and all four misses were below.</p>
 <p>The parametric intervals are also narrower than the analytic
 intervals from the same audit (Table 4, Figure 1):</p>
 <table>
@@ -1040,8 +1057,8 @@ intervals from the same audit (Table 4, Figure 1):</p>
 </tr>
 </tbody>
 </table>
-<p>They achieved equal or higher coverage than the analytic intervals in
-every program:</p>
+<p>The parametric intervals also achieved equal or higher coverage than
+the analytic intervals in every program:</p>
 <table>
 <thead>
 <tr class="header">
@@ -1080,34 +1097,37 @@ every program:</p>
 </table>
 <p>In dollars (Appendix Table C1):</p>
 <ul>
-<li><strong>PERM:</strong> the parametric interval is ±$0.90B around a
-median $8.46B, against ±$1.13B for the ratio estimator.</li>
-<li><strong>CERT:</strong> ±$1.24B around $28.81B, against ±$1.57B.</li>
-<li><strong>Part C:</strong> ±$3.57B around $23.62B, against
+<li><strong>PERM:</strong> The parametric interval is ±$0.90B around a
+median of $8.46B, as opposed to ±$1.13B for the ratio estimator.</li>
+<li><strong>CERT:</strong> ±$1.24B around $28.81B, as opposed to
+±$1.57B.</li>
+<li><strong>Part C:</strong> ±$3.57B around $23.62B, as opposed to
 ±$4.02B.</li>
 </ul>
-<p>The width gain has two sources:</p>
+<p>The gain in width has two sources:</p>
 <ul>
-<li><strong>The population’s known structure.</strong> The simulation
-reruns the payment function over every unit’s known payment, HCCs,
-benefit position or APTC inputs. It is therefore a model-assisted
-estimator that uses the full population’s auxiliary information, where
-the ratio estimator uses only total payments.</li>
-<li><strong>The partial-size list is held fixed.</strong> The audited
-list of partial error sizes is reused rather than resampled, which
-leaves out some uncertainty in error size. The coverage results suggest
-this omission is small for the gross rate, but it is a reason to extend
-the method (Section 6).</li>
+<li><strong>The known structure of the population.</strong> The
+simulation reruns the payment function over the known payment, HCCs,
+benefit position, or APTC inputs of every unit. The simulation is
+therefore a model-assisted estimator that uses the auxiliary information
+of the full population, whereas the ratio estimator uses only total
+payments.</li>
+<li><strong>The list of partial sizes is held fixed.</strong> The
+audited list of partial error sizes is reused (as opposed to resampled),
+which leaves out some uncertainty in error size. The coverage results
+suggest that this omission is small for the gross rate, but it is a
+reason to extend the method (Section 6).</li>
 </ul>
-<p>The Part D gain is largest and the least certain. The only analytic
-method on the same PDE audit is expansion. Its delta-method interval is
-wide and its point estimate runs low, so the 37% understates what a
-well-specified analytic interval on that audit could achieve.</p>
+<p>The Part D gain is the largest and the least certain. The only
+analytic method on the same PDE audit is expansion. Its delta-method
+interval is wide and its point estimate runs low, so the 37% likely
+understates what a well-specified analytic interval on that audit could
+achieve.</p>
 <h3 id="components-and-sparse-measures">4.4 Components and sparse
 measures</h3>
-<p>Coverage of every reported measure is in Table 5. For the large
-components, the parametric version matched or exceeded the analytic
-methods:</p>
+<p>Table 5 provides the coverage of every reported measure. For the
+large components, the parametric version matched or exceeded the
+analytic methods:</p>
 <p><strong>Table 5. Coverage of every measure (truth inside the 95%
 interval, out of 25 audit years; above / below)</strong></p>
 <table>
@@ -1365,8 +1385,8 @@ interval, out of 25 audit years; above / below)</strong></p>
 <li><strong>CERT:</strong> overpayments and net 25/25, and every claim
 type 24–25/25.</li>
 </ul>
-<p>The exceptions are the sparse measures, those built from a handful of
-audited errors:</p>
+<p>The exceptions are the sparse measures (those built from a handful of
+audited errors):</p>
 <table>
 <thead>
 <tr class="header">
@@ -1409,60 +1429,62 @@ audited errors:</p>
 </tbody>
 </table>
 <p>Every method undercovers these measures, and the misses fall mainly
-below: the interval lies under the truth in audit years whose sample
-happened to contain few of the rare errors. This is the zero-inflated,
-right-skewed regime in which normal-theory intervals are known to fail
-(Kvanli et al. 1998; Hesterberg 2015). The parametric bootstrap does not
-escape it, because a binomial redraw centered on a low audited rate
-stays low. The gross rate is protected because the sparse component is a
-small share of it.</p>
+below the truth. The interval lies under the truth in audit years whose
+sample happened to contain few of the rare errors. This is the
+zero-inflated, right-skewed setting in which normal-theory intervals are
+known to fail (Kvanli et al. 1998; Hesterberg 2015). The parametric
+bootstrap does not avoid this problem because a binomial redraw centered
+on a low audited rate remains low. The gross rate is protected because
+the sparse component is a small share of it.</p>
 <h3 id="regression-with-beneficiary-variables">4.5 Regression with
 beneficiary variables</h3>
 <p>The regression estimator fits a least-squares model within each
-stratum on the ratio estimator’s audit, using basic beneficiary
-variables and the amount paid. It then predicts every population unit
-and adds the weighted audit residuals. The extra variables changed
-little: - <strong>Part C, PERM, EIPM and CERT:</strong> coverage of the
-gross rate was 23, 23, 23 and 24 of 25. Width and point accuracy were
-within a few percent of the ratio estimator’s. - <strong>Part
-D:</strong> drug cost and reaching the catastrophic phase explain part
-of the beneficiary payment error, and the interval narrowed from ±0.67
-(ratio) to ±0.58 points. But coverage fell to 15 of 25, and the point
-estimate ran 7.8% high on average.</p>
+stratum on the audit used by the ratio estimator, using basic
+beneficiary variables and the amount paid. It then predicts every
+population unit and adds the weighted audit residuals. The additional
+variables changed little: - <strong>Part C, PERM, EIPM, and
+CERT:</strong> Coverage of the gross rate was 23, 23, 23, and 24 of 25.
+Width and point accuracy were within a few percent of those of the ratio
+estimator. - <strong>Part D:</strong> Drug cost and reaching the
+catastrophic phase explain part of the beneficiary payment error, and
+the interval narrowed from ±0.67 (ratio) to ±0.58 points. However,
+coverage fell to 15 of 25, and the point estimate ran 7.8% high on
+average.</p>
 <p>With few large errors in a 990-beneficiary audit, a better-fitting
-model leaves residuals that understate the true sampling variance: the
-overfitting risk of model-assisted estimation with small samples
+model leaves residuals that understate the true sampling variance. This
+is the overfitting risk of model-assisted estimation with small samples
 (McConville et al. 2020). In PERM, all but the largest-payment
 fee-for-service stratum had too few audited errors for a model and used
-the intercept-only fallback, which equals expansion within the
+the intercept-only fallback, which is equivalent to expansion within the
 stratum.</p>
 <p>Across the five programs, regression covered the true gross rate in
-108 of 125 audit years (86.4%), against 111 for the ratio estimator and
-121 for the parametric bootstrap.</p>
+108 of 125 audit years (86.4%), as opposed to 111 for the ratio
+estimator and 121 for the parametric bootstrap.</p>
 <h2 id="discussion">5. Discussion</h2>
 <h3 id="principal-findings">5.1 Principal findings</h3>
 <p>In five synthetic populations designed after the five CMS improper
-payment measurements, audit-finding bootstrap simulation gave point
-estimates as accurate as, or more accurate than, the expansion, ratio
-and regression estimators. Its fixed-rate interval, however, was invalid
-in every program, covering the truth in 24% of audit years where 95% was
-intended. The failure is not a tuning problem. Because the audit is
+payment measurements, audit-finding bootstrap simulation produced point
+estimates as accurate as, or more accurate than, the expansion, ratio,
+and regression estimators. However, its fixed-rate interval was invalid
+in every program, covering the truth in 24% of audit years when 95% was
+intended. This failure is not a tuning problem. Because the audit is
 never resampled, the interval measures only how the audited rates
-scatter across the population, not how much those rates would change
-with a different audit. Its width shrinks toward zero as the population
-grows. Any production use of a fixed-rate audit-finding simulation for
-PIIA intervals should therefore be reviewed.</p>
+scatter across the population (as opposed to how much those rates would
+change with a different audit). Its width also shrinks toward zero as
+the population grows. Given these findings, any production use of a
+fixed-rate audit-finding simulation for PIIA intervals should be
+reviewed.</p>
 <p>Redrawing the rates from their binomial sampling distribution before
-each iteration fixes the interval with a change of a few lines of code
-and no additional review. It covered the true gross rate in 96.8% of
-audit years. Its intervals were 11–21% narrower than the ratio
-estimator’s in four programs, and much narrower than expansion’s in Part
-D.</p>
+each iteration corrects the interval with a change of a few lines of
+code and no additional review. This version covered the true gross rate
+in 96.8% of audit years. Its intervals were 11–21% narrower than those
+of the ratio estimator in four programs, and much narrower than those of
+expansion in Part D.</p>
 <h3 id="recommendation">5.2 Recommendation</h3>
-<p>We recommend that CMS improper payment measurements adopt
+<p>This study recommends that CMS improper payment measurements adopt
 <strong>bootstrap simulation with parametric rates</strong> for the
 gross improper payment rate and its interval, with the analytic ratio
-interval reported alongside during a transition period. The
+interval reported alongside it during a transition period. This
 recommendation rests on three findings:</p>
 <ol type="1">
 <li><strong>Validity:</strong> coverage at the nominal level for the
@@ -1472,10 +1494,11 @@ methods studied.</li>
 <li><strong>Precision:</strong> narrower intervals than the analytic
 methods from the same audit.</li>
 </ol>
-<p>Precision is where the cost case lies. A narrower interval at the
-same coverage means the current precision can be reached with fewer
+<p>The cost case rests on precision. A narrower interval at the same
+coverage means that the current precision can be reached with fewer
 records reviewed. If width scales with 1/√<em>n</em>, the parametric
-method would match the analytic interval’s current width with about:</p>
+method would match the current width of the analytic interval with
+about:</p>
 <table>
 <thead>
 <tr class="header">
@@ -1507,19 +1530,19 @@ method would match the analytic interval’s current width with about:</p>
 </tr>
 </tbody>
 </table>
-<p>That is a 20–38% reduction in medical record and eligibility reviews,
-which dominate the cost of each measurement. Part D’s projected
-reduction is larger still but rests on a weaker comparator (Section
-4.3).</p>
-<p>These figures are projections, not demonstrated results, and they
-apply to the gross rate. Two conditions should precede any
+<p>This represents a 20–38% reduction in medical record and eligibility
+reviews, which dominate the cost of each measurement. The projected
+reduction for Part D is larger still but rests on a weaker comparator
+(Section 4.3).</p>
+<p>These figures are projections (as opposed to demonstrated results),
+and they apply only to the gross rate. Two conditions should precede any
 reduction:</p>
 <ul>
 <li><strong>Confirm coverage at the reduced size.</strong> Coverage must
 be confirmed directly at the smaller audit sizes (Section 6).</li>
 <li><strong>Protect sparse components.</strong> Components that CMS
-reports separately and that rest on few errors (underpayments,
-technically improper payments) need their own precision check, because
+reports separately and that rest on few errors (underpayments and
+technically improper payments) need their own precision check because
 their coverage was already below nominal under every method.</li>
 </ul>
 <h3 id="implementation">5.3 Implementation</h3>
@@ -1527,12 +1550,13 @@ their coverage was already below nominal under every method.</li>
 version. It adds two binomial draws per stratum per iteration, and at
 1,000 iterations it ran in seconds (EIPM, Part C) to minutes (CERT, 5.3
 million claims) on a two-core machine.</p>
-<p>The method is fully specified by the audit and the payment function,
-so it can be written into a Sampling and Estimation Methodology Plan and
-tested by an Inspector General with the same census check used here:
-auditing every unit must return the true rate exactly. Rates with no
-audited failures stay at zero, a conservative choice that keeps the
-simulation from inventing errors the audit never observed.</p>
+<p>The method is fully specified by the audit and the payment function.
+It can therefore be written into a Sampling and Estimation Methodology
+Plan and tested by an Inspector General with the same census check used
+in this study: auditing every unit must return the true rate exactly.
+Rates with no audited failures stay at zero. This is a conservative
+choice that keeps the simulation from inventing errors the audit never
+observed.</p>
 <h3 id="limitations">5.4 Limitations</h3>
 <ol type="1">
 <li><strong>Number of audit years.</strong> Coverage was estimated from
@@ -1541,102 +1565,107 @@ points, so 23/25 and 25/25 are not statistically distinguishable. The
 consistency across five programs and 22 measures is the stronger
 evidence, but a larger replication is needed.</li>
 <li><strong>Synthetic populations.</strong> The populations are
-synthetic and calibrated only to public aggregates:
+synthetic and calibrated only to public aggregates. It should be clearly
+noted that:
 <ul>
-<li>Error mechanisms, partial-error shares and the independence of
+<li>Error mechanisms, partial-error shares, and the independence of
 errors from payment size within strata are assumptions.</li>
-<li>Strata the agencies do not publish (EIPM, Part C IPM, CERT
+<li>Strata the agencies do not publish (EIPM, Part C IPM, and CERT
 service-level strata) are illustrative.</li>
 <li>MAC jurisdictions and the CERT Part A-to-B rebilling adjustment are
 not modeled.</li>
 </ul></li>
-<li><strong>Perfect review.</strong> Review is assumed error-free and
-final, with no appeals.</li>
-<li><strong>Part D design differences.</strong> Part D’s analytic
+<li><strong>Perfect review.</strong> Review is assumed to be error-free
+and final, with no appeals.</li>
+<li><strong>Part D design differences.</strong> The Part D analytic
 comparators use a different audit (990 beneficiaries) or a different
-interval construction (delta method), so its comparisons mix design and
-estimator.</li>
+interval construction (delta method), so the Part D comparisons mix
+design and estimator.</li>
 <li><strong>Fixed error sizes.</strong> The parametric version does not
-resample the distribution of error sizes. Coverage suggests this matters
-little for the gross rate, but it may contribute to the undercoverage of
-sparse components.</li>
-<li><strong>Scope.</strong> The study addresses two-sided PIIA rate
+resample the distribution of error sizes. Coverage suggests that this
+matters little for the gross rate, but it may contribute to the
+undercoverage of sparse components.</li>
+<li><strong>Scope.</strong> This study addresses two-sided PIIA rate
 intervals. Recovery uses rely on one-sided lower bounds, which were not
 tested.</li>
 </ol>
 <h2 id="future-research">6. Future research</h2>
 <ol type="1">
 <li><strong>Optimal audit sizes.</strong> The audit-size figures in
-Table 4 are projections from a 1/√<em>n</em> scaling. The direct test is
-to rerun each program’s design at reduced audit sizes (for example 50%,
-65% and 80% of current) with at least 200 audit years. This would find
-the smallest audit at which the parametric interval still covers the
-truth in 95% of audit years for the gross rate and for the components
-CMS reports. Allocation should be reconsidered at the same time. Neyman
-allocation minimizes the variance of the analytic estimator, not of the
-simulation. The cost of review differs by stratum (an inpatient record
-costs more to review than a Part B claim), so cost-weighted allocation
-(<em>n_h</em> ∝ <em>N_h S_h / √c_h</em>) belongs in the same study.</li>
+Table 4 are projections from a 1/√<em>n</em> scaling. Future research
+should test these projections directly by rerunning each program’s
+design at reduced audit sizes (for example, 50%, 65%, and 80% of
+current) with at least 200 audit years. This would identify the smallest
+audit at which the parametric interval still covers the truth in 95% of
+audit years, both for the gross rate and for the components CMS reports.
+Allocation should be reconsidered at the same time. Neyman allocation
+minimizes the variance of the analytic estimator (as opposed to the
+variance of the simulation). In addition, the cost of review differs by
+stratum (for example, an inpatient record costs more to review than a
+Part B claim), so cost-weighted allocation (<em>n_h</em> ∝ <em>N_h S_h /
+√c_h</em>) belongs in the same study.</li>
 <li><strong>Model + simulation alternatives.</strong> The parametric
-version models only the rates. Several extensions are natural:
+version models only the rates. Future research should consider several
+natural extensions:
 <ul>
 <li><strong>Hierarchical Bayesian error models.</strong> Beta-binomial
-rates pooled across strata, HCCs or states would give zero-failure HCCs
-and small strata a plausible nonzero rate instead of a fixed zero. Their
-posterior predictive draws would replace the binomial redraw.</li>
+rates pooled across strata, HCCs, or states would give zero-failure HCCs
+and small strata a plausible nonzero rate (as opposed to a fixed zero).
+Their posterior predictive draws would replace the binomial redraw.</li>
 <li><strong>Unit-level error models.</strong> Logistic or zero-inflated
-regression of error probability and error size on unit features (payment
-amount, provider type, drug class, HCC count) would feed the simulation.
-This model-assisted microsimulation would use the full population’s
-auxiliary data and could narrow intervals further where the features
-predict error.</li>
+regression of error probability and error size on unit features (for
+example, payment amount, provider type, drug class, or HCC count) would
+feed the simulation. This model-assisted microsimulation would use the
+auxiliary data of the full population and could narrow intervals further
+where the features predict error.</li>
 <li><strong>Resampling the size distribution.</strong> Partial sizes
-could be resampled with replacement within each iteration, so that
+could be resampled with replacement within each iteration so that
 uncertainty in error size enters alongside uncertainty in the
 rates.</li>
 <li><strong>Calibrated intervals.</strong> BCa or double-bootstrap
 calibration could be applied to the iteration distribution to correct
-remaining tail imbalance in sparse components (Efron 1987; Hall
+any remaining tail imbalance in sparse components (Efron 1987; Hall
 1988).</li>
 </ul></li>
-<li><strong>Settings beyond the PIIA national rate.</strong> The study
+<li><strong>Settings beyond the PIIA national rate.</strong> This study
 can be extended to:
 <ul>
 <li>state-level PERM eligibility rates, which carry federal match
-consequences from FY 2030 (P.L. 119-21);</li>
-<li>State-based Exchange measurement from 2027;</li>
+consequences beginning in FY 2030 (P.L. 119-21);</li>
+<li>State-based Exchange measurement beginning in 2027;</li>
 <li>contract-level RADV, where the interval becomes a lower bound for
 recovery and one-sided coverage matters.</li>
 </ul></li>
 <li><strong>Validation on real audits.</strong> Under an appropriate
 data use agreement, the synthetic results can be checked against
-held-out real audit samples, in particular the share of partial errors
-and whether error probability depends on payment size, which this study
-assumes away within strata.</li>
+held-out real audit samples. In particular, future research should
+examine the share of partial errors and whether error probability
+depends on payment size, which this study assumes away within
+strata.</li>
 </ol>
 <h2 id="conclusion">7. Conclusion</h2>
 <p>On the question of comparative accuracy, the answer is consistent
 across the five programs studied. In every program, audit-finding
 bootstrap simulation with fixed rates produces point estimates as
-accurate as the analytic estimators, but intervals far too narrow to be
-valid. The cause is structural: the audit is never resampled, so the
-interval omits the sampling error of the rates. Redrawing the rates from
-their binomial sampling distribution before each iteration restores
-nominal coverage for the gross rate in every program. Those intervals
+accurate as the analytic estimators but intervals far too narrow to be
+valid. The cause is structural. Because the audit is never resampled,
+the interval omits the sampling error of the rates. Redrawing the rates
+from their binomial sampling distribution before each iteration restores
+nominal coverage for the gross rate in every program. These intervals
 are also narrower than the analytic intervals from the same audit in all
-five programs: 11–21% narrower than the ratio estimator in four, and
-much narrower than expansion in Part D. We recommend parametric-rate
-bootstrap simulation for improper payment rate estimation. Its precision
-gain gives CMS room to reduce audit sizes, and with them review costs,
-without losing accuracy, subject to direct confirmation at the reduced
-sizes.</p>
+five programs (11–21% narrower than the ratio estimator in four
+programs, and much narrower than expansion in Part D). This study
+recommends parametric-rate bootstrap simulation for improper payment
+rate estimation. The gain in precision gives CMS room to reduce audit
+sizes (and with them, review costs) without losing accuracy, subject to
+direct confirmation at the reduced sizes.</p>
 <h2 id="data-and-code-availability">Data and code availability</h2>
 <p>All code, configuration, synthetic populations (or their SHA-256
-manifests where a population is too large to commit), results and the
-scripts that build every table and figure in this paper are in the
-public repository <a href="https://github.com/andrewcistola/improper-payment-estimation-accuracy">andrewcistola/improper-payment-estimation-accuracy</a>.
+manifests where a population is too large to commit), results, and the
+scripts that build every table and figure in this paper are available in
+the public repository <a href="https://github.com/andrewcistola/improper-payment-estimation-accuracy">andrewcistola/improper-payment-estimation-accuracy</a>.
 The repository contains no protected health information, no unit-level
-data from any source and no non-public CMS material.</p>
+data from any source, and no non-public CMS material.</p>
 <h2 id="funding-conflicts-of-interest-and-disclaimer">Funding, conflicts
 of interest and disclaimer</h2>
 <p>[To be completed by the author before submission: funding source,
@@ -1719,38 +1748,39 @@ ed. Springer.</li>
 </ul>
 <h2 id="appendix-a.-data-process">Appendix A. Data process</h2>
 <p>Every number in this study comes from synthetic populations built
-from stated probability distributions. No protected health information,
-no unit-level data from any source and no non-public CMS material
-(contractor methodology plans, internal error data) were used.
-Populations are calibrated only to public aggregate results: FY 2025 HHS
-Agency Financial Report figures and the program-specific CMS result
-pages cited in Appendix B.</p>
+from stated probability distributions. This study used no protected
+health information, no unit-level data from any source, and no
+non-public CMS material (for example, contractor methodology plans or
+internal error data). Populations are calibrated only to public
+aggregate results, namely the FY 2025 HHS Agency Financial Report
+figures and the program-specific CMS result pages cited in Appendix
+B.</p>
 <h3 id="a.1-pipeline">A.1 Pipeline</h3>
 <p>Each program folder has two stages, run by one YAML-driven runner
 (<code>ipsim</code>):</p>
 <ol type="1">
 <li><strong><code>errors/</code></strong> builds an error-free
-population, applies fabricated errors, records the truth and checks it
+population, applies fabricated errors, records the truth, and checks it
 against public figures.
 <ul>
 <li>Population. Units with their payment amounts and the fields each
 payment function needs: risk scores and HCCs, PDEs and benefit phases,
-APTC inputs, claims.</li>
-<li>Errors. Each unit’s candidate error is drawn first, then turned on
-with a stated probability. Where a public aggregate is used as a target,
-the probability comes from one closed-form multiplier: the target
-dollars divided by the expected dollars of the candidates. No iterative
-tuning is used.</li>
+APTC inputs, and claims.</li>
+<li>Errors. The candidate error for each unit is drawn first and then
+turned on with a stated probability. Where a public aggregate is used as
+a target, the probability comes from one closed-form multiplier (the
+target dollars divided by the expected dollars of the candidates). No
+iterative tuning is used.</li>
 <li>Truth. The true improper amount <em>y</em> and payment <em>x</em>
-for every unit, and the true over, under, gross and net totals.</li>
+for every unit, and the true over, under, gross, and net totals.</li>
 <li>Checks. Each population is compared with the public aggregates it is
 calibrated to. Results are written to <code>checks.json</code>.</li>
 </ul></li>
 <li><strong><code>estimation/</code></strong> draws the audits and
 estimates with each method.
 <ul>
-<li>Frame and design. Strata, the allocation (Neyman where stated), and
-the sample size.</li>
+<li>Frame and design. The strata, the allocation (Neyman where stated),
+and the sample size.</li>
 <li>Audits. 25 independent production audits (“audit years”).</li>
 <li>Estimators. Expansion and ratio, with normal 95% intervals, written
 once in <code>shared/sql/lib/02_estimators.sql</code> and tested against
@@ -1766,8 +1796,8 @@ per audit year, run by the shared loop in
 <li>Scoring against the truth.</li>
 </ul></li>
 </ol>
-<p><code>shared/report.yaml</code> joins every estimate to the truth
-(<code>shared/results/report/by_scenario.csv</code>,
+<p>The file <code>shared/report.yaml</code> joins every estimate to the
+truth (<code>shared/results/report/by_scenario.csv</code>,
 <code>by_audit_year.parquet</code>).
 <code>manuscripts/scripts/build_tables.py</code> produces every table
 and figure in this manuscript from the parametric-rate results
@@ -1782,15 +1812,15 @@ come from PCG64 generators seeded by
 <code>SeedSequence([scenario seed, audit year])</code>.</li>
 <li><strong>Exact arithmetic.</strong> Money is stored as
 <code>DECIMAL</code>, and floating-point sums run in a fixed order.</li>
-<li><strong>Identical reruns.</strong> Reruns give byte-identical files
-at any thread count. This is tested in
+<li><strong>Identical reruns.</strong> Reruns produce byte-identical
+files at any thread count. This is tested in
 <code>shared/tests/test_determinism.py</code>, and
 <code>manifest.json</code> records a SHA-256 hash for every output.</li>
 <li><strong>Payment functions.</strong> Each program’s numpy payment
 function is tested to reproduce the SQL improper amount to the cent for
-every unit when given that unit’s own audit finding. A census audit is
-also tested: when every unit is audited, both bootstrap versions must
-return the exact true rates
+every unit when given that unit’s own audit finding. In addition, a
+census audit is tested. When every unit is audited, both bootstrap
+versions must return the exact true rates
 (<code>shared/tests/test_simulation.py</code>).</li>
 </ul>
 <h3 id="a.3-scale">A.3 Scale</h3>
@@ -1829,9 +1859,9 @@ return the exact true rates
 synthetic payments × <em>w</em>.</p>
 <h3 id="a.4-estimands-and-netting">A.4 Estimands and netting</h3>
 <ul>
-<li><strong>Netting.</strong> Errors are netted within the payment unit
-first: the enrollee (Part C), the beneficiary (Part D), the payment
-(PERM), the application (EIPM) and the claim (CERT).</li>
+<li><strong>Netting.</strong> Errors are first netted within the payment
+unit (the enrollee for Part C, the beneficiary for Part D, the payment
+for PERM, the application for EIPM, and the claim for CERT).</li>
 <li><strong>Measures.</strong>
 <ul>
 <li>Over = Σ max(<em>y</em>, 0)</li>
@@ -1839,18 +1869,18 @@ first: the enrollee (Part C), the beneficiary (Part D), the payment
 <li>Gross = over + under</li>
 <li>Net = over − under</li>
 </ul></li>
-<li><strong>Rates.</strong> Each total is estimated in dollars with its
-interval first, then divided by the known total payments
+<li><strong>Rates.</strong> Each total is first estimated in dollars
+with its interval and then divided by the known total payments
 <em>X</em>.</li>
 <li><strong>Overpayment-only programs.</strong> PERM and EIPM have only
 overpayments, so gross = over = net. Their components are reported
-instead: eligibility and claims for PERM, technically improper and
-monetary for EIPM.</li>
-<li><strong>Analytic estimators.</strong> These estimate the rate
-directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio) or <em>[Σ_U ŷ +
-Σ_s w (y − ŷ)] / X</em> (regression, with models fit within strata),
-using stratified-SRS variance formulas with finite population correction
-on <em>y</em> or on the residuals.</li>
+instead (eligibility and claims for PERM; technically improper and
+monetary for EIPM).</li>
+<li><strong>Analytic estimators.</strong> The analytic estimators
+estimate the rate directly as *T̂_y / X* (expansion), *T̂_y / T̂_x* (ratio)
+or <em>[Σ_U ŷ + Σ_s w (y − ŷ)] / X</em> (regression, with models fit
+within strata), using stratified-SRS variance formulas with finite
+population correction on <em>y</em> or on the residuals.</li>
 </ul>
 <h3 id="a.5-bootstrap-simulation-step-by-step">A.5 Bootstrap simulation,
 step by step</h3>
@@ -1861,7 +1891,7 @@ stratum, or the HCC for Part C), from the <em>n</em> audited units:
 <ul>
 <li><em>f</em> = how many are in error;</li>
 <li><em>g</em> = how many of those errors are partial;</li>
-<li>the list of audited partial sizes (taints, income ratios or HCC
+<li>the list of audited partial sizes (taints, income ratios, or HCC
 losses).</li>
 </ul></li>
 <li><strong>Parametric rates only.</strong> Redraw <em>p</em> =
@@ -1872,20 +1902,21 @@ with probability <em>p</em>, drawn as a Bernoulli process over the unit
 list.</li>
 <li><strong>Partial or whole.</strong> Each error is partial with
 probability <em>q</em>, and its size is drawn uniformly from the audited
-partial list. Otherwise it is a whole error: the full payment, or the
-full HCC coefficient.</li>
+partial list. Otherwise, it is a whole error (the full payment or the
+full HCC coefficient).</li>
 <li><strong>Audited units</strong> keep their own findings.</li>
-<li><strong>Rerun the payment function</strong> for every unit: the risk
-score × county rate, the Part D benefit, APTC, or claim × taint. Net per
-unit, then sum to over, under, gross and net, and divide by
-<em>X</em>.</li>
+<li><strong>Rerun the payment function</strong> for every unit (the risk
+score × county rate, the Part D benefit, APTC, or claim × taint). Errors
+are netted per unit, summed to over, under, gross, and net, and divided
+by <em>X</em>.</li>
 </ol>
 <p>The estimate is the mean of the 1,000 iteration rates. The interval
 runs from the 2.5th to the 97.5th percentile of those rates.</p>
 <h2 id="appendix-b.-program-designs-and-assumptions">Appendix B. Program
 designs and assumptions</h2>
-<p>Values marked <em>illustrative</em> are not published by CMS. They
-are set to plausible levels and labeled as such in the configs.</p>
+<p>Values marked <em>illustrative</em> are not published by CMS. These
+values are set to plausible levels and labeled as such in the
+configs.</p>
 <h3 id="b.1-medicare-part-c-medicare-advantage-risk-adjustment">B.1
 Medicare Part C (Medicare Advantage risk adjustment)</h3>
 <p><strong>Population</strong> (330,253 enrollees × 100):</p>
@@ -1901,23 +1932,23 @@ payments subject to risk adjustment.</li>
 <ul>
 <li>HCCs not supported by the record: deleted, or moved down the
 hierarchy (severe to mild).</li>
-<li>Missing documentation: every coded HCC is lost.</li>
-<li>HCCs supported by the record but not coded: underpayments.</li>
+<li>Missing documentation (every coded HCC is lost).</li>
+<li>HCCs supported by the record but not coded (underpayments).</li>
 <li>Calibrated to the FY 2025 Part C results: gross 6.09%, overpayments
 $21.43B, underpayments $2.23B, missing documentation 0.22%.</li>
 <li>The simulated truth is gross 6.06% ($23.57B).</li>
 </ul>
 <p><strong>Audit:</strong> 990 enrollees, 330 per national tercile of
-the submitted risk score (stratified SRS). The real Part C IPM sample
-size and strata are not public. The terciles follow the 2012 RADV
+the submitted risk score (stratified SRS). The actual Part C IPM sample
+size and strata are not public, so the terciles follow the 2012 RADV
 design.</p>
 <p><strong>Estimators:</strong></p>
 <ul>
 <li>Expansion works in risk-score units: within each tercile, the mean
 over and under risk-score error × the tercile’s size × the national mean
 county rate × months.</li>
-<li>Ratio uses the enrollee payment; regression uses payment,
-demographic score, months enrolled and number of HCCs within each
+<li>Ratio uses the enrollee payment. Regression uses payment,
+demographic score, months enrolled, and number of HCCs within each
 tercile.</li>
 </ul>
 <p><strong>Bootstrap simulation:</strong></p>
@@ -1926,8 +1957,8 @@ tercile.</li>
 was deleted, moved, or on a record with missing documentation, and it
 loses its HCC’s mean audited loss.</li>
 <li>One addition rate per family (10).</li>
-<li>An HCC with no audited instance never fails. Rates are not
-extrapolated to unaudited HCCs.</li>
+<li>An HCC with no audited instance never fails (rates are not
+extrapolated to unaudited HCCs).</li>
 </ul>
 <h3 id="b.2-medicare-part-d-prescription-drug-event-errors">B.2 Medicare
 Part D (prescription drug event errors)</h3>
@@ -1955,7 +1986,8 @@ all.</li>
 partial, with the error share uniform on [−100%, 100%).</li>
 <li>Error probability is 10% for LTC PDEs and 2.5% for other PDEs
 (illustrative).</li>
-<li>No calibration: the truth is 1.38% gross ($1.46B).</li>
+<li>This population is not calibrated, and the truth is 1.38% gross
+($1.46B).</li>
 <li>The FY 2025 Part D result was 4.00%, so this population tests the
 method at a lower error rate than production.</li>
 </ul>
@@ -1973,8 +2005,8 @@ way.</li>
 <li>Beneficiary audit: an SRS of 990 beneficiaries with every PDE
 reviewed. Used by ratio and regression.</li>
 </ul>
-<p>The two audits differ, so the comparison between methods is between
-designs as well as estimators.</p>
+<p>Because the two audits differ, the comparison between methods is a
+comparison between designs as well as estimators.</p>
 <h3 id="b.3-medicaid-perm-fee-for-service-and-managed-care-claims-and-eligibility">B.3
 Medicaid PERM (fee-for-service and managed care, claims and
 eligibility)</h3>
@@ -2019,15 +2051,15 @@ of the state.</li>
 Marketplace APTC (EIPM, Federally-facilitated Exchange)</h3>
 <p><strong>Population</strong> (142,152 applications × 100):</p>
 <ul>
-<li>Households with income, size, age and benchmark premium.</li>
+<li>Households with income, size, age, and benchmark premium.</li>
 <li>APTC under the enhanced applicable-percentage schedule for
 2021–2025.</li>
 <li>APTC recipients only.</li>
 </ul>
 <p><strong>Errors:</strong></p>
 <ul>
-<li>FY 2023–2025 public results report no underpayments, so every error
-is an overpayment.</li>
+<li>Because the FY 2023–2025 public results report no underpayments,
+every error is an overpayment.</li>
 <li><em>Technical</em> errors: a required data match was not run, so the
 whole APTC is improper. 48% of improper dollars, matching FY 2025 (0.43
 of 0.89 points).</li>
@@ -2121,18 +2153,18 @@ estimator.</li>
 to all programs</h3>
 <ol type="1">
 <li><strong>Review is perfect.</strong> The audit finding equals the
-truth. There are no reviewer errors and no appeals.</li>
+truth, and there are no reviewer errors and no appeals.</li>
 <li><strong>One audit per year.</strong> Each audit year has one audit,
-and every method gets only that audit.</li>
+and every method uses only that audit.</li>
 <li><strong>Errors are independent of selection.</strong> Within a
 stratum, error probability does not depend on whether a unit is sampled.
-In PERM, CERT and EIPM it also does not depend on payment size, except
+In PERM, CERT, and EIPM, it also does not depend on payment size, except
 through the strata definitions.</li>
-<li><strong>Neyman inputs.</strong> Allocations use the population’s
-stratum standard deviations, standing in for prior-year data, which
-production designs have but this study does not.</li>
+<li><strong>Neyman inputs.</strong> Allocations use the stratum standard
+deviations of the population as a stand-in for prior-year data (which
+production designs have but this study does not).</li>
 <li><strong>Gross is the reported rate.</strong> PIIA gross rates are
-the primary estimand. Recovery, contract-level RADV extrapolation and
+the primary estimand. Recovery, contract-level RADV extrapolation, and
 provider demands are out of scope.</li>
 <li><strong>Unknown payments count as improper,</strong> following CMS
 practice (for example, missing documentation in Part C).</li>
@@ -2363,8 +2395,8 @@ results</h2>
 </tr>
 </tbody>
 </table>
-<p>Results for every program, measure, method and audit year, including
-overpayments, underpayments and net in dollars, are in
+<p>Results for every program, measure, method, and audit year (including
+overpayments, underpayments, and net in dollars) are available in
 <code>shared/results/report/by_scenario.csv</code> and
 <code>by_audit_year.parquet</code> (analytic methods and parametric
 rates), and in <code>manuscripts/generated/results_long.csv</code> (all

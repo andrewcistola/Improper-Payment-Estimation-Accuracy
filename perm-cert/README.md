@@ -89,7 +89,7 @@ From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scena
 
 ## CERT results (25 audit years)
 
-Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 200); rates are dollars ÷ total payments ($9.4B).
+Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 200); rates are dollars ÷ total payments ($439.9B).
 
 **Dollars**
 
