@@ -7,7 +7,11 @@ name = "ipsim"
 version = "0.1.0"
 description = "Synthetic finite populations for validating CMS improper payment estimates"
 requires-python = ">=3.10"
-dependencies = ["duckdb==1.5.6", "pyarrow>=17", "numpy>=2.0", "numba==0.68.0", "pyyaml>=6.0"]
+dependencies = ["duckdb==1.5.6", "pyarrow>=17", "numpy>=2.0", "numba==0.68.0", "pyyaml>=6.0", "scipy>=1.11"]
+
+[project.optional-dependencies]
+# manuscript tables and figures (manuscripts/scripts/build_tables.py, render_review.py) and the test suite
+all = ["pandas>=2.0", "matplotlib>=3.8", "pytest>=8.0"]
 
 [project.scripts]
 ipsim = "ipsim.engine:main"
