@@ -5,27 +5,27 @@ Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion lit
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 
-The Payment Integrity Information Act of 2019 requires a statistically valid estimate of improper payments, with a confidence interval, for every federal program at risk of significant improper payments. CMS produces five such estimates: Medicare Part C, Medicare Part D, Medicaid (PERM), the Marketplace advance premium tax credit (EIPM) and Medicare fee-for-service (CERT). Each one audits a probability sample of payments and projects the audited errors to the program. The projection uses design-based analytic estimators (expansion, ratio and regression) or audit-finding bootstrap simulation depending on the program.
+The Payment Integrity Information Act of 2019 (PIIA) requires that every federal program at risk of significant improper payments produce a statistically valid estimate of those payments, along with a confidence interval. The Centers for Medicare & Medicaid Services (CMS) produces five such estimates: Medicare Part C, Medicare Part D, Medicaid (the Payment Error Rate Measurement, or PERM), the Marketplace advance premium tax credit (EIPM), and Medicare fee-for-service (the Comprehensive Error Rate Testing program, or CERT). Each program audits a probability sample of payments and projects the audited errors to the program as a whole. Depending on the program, this projection uses either design-based analytic estimators (expansion, ratio, or regression) or audit-finding bootstrap simulation.
 
-This repository is a Monte Carlo study of the accuracy of those methods. Accuracy has two parts:
+This repository contains a Monte Carlo study of the accuracy of these methods. In this study, accuracy has two parts:
 - **Point accuracy:** how close the estimate is to the true improper payment.
-- **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage), and, among intervals that do, how narrow it is (width).
+- **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage) and, among intervals that do, how narrow the interval is (width).
 
-**Approach: Synthetic Data Run through Multiple Audit Years** For each program, a synthetic population is built with fabricated errors, so the true improper payment is known, and calibrated only to public FY 2025 aggregates. The program's production-like audit is drawn in 25 independent audit years, and each method's estimate and interval are compared with the truth. Each audit year has one audit, drawn with the program's design, and every method gets only that audit. The analytic methods estimate their variance from it. The bootstrap simulation uses its findings as audited and redraws only the error rates; the audit itself is never resampled. In Part D, the bootstrap simulation's audit sample (5,000 PDEs) and beneficiary sample (108,000 beneficiaries) are both fixed for the audit year.
+**Approach: Synthetic Data Run through Multiple Audit Years** For each program, this study builds a synthetic population with fabricated errors so that the true improper payment is known. Each population is calibrated only to public FY 2025 aggregates. The program's production-like audit is then drawn in 25 independent audit years, and the estimate and interval from each method are compared with the truth. Each audit year has one audit, drawn with the program's design, and every method uses only that audit. The analytic methods estimate their variance from the audit. The bootstrap simulation uses the audit findings as audited and redraws only the error rates (as opposed to resampling the audit itself). In Part D, both the audit sample used by the bootstrap simulation (5,000 PDEs) and the beneficiary sample (108,000 beneficiaries) are fixed for the audit year.
 
-**Scope: PIIA improper payment rate estimation.** Recovery and extrapolation uses (contract-level RADV, provider overpayment demands) are out of scope. No PHI, no unit-level data from any source, and nothing non-public: every number is drawn from stated distributions and calibrated only to public aggregate results.
+**Scope: PIIA improper payment rate estimation.** Recovery and extrapolation uses (for example, contract-level RADV or provider overpayment demands) are out of scope. This repository contains no PHI, no unit-level data from any source, and nothing non-public. Every number is drawn from stated distributions and calibrated only to public aggregate results.
 
-**Methods Under Comparison:** The following approaches are compared in this study.
-- **Expansion:** The average error per audited unit (enrollee, beneficiary, claim or application) is multiplied by the number of units in the population, stratum by stratum. It can apply to payments directly or to parts of a payment function audited separately (for example, risk score error).
-- **Ratio:** The audited improper dollars are divided by the audited payments to get an improper payment rate. That rate is then applied to the program's known total payments.
-- **Regression:** Within each stratum, a regression model is fit on the audit using basic beneficiary variables and the amount paid, and it predicts improper payments for every unit in the population. The audit's prediction errors are then added back so the total stays unbiased even if the model is imperfect.
-- **Bootstrap Simulation:** The audit's findings (error rates, partial-error shares and error sizes) are assigned at random to every unaudited unit, and the payment rules are rerun many times; audited units keep their own findings. The estimate is the average across iterations, and the 95% interval runs from the 2.5th to the 97.5th percentile.
+**Methods Under Comparison:** This study compares the following approaches.
+- **Expansion:** The average error per audited unit (enrollee, beneficiary, claim, or application) is multiplied by the number of units in the population, stratum by stratum. Expansion can apply to payments directly or to parts of a payment function audited separately (for example, risk score error).
+- **Ratio:** The audited improper dollars are divided by the audited payments to produce an improper payment rate. This rate is then applied to the program's known total payments.
+- **Regression:** Within each stratum, a regression model is fit on the audit using basic beneficiary variables and the amount paid, and this model predicts improper payments for every unit in the population. The prediction errors from the audit are then added back so that the total remains unbiased even if the model is imperfect.
+- **Bootstrap Simulation:** The audit findings (error rates, partial-error shares, and error sizes) are assigned at random to every unaudited unit, and the payment rules are rerun many times, while audited units keep their own findings. The estimate is the average across iterations, and the 95% interval runs from the 2.5th to the 97.5th percentile.
 
-**Confidence Intervals:** Expansion and ratio report a normal 95% interval (estimate ± 1.96 standard errors, from the stratified design with finite population correction). Regression uses the same formula on the audit's prediction errors (residuals), with a t multiplier, so every analytic interval comes from a single audit. The study compared two versions of the bootstrap simulation:
-- **Fixed rates:** the audited error rates are reused in every iteration. Its point estimates are as accurate as or more accurate than the analytic estimators, but its intervals contained the truth in only 24% of audit years, because they omit the sampling error of the audited rates.
-- **Parametric rates:** before each iteration, the audited error rates are redrawn from their binomial sampling distribution. Its intervals contained the true gross rate in 96.8% of audit years and were narrower than the analytic intervals from the same audit in all five programs.
+**Confidence Intervals:** Expansion and ratio report a normal 95% interval (the estimate ± 1.96 standard errors, from the stratified design with a finite population correction). Regression uses the same formula on the prediction errors from the audit (residuals) with a t multiplier, so every analytic interval comes from a single audit. This study compared two versions of the bootstrap simulation:
+- **Fixed rates:** The audited error rates are reused in every iteration. The point estimates from this version are as accurate as or more accurate than those from the analytic estimators. However, its intervals contained the truth in only 24% of audit years because they omit the sampling error of the audited rates.
+- **Parametric rates:** Before each iteration, the audited error rates are redrawn from their binomial sampling distribution. The intervals from this version contained the true gross rate in 96.8% of audit years and were narrower than the analytic intervals from the same audit in all five programs.
 
-The results below report the parametric version. The full write-up, including the fixed-rate comparison, is in [`manuscripts/`](manuscripts/) (manuscript and one-page summary).
+The results below report the parametric version. The full write-up, including the fixed-rate comparison, is available in [`manuscripts/`](manuscripts/) (manuscript and one-page summary).
 
 ## Structure
 
@@ -133,20 +133,20 @@ The tables come from [`shared/results/report/by_scenario.csv`](shared/results/re
 
 **Findings** (gross rate, 25 audit years per program; details in [`manuscripts/`](manuscripts/)):
 
-1. **Point accuracy.** Every method estimated the gross rate closely. The bootstrap simulation was as accurate as or more accurate than the analytic estimators in every program: mean absolute error 1.5–6.6% of the true rate, and 16.6% in EIPM, where rare errors affected every method.
-2. **Coverage.** The parametric-rate bootstrap interval contained the truth in 121 of 125 audit years (96.8%), against 111 of 125 (88.8%) for the ratio estimator and 108 of 125 (86.4%) for regression. The fixed-rate bootstrap, not shown in the tables, contained it in only 30 of 125: reusing the audited rates in every iteration leaves out their sampling error.
-3. **Width.** The parametric interval was 11–21% narrower than the ratio interval in Part C, PERM, EIPM and CERT, and 63% narrower than the Part D expansion interval from the same PDE audit.
-4. **Sparse measures.** Measures built from few audited errors (underpayments, EIPM technically improper payments) were undercovered by every method; the parametric bootstrap covered them in 19–20 of 25.
-5. **Regression.** Fitting models within strata on basic beneficiary variables plus the amount paid changed little: coverage and width were within about one audit year and a few percent of the ratio estimator in Part C, PERM, EIPM and CERT. In Part D, drug cost and reaching the catastrophic phase narrowed the interval, but it covered the truth in only 15 of 25 audit years: with few large errors, the residuals of a better-fitting model understate the variance.
+1. **Point accuracy.** Every method estimated the gross rate closely. The bootstrap simulation was as accurate as or more accurate than the analytic estimators in every program, with a mean absolute error of 1.5–6.6% of the true rate (and 16.6% in EIPM, where rare errors affected every method).
+2. **Coverage.** The parametric-rate bootstrap interval contained the truth in 121 of 125 audit years (96.8%), as opposed to 111 of 125 (88.8%) for the ratio estimator and 108 of 125 (86.4%) for regression. The fixed-rate bootstrap (not shown in the tables) contained the truth in only 30 of 125. Reusing the audited rates in every iteration leaves out their sampling error.
+3. **Width.** The parametric interval was 11–21% narrower than the ratio interval in Part C, PERM, EIPM, and CERT, and 63% narrower than the Part D expansion interval from the same PDE audit.
+4. **Sparse measures.** Measures built from few audited errors (underpayments and EIPM technically improper payments) were undercovered by every method. The parametric bootstrap covered these measures in 19–20 of 25 audit years.
+5. **Regression.** Fitting models within strata on basic beneficiary variables plus the amount paid changed little. In Part C, PERM, EIPM, and CERT, coverage and width were within about one audit year and a few percent of the ratio estimator. In Part D, drug cost and reaching the catastrophic phase narrowed the interval, but the interval covered the truth in only 15 of 25 audit years. With few large errors, the residuals of a better-fitting model understate the variance.
 
 **Recommendations:**
 
-1. **Use bootstrap simulation with parametric rates** for PIIA improper payment rates, reporting the analytic ratio interval alongside it during a transition.
+1. **Use bootstrap simulation with parametric rates** for PIIA improper payment rates, and report the analytic ratio interval alongside it during a transition period.
 2. **Do not use fixed-rate bootstrap intervals.**
-3. **Consider smaller audits.** At current precision, the narrower intervals would allow audits roughly 20–38% smaller (Part C, PERM, EIPM, CERT), lowering review costs. These are projections:
-   - confirm coverage directly at the reduced sizes first;
+3. **Consider smaller audits.** At current precision, the narrower intervals would allow audits roughly 20–38% smaller (Part C, PERM, EIPM, and CERT), which would lower review costs. These are projections, and two steps should come first:
+   - confirm coverage directly at the reduced sizes;
    - check sparse components separately.
-4. **Next research:** find the optimal audit size for each program, and test model + simulation alternatives (hierarchical error rates, unit-level error models, resampled error sizes, calibrated intervals).
+4. **Future research** should identify the optimal audit size for each program and test model + simulation alternatives (for example, hierarchical error rates, unit-level error models, resampled error sizes, and calibrated intervals).
 
 ## Design principles
 

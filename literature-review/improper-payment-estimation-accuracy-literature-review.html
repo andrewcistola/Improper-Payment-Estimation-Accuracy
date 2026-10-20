@@ -58,48 +58,51 @@ Simulation</em> (this repository, <a href="../manuscripts/"><code>manuscripts/</
 <p><strong>Background.</strong> The Payment Integrity Information Act of
 2019 requires statistically valid improper payment estimates, with
 confidence intervals, for federal programs at risk of significant
-improper payments. CMS produces five such estimates: Medicare Part C,
-Medicare Part D, Medicaid and CHIP (PERM), the Marketplace advance
-premium tax credit (EIPM) and Medicare fee-for-service (CERT). Each
-projects audited errors from a probability sample, using design-based
-analytic estimators (expansion, ratio, regression) or simulation that
+improper payments. The Centers for Medicare &amp; Medicaid Services
+(CMS) produces five such estimates: Medicare Part C, Medicare Part D,
+Medicaid and CHIP (PERM), the Marketplace advance premium tax credit
+(EIPM), and Medicare fee-for-service (CERT). Each estimate projects
+audited errors from a probability sample using either design-based
+analytic estimators (expansion, ratio, or regression) or simulation that
 reruns the payment rules.</p>
-<p><strong>Objective.</strong> To review what is known about the
-comparative accuracy of the available methods for estimating improper
-payments in federal health programs. Accuracy has two parts:</p>
+<p><strong>Objective.</strong> The purpose of this review is to describe
+what is known about the comparative accuracy of the available methods
+for estimating improper payments in federal health programs. In this
+review, accuracy has two parts:</p>
 <ul>
 <li>point accuracy;</li>
-<li>interval accuracy: coverage at the nominal level, then width.</li>
+<li>interval accuracy (coverage at the nominal level and, after that,
+width).</li>
 </ul>
-<p><strong>Methods.</strong> We conducted a narrative review of two
+<p><strong>Methods.</strong> This study is a narrative review of two
 bodies of work:</p>
 <ul>
-<li>public statute, OMB guidance and CMS, HHS, GAO and OIG methodology
+<li>public statute, OMB guidance, and CMS, HHS, GAO, and OIG methodology
 documents for the five programs and for contract-level RADV audits;</li>
 <li>the statistical, audit-sampling and survey-bootstrap literature on
 interval accuracy for skewed, zero-inflated payment errors.</li>
 </ul>
 <p><strong>Findings.</strong> All five programs use stratified
 probability samples and ratio-type estimators. Part D alone publicly
-describes a simulation-based interval; the others document or imply
-normal-theory intervals. Interval accuracy depends mainly on two things,
-not on the method’s name:</p>
+describes a simulation-based interval, while the others document or
+imply normal-theory intervals. Interval accuracy depends mainly on two
+factors (as opposed to the name of the method):</p>
 <ul>
 <li>the skew of the error distribution;</li>
 <li>the number of nonzero errors in the sample.</li>
 </ul>
 <p>Normal-theory intervals are conservative at low error rates and
-liberal at high ones. Second-order bootstrap intervals (BCa,
-bootstrap-<em>t</em>) repair much of the low-error failure. No published
-study has compared these methods against a known truth in the designs
-CMS uses: risk-score, drug-benefit, eligibility, APTC or national claims
-estimates.</p>
+liberal at high ones. Second-order bootstrap intervals (BCa and
+bootstrap-<em>t</em>) correct much of the low-error failure. No
+published study has compared these methods against a known truth in the
+designs CMS uses (risk-score, drug-benefit, eligibility, APTC, or
+national claims estimates).</p>
 <p><strong>Conclusions.</strong> The comparative accuracy of improper
 payment estimation methods in federal health programs is largely
-untested, and the methods in production rest on assumptions the evidence
-questions. We set out a research agenda: design-based Monte Carlo
-validation against synthetic populations, scored on the metric that
-matches each estimate’s use.</p>
+untested, and the methods in production rest on assumptions that the
+evidence calls into question. This review sets out a research agenda for
+design-based Monte Carlo validation against synthetic populations,
+scored on the metric that matches the use of each estimate.</p>
 <p><strong>Keywords:</strong> improper payments; payment integrity;
 survey sampling; bootstrap; confidence intervals; Medicare; Medicaid;
 audit sampling</p>
@@ -108,26 +111,28 @@ audit sampling</p>
 three things:</p>
 <ol type="1">
 <li>draws a probability sample of payments;</li>
-<li>establishes each sampled unit’s payment error by review;</li>
+<li>establishes the payment error of each sampled unit through
+review;</li>
 <li>projects the errors to the program with an uncertainty
 statement.</li>
 </ol>
-<p>The estimates matter. CMS’s five measurements reported more than $90
-billion in improper payments for FY 2025. Their confidence intervals are
-audited by Inspectors General. And in some settings the estimates become
-financial determinations: Medicare Advantage contract recoveries, and,
-from FY 2030, Medicaid federal match disallowances above a 3%
-eligibility error rate.</p>
-<p>This review asks: <strong>what is known about the comparative
-accuracy of the available methods for estimating improper payments in
-federal health programs?</strong> We define accuracy as in the companion
-Monte Carlo study:</p>
+<p>These estimates matter. The five CMS measurements reported more than
+$90 billion in improper payments for FY 2025, and their confidence
+intervals are audited by Inspectors General. In addition, in some
+settings the estimates become financial determinations (for example,
+Medicare Advantage contract recoveries and, beginning in FY 2030,
+Medicaid federal match disallowances above a 3% eligibility error
+rate).</p>
+<p>The purpose of this review is to answer the question: <strong>what is
+known about the comparative accuracy of the available methods for
+estimating improper payments in federal health programs?</strong> This
+review defines accuracy as in the companion Monte Carlo study:</p>
 <ul>
 <li><strong>Point accuracy:</strong> how close the estimate is to the
 true improper payment.</li>
 <li><strong>Interval accuracy:</strong> whether the 95% interval
-contains the truth in about 95% of repeated audits (coverage), and,
-among intervals that do, how narrow it is (width).</li>
+contains the truth in about 95% of repeated audits (coverage) and, among
+intervals that do, how narrow the interval is (width).</li>
 </ul>
 <p>The review is organized around three questions:</p>
 <ol type="1">
@@ -144,25 +149,26 @@ tested?</li>
 apart:</p>
 <ul>
 <li><strong>The national improper payment rate</strong> reported under
-the Payment Integrity Information Act: a program-level ratio with a
-two-sided confidence interval.</li>
-<li><strong>The contract- or entity-level recovery amount,</strong> for
-example a RADV extrapolation against a Medicare Advantage contract. Here
-the estimate becomes a legal demand and is usually taken at a lower
-confidence bound.</li>
+the Payment Integrity Information Act, which is a program-level ratio
+with a two-sided confidence interval.</li>
+<li><strong>The contract- or entity-level recovery amount</strong> (for
+example, a RADV extrapolation against a Medicare Advantage contract). In
+this setting, the estimate becomes a legal demand and is usually taken
+at a lower confidence bound.</li>
 </ul>
 <p>A method adequate for the first can still be inadequate for the
 second, because coverage failures in one tail matter more than overall
 width.</p>
 <h2 id="review-approach">2. Review approach</h2>
-<p>This is a narrative, not systematic, review. Two bodies of evidence
-were searched and read in full where available:</p>
+<p>This study is a narrative review (as opposed to a systematic review).
+Two bodies of evidence were searched and read in full where
+available:</p>
 <ol type="1">
-<li><strong>Program sources.</strong> Primary public sources on each
-program’s design and estimation: statute and OMB guidance; CMS program
-pages, error-rate findings, methodology documents and manuals; OMB
-information-collection supporting statements; GAO and OIG reports; and
-court records on RADV extrapolation.</li>
+<li><strong>Program sources.</strong> Primary public sources on the
+design and estimation of each program, including statute and OMB
+guidance; CMS program pages, error-rate findings, methodology documents,
+and manuals; OMB information-collection supporting statements; GAO and
+OIG reports; and court records on RADV extrapolation.</li>
 <li><strong>Methods literature.</strong> Statistical, audit-sampling and
 survey-methods literature on the accuracy of estimators and intervals
 for skewed and zero-inflated payment errors, including finite-population
@@ -172,16 +178,17 @@ and survey bootstraps.</li>
 key papers (especially Edwards, Liu and Delage 2023; Kvanli and Schauer;
 Mashreghi, Haziza and Léger 2016), and from CMS methodology documents.
 Program facts are taken only from public documents current to October
-2026; anything that would require non-public contractor methodology
-plans is flagged as unknown. The review covers the PIIA national rate as
-its primary target and RADV recovery as context. Sixty-six sources are
-annotated in the reference list.</p>
+2026, and anything that would require non-public contractor methodology
+plans is flagged as unknown. This review covers the PIIA national rate
+as its primary target and RADV recovery as context. Sixty-six sources
+are annotated in the reference list.</p>
 <h2 id="regulatory-and-institutional-background">3. Regulatory and
 institutional background</h2>
 <p>Every estimate in scope exists because the Payment Integrity
 Information Act of 2019 (PIIA) requires a statistically valid improper
 payment estimate for programs at risk of significant improper payments,
-and OMB’s Appendix C to Circular A-123 (<a href="https://www.whitehouse.gov/wp-content/uploads/2021/03/M-21-19.pdf">M-21-19</a>,
+and Appendix C to Office of Management and Budget (OMB) Circular A-123
+(<a href="https://www.whitehouse.gov/wp-content/uploads/2021/03/M-21-19.pdf">M-21-19</a>,
 March 2021) sets the rules. Payments are “significant” above $10 million
 and 1.5% of outlays, or above $100 million outright (<a href="https://www.mychesco.com/a/news/national/cms-reports-billions-in-improper-payments-but-says-most-are-paperwork-errors/">summary
 of the FY 2025 CMS release</a>).</p>
@@ -190,11 +197,12 @@ Sampling and Estimation Methodology Plan (S&amp;EMP) with OMB (Phase 2).
 Appendix C also defines the <em>unknown payment</em>: one the agency
 cannot classify as proper or improper because documentation is
 insufficient. Inspectors General review the plans annually, and interval
-accuracy is an audited item: the Education OIG has repeatedly found
-estimates unreliable because nonrandom sampling made the confidence
-intervals inaccurate (<a href="https://www.oversight.gov/reports/audit/us-department-educations-compliance-payment-integrity-information-reporting-6">ED
-OIG, FY 2025 review</a>). That precedent matters here: a change in
-interval method is something an OIG can test.</p>
+accuracy is an audited item. For example, the Department of Education
+Office of Inspector General (OIG) has repeatedly found estimates
+unreliable because nonrandom sampling made the confidence intervals
+inaccurate (<a href="https://www.oversight.gov/reports/audit/us-department-educations-compliance-payment-integrity-information-reporting-6">ED
+OIG, FY 2025 review</a>). This precedent matters here because a change
+in interval method is something an OIG can test.</p>
 <p><strong>Precision targets.</strong> Medicare FFS (CERT) designs for
 at least a 95% confidence interval of ±3 percentage points (<a href="https://www.cms.gov/files/document/introduction-comprehensive-error-rate-testing-cert-program.pdf">CMS
 CERT overview</a>). PERM’s older statutory target was a 90% interval of
@@ -203,9 +211,9 @@ points (<a href="https://www.macpac.gov/subtopic/payment-error-rate-measurement-
 <p><strong>Who does the work.</strong> The Payment Accuracy and
 Reporting Group (PARG) in CMS’s Office of Financial Management runs
 improper payment measurement for Medicare FFS, Parts C and D, Medicaid,
-CHIP and APTC, across 11 contracts and about $115 million a year (<a href="https://aga.digitellinc.com/b/sp/chrissy-fowler-9771">PARG
-director bio</a>). One boundary is worth keeping straight: the national
-Part C measure is a PARG product, but <em>contract-specific</em> RADV
+CHIP, and APTC, across 11 contracts and about $115 million a year (<a href="https://aga.digitellinc.com/b/sp/chrissy-fowler-9771">PARG
+director bio</a>). One boundary is important to note. The national Part
+C measure is a PARG product, but <em>contract-specific</em> RADV
 recovery audits are planned and extrapolated by CMS’s Center for Program
 Integrity (<a href="https://www.cms.gov/files/document/payment-year-2019-radv-audits-methods-and-instructions-6-26-25.pdf">PY
 2019 RADV methods</a>). The two share review machinery but not
@@ -275,17 +283,17 @@ fact sheet</a>):</p>
 </tbody>
 </table>
 <p>HHS was not fully PIIA-compliant for FY 2025 (<a href="https://paymentaccuracy.gov/agency/HHS">PaymentAccuracy.gov</a>).
-State-based Exchange APTC is not yet measured; HHS plans to start no
+State-based Exchange APTC is not yet measured, and HHS plans to start no
 earlier than January 1, 2027 (<a href="https://cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/exchange-improper-payment-measurement-eipm/program-background">EIPM
 background</a>).</p>
 <h2 id="terminology-of-error-estimation-and-extrapolation">4.
 Terminology of error estimation and extrapolation</h2>
 <p>Every measure in scope does the same three things: draw a probability
-sample, establish a payment error for each sampled unit by review, then
-project (“extrapolate”) to the frame and attach an uncertainty
-statement. The programs differ in the estimator, the variance method and
-what the interval is <em>used for</em>. Those three choices determine
-which method is most accurate in each setting.</p>
+sample, establish a payment error for each sampled unit through review,
+and then project (“extrapolate”) to the frame and attach an uncertainty
+statement. The programs differ in the estimator, the variance method,
+and what the interval is <em>used for</em>. These three choices
+determine which method is most accurate in each setting.</p>
 <h3 id="sampling-and-review-vocabulary">Sampling and review
 vocabulary</h3>
 <table>
@@ -362,28 +370,28 @@ programs</td>
 <h3 id="estimators">Estimators</h3>
 <p>The <strong>expansion (mean-per-unit, Horvitz–Thompson)
 estimator</strong> weights each sampled error by the inverse of its
-selection probability. It is what 2012 RADV and PIM Chapter 8
-contractors use.</p>
+selection probability. This is the estimator used by 2012 RADV and PIM
+Chapter 8 contractors.</p>
 <p style="text-align:center">
 <img src="data:image/png;base64,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" style="max-width:95%; height:auto; zoom:0.5">
 </p>
 <p>The <strong>ratio estimator</strong> divides projected improper
 dollars by projected paid dollars. Improper payment <em>rates</em>
 (PERM, Part C, Part D, APTC) are ratios, so their variance comes from
-linearization or replication, not the simple formula above. Current RADV
-(PY 2019 onward) estimates the mean change in risk score, then
-multiplies by the frame’s summed county rates, a ratio-type estimator in
-disguise.</p>
+linearization or replication (as opposed to the simple formula above).
+Current RADV (PY 2019 onward) estimates the mean change in risk score
+and then multiplies it by the summed county rates of the frame, which is
+effectively a ratio-type estimator.</p>
 <p style="text-align:center">
 <img src="data:image/png;base64,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" style="max-width:95%; height:auto; zoom:0.5">
 </p>
 <p><strong>Difference and regression estimators</strong> use the known
-paid amount <em>x</em> as an auxiliary; they are standard in audit
-sampling but not documented in the public PARG methods.
-<strong>Composite estimators</strong> combine separately estimated
-components: PERM’s overall rate is claims rate plus eligibility rate
-minus an overlap term, and the national rate rolls three state cycles
-together.</p>
+paid amount <em>x</em> as an auxiliary variable. These estimators are
+standard in audit sampling but are not documented in the public PARG
+methods. <strong>Composite estimators</strong> combine separately
+estimated components. For example, the PERM overall rate is claims rate
+plus eligibility rate minus an overlap term, and the national rate rolls
+three state cycles together.</p>
 <h3 id="variance-and-interval-methods">Variance and interval
 methods</h3>
 <table>
@@ -469,37 +477,38 @@ read off the bootstrap distribution:</p>
 <img src="data:image/png;base64,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" style="max-width:95%; height:auto; zoom:0.5">
 </p>
 <h3 id="simulation-based-estimation">Simulation-based estimation</h3>
-<p>A third family of methods simulates instead of projecting. In
-<strong>audit-finding bootstrap simulation</strong>, the audit’s
-findings are assigned at random to the unaudited units of the whole
-population, the program’s payment function is rerun, and the process is
-repeated many times. The findings are which HCCs failed, which drug
-claims were wrong and by how much, and which applications were
-ineligible. The estimate and interval are read from the distribution of
-simulated improper payments.</p>
-<p>The method has three attractions:</p>
+<p>A third family of methods simulates (as opposed to projects). In
+<strong>audit-finding bootstrap simulation</strong>, the audit findings
+are assigned at random to the unaudited units of the whole population,
+the program’s payment function is rerun, and the process is repeated
+many times. The findings are which HCCs failed, which drug claims were
+wrong and by how much, and which applications were ineligible. The
+estimate and interval are read from the distribution of simulated
+improper payments.</p>
+<p>This method is attractive for three reasons:</p>
 <ul>
-<li><strong>Nonlinear payments.</strong> It reruns the actual payment
-rules, such as Part D benefit phases, risk-score hierarchies and the
-APTC schedule.</li>
-<li><strong>Every measure at once.</strong> One set of iterations yields
-over-, under-, gross and net payments and any subgroup.</li>
+<li><strong>Nonlinear payments.</strong> The simulation reruns the
+actual payment rules (for example, Part D benefit phases, risk-score
+hierarchies, and the APTC schedule).</li>
+<li><strong>Every measure at once.</strong> One set of iterations
+produces over-, under-, gross, and net payments, along with any
+subgroup.</li>
 <li><strong>Traceability.</strong> Every simulated dollar can be traced
 to an audited finding.</li>
 </ul>
-<p>It differs from the survey bootstraps in the table above in one
-important way: the audit itself is not resampled. Two versions are
+<p>This method differs from the survey bootstraps in the table above in
+one important way: the audit itself is not resampled. Two versions are
 possible:</p>
 <ul>
-<li><strong>Fixed rates:</strong> the error rates estimated from the
+<li><strong>Fixed rates:</strong> The error rates estimated from the
 audit are reused in every iteration.</li>
-<li><strong>Parametric rates:</strong> the rates are redrawn from their
+<li><strong>Parametric rates:</strong> The rates are redrawn from their
 sampling distribution (for example, binomial) before each iteration,
 which represents the uncertainty of the audit itself (Efron and
 Tibshirani 1993, ch. 6).</li>
 </ul>
-<p>Whether either version’s interval holds its nominal coverage is an
-empirical question taken up in Sections 6 and 8.</p>
+<p>Whether the interval from either version holds its nominal coverage
+is an empirical question addressed in Sections 6 and 8.</p>
 <h3 id="decision-quantities-and-performance-language">Decision
 quantities and performance language</h3>
 <ul>
@@ -523,15 +532,16 @@ means simulating from a model or a synthetic population (used to
 validate designs and to propagate component uncertainty).
 <em>Bootstrap</em> means resampling the observed sample. CMS’s Part D
 documents use “simulation” for both the benefit re-adjudication and the
-interval iterations, so the word alone does not tell you which is
+interval iterations, so the word alone does not indicate which is
 meant.</li>
 </ul>
 <h2 id="how-each-program-measures-improper-payments">5. How each program
 measures improper payments</h2>
-<p>Only one of the five PIIA measures, Part D, publicly describes a
-simulation-based interval; the others document (or imply) analytic
-normal-theory intervals. RADV is the outlier in stakes: small samples, a
-one-sided decision rule and money changing hands on the result.</p>
+<p>Only one of the five PIIA measures (Part D) publicly describes a
+simulation-based interval, while the others document (or imply) analytic
+normal-theory intervals. RADV is the outlier in terms of stakes, with
+small samples, a one-sided decision rule, and money changing hands on
+the result.</p>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 16%" />
@@ -636,16 +646,16 @@ estimator; contractor clusters weighted by expenditure share</td>
 <h3 id="medicare-part-c-national-measure-and-contract-audits">Medicare
 Part C: national measure and contract audits</h3>
 <p>The Part C IPM verifies that HCCs submitted for payment are supported
-in the medical record for a sampled enrollee, computes enrollee-level
-payment error, and projects it to the Part C population subject to risk
-adjustment (<a href="https://www.cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/medicare-part-c-ipm">CMS
+in the medical record for a sampled enrollee, computes the
+enrollee-level payment error, and projects this error to the Part C
+population subject to risk adjustment (<a href="https://www.cms.gov/data-research/monitoring-programs/improper-payment-measurement-programs/medicare-part-c-ipm">CMS
 Part C IPM</a>). The FY 2025 rate was 6.09% ($23.67B gross, $19.20B net)
-on a $388.72B denominator; missing documentation was only 0.22% of
+on a $388.72B denominator, and missing documentation was only 0.22% of
 expenditures (<a href="https://www.cms.gov/files/document/fy-2025-medicare-part-c-error-rate-findings-results.pdf">FY
-2025 results</a>). Two definitional changes moved the series:
-“spontaneous” additional HCCs left the underpayment calculation from CY
-2020, and ESRD and hospice enrollees entered the sample from FY
-2024.</p>
+2025 results</a>). Two definitional changes affected the series.
+“Spontaneous” additional HCCs were removed from the underpayment
+calculation beginning in CY 2020, and ESRD and hospice enrollees entered
+the sample beginning in FY 2024.</p>
 <p>Contract-specific RADV has gone through four statistical regimes in
 fourteen years:</p>
 <table>
@@ -699,15 +709,15 @@ fourteen years:</p>
 </tr>
 </tbody>
 </table>
-<p>The legal footing is unsettled. The 2023 RADV rule (no FFS adjuster;
-extrapolation from PY 2018) was vacated in <em>Humana v. Becerra</em> on
-September 25, 2025 (<a href="https://www.milliman.com/en/insight/federal-court-vacates-2023-rule-cms-radv-audits">Milliman</a>);
-the government appealed, and a Fifth Circuit panel heard argument on
-October 5, 2026 and appeared skeptical of the government’s position (<a href="https://www.statnews.com/2026/10/05/humana-medicare-advantage-radv-audits-lawsuit-hearing/">STAT</a>).
-Meanwhile CMS plans to audit all ~550 eligible contracts a year (<a href="https://www.cms.gov/files/document/cpi-radvfact-sheet.pdf">CMS
-RADV fact sheet</a>). Whatever the court decides, the estimator and
-bound will be argued over contract by contract, which is exactly where
-coverage evidence matters.</p>
+<p>The legal basis for these audits is unsettled. The 2023 RADV rule (no
+FFS adjuster; extrapolation from PY 2018) was vacated in <em>Humana v.
+Becerra</em> on September 25, 2025 (<a href="https://www.milliman.com/en/insight/federal-court-vacates-2023-rule-cms-radv-audits">Milliman</a>).
+The government appealed, and a Fifth Circuit panel heard argument on
+October 5, 2026, and appeared skeptical of the government’s position (<a href="https://www.statnews.com/2026/10/05/humana-medicare-advantage-radv-audits-lawsuit-hearing/">STAT</a>).
+Meanwhile, CMS plans to audit all ~550 eligible contracts a year (<a href="https://www.cms.gov/files/document/cpi-radvfact-sheet.pdf">CMS
+RADV fact sheet</a>). Regardless of the court’s decision, the estimator
+and bound will likely be argued over contract by contract, which is
+exactly where coverage evidence matters.</p>
 <h3 id="medicare-part-d">Medicare Part D</h3>
 <p>The Part D IPM samples beneficiaries, requests documentation for
 their PDEs, corrects gross drug cost where the record does not support
@@ -718,17 +728,18 @@ performance plan</a>). The FY 2023 redesign changed the sampling unit,
 reduced “the number of simulation iterations to align to statistical
 literature,” and aligned the confidence interval to the estimation
 method (<a href="https://www.cms.gov/files/document/fy-2023-medicare-part-d-error-rate-findings-and-results.pdf-0">FY
-2023 results</a>). FY 2025 moved from cohort to random beneficiary
-selection.</p>
+2023 results</a>). In FY 2025, the program moved from cohort to random
+beneficiary selection.</p>
 <p>The published intervals are visibly asymmetric: FY 2023 was
 $2.63B–$4.17B around $3.35B, and FY 2025 was $3.77B–$4.71B around $4.23B
 (<a href="https://www.cms.gov/files/document/fy-2025-medicare-part-d-error-rate-findings-results.pdf">FY
-2025 results</a>). That pattern is what a percentile-type resampling
-interval on a right-skewed error distribution produces. Public documents
-do not name the algorithm, so the internal S&amp;EMP is the authority
-here. Missing or invalid documentation was 75% of sampled errors in FY
-2025, which makes the error distribution closer to all-or-nothing than
-to small pricing discrepancies.</p>
+2025 results</a>). This pattern is consistent with what a
+percentile-type resampling interval on a right-skewed error distribution
+produces. Public documents do not name the algorithm, so the internal
+S&amp;EMP is the authority on this point. Missing or invalid
+documentation was 75% of sampled errors in FY 2025, which makes the
+error distribution closer to all-or-nothing than to small pricing
+discrepancies.</p>
 <h3 id="medicaid-and-chip-perm">Medicaid and CHIP (PERM)</h3>
 <p>PERM measures each state once every three years and builds a national
 rolling rate from the latest three cycles (<a href="https://www.cms.gov/files/document/perm-manual.pdf-2">PERM Manual,
@@ -737,15 +748,15 @@ stratified by payment (five payment strata for managed care in recent
 cycles) and selected systematically after sorting by paid amount (<a href="https://omb.report/icr/202408-0938-026/doc/145713901.pdf">OMB
 supporting statement</a>; <a href="https://www.cms.gov/files/document/ry-2022-cycle-kick-slides.pdf">RY
 2022 kickoff</a>). Each component rate is projected improper dollars
-over projected paid dollars; the overall rate adds the eligibility rate
-to the claims rate and subtracts their overlap (<a href="https://www.cms.gov/files/document/perm-error-rate-calculation-presentation.pdf">CMS
+over projected paid dollars, and the overall rate adds the eligibility
+rate to the claims rate and subtracts their overlap (<a href="https://www.cms.gov/files/document/perm-error-rate-calculation-presentation.pdf">CMS
 rate calculation</a>).</p>
 <p>The stakes for state-level estimates changed in 2025. P.L. 119-21
 §71106 disallows federal match on eligibility improper payments above a
 3% rate starting October 1, 2029, and removes the good-faith waiver (<a href="https://bipartisanpolicy.org/article/understanding-medicaids-payment-error-rate-measurement-perm-program-and-changes-under-h-r-1/">BPC</a>).
 A state eligibility rate near 3% now carries a dollar consequence, so
-its interval behaves like a recovery bound, not just a reporting
-statistic. RY 2027 measures eligibility only (<a href="https://www.cms.gov/files/document/ry-2027-cycle-3-kick-presentation-part-2.pdf">RY
+its interval behaves like a recovery bound (as opposed to only a
+reporting statistic). RY 2027 measures eligibility only (<a href="https://www.cms.gov/files/document/ry-2027-cycle-3-kick-presentation-part-2.pdf">RY
 2027 kickoff</a>).</p>
 <h3 id="marketplace-aptc-eipm">Marketplace APTC (EIPM)</h3>
 <p>EIPM reviews a stratified random sample of about 2,000 FFE
@@ -757,13 +768,13 @@ background</a>; <a href="https://www.cms.gov/newsroom/press-releases/federally-f
 underpayments were reported for FY 2023–2025. In FY 2025, 0.43 of the
 0.89 points were <em>technically improper</em> payments, where a
 required periodic data match was not run. The remainder came from manual
-errors such as income entered incorrectly or documents accepted despite
-name or date-of-birth discrepancies (<a href="https://paymentaccuracy.gov/program/hhs-centers-for-medicare-medicaid-services-cms-advance-premi-155942da">PaymentAccuracy.gov</a>).
-At that rate a 2,000-unit sample holds only a few dozen errors, the
-regime in which normal-theory bounds are least reliable. State-based
-Exchanges come under a separate SEIPM rule (45 CFR 155 Subpart Q) with
-state-specific sample sizes and a three-year cycle, no earlier than
-January 1, 2027.</p>
+errors (for example, income entered incorrectly or documents accepted
+despite name or date-of-birth discrepancies) (<a href="https://paymentaccuracy.gov/program/hhs-centers-for-medicare-medicaid-services-cms-advance-premi-155942da">PaymentAccuracy.gov</a>).
+At this rate, a 2,000-unit sample contains only a few dozen errors,
+which is the setting in which normal-theory bounds are least reliable.
+State-based Exchanges come under a separate SEIPM rule (45 CFR 155
+Subpart Q) with state-specific sample sizes and a three-year cycle, no
+earlier than January 1, 2027.</p>
 <h3 id="medicare-fee-for-service-cert">Medicare fee-for-service
 (CERT)</h3>
 <p>CERT reviews a stratified random sample of Medicare FFS claims
@@ -771,15 +782,15 @@ submitted from July through June, including both paid and denied claims
 (<a href="https://www.cms.gov/files/document/introduction-comprehensive-error-rate-testing-cert-program.pdf">CERT
 introduction</a>).</p>
 <ul>
-<li><strong>Strata.</strong> The first level is claim type: Part A
-hospital IPPS, Part A excluding IPPS, Part B and DMEPOS. Within each
-type there are about 100 service-level strata; Part A excluding IPPS
-uses two-digit type-of-bill strata, fewer than 20 (<a href="https://data.cms.gov/sites/default/files/2026-01/CERT%20Methodology.pdf">CERT
+<li><strong>Strata.</strong> The first level is claim type (Part A
+hospital IPPS, Part A excluding IPPS, Part B, and DMEPOS). Within each
+type, there are about 100 service-level strata, and Part A excluding
+IPPS uses two-digit type-of-bill strata, fewer than 20 (<a href="https://data.cms.gov/sites/default/files/2026-01/CERT%20Methodology.pdf">CERT
 methodology</a>).</li>
-<li><strong>Estimator.</strong> A generalized estimator gives national,
-contractor-cluster and service-level rates. At the national level it
-reduces to the separate ratio estimator, with contractor clusters
-weighted by their share of expenditures.</li>
+<li><strong>Estimator.</strong> A generalized estimator produces
+national, contractor-cluster, and service-level rates. At the national
+level it reduces to the separate ratio estimator, with contractor
+clusters weighted by their share of expenditures.</li>
 <li><strong>FY 2025 sample.</strong> 49,061 claims were sampled and
 37,651 reviewed: IPPS 8,750; Part A excluding IPPS 8,651; Part B 11,600;
 DMEPOS 8,650.</li>
@@ -790,16 +801,16 @@ Supplemental Improper Payment Data</a>). By type, the rates ranged from
 3.1% (IPPS) to 24.1% (DMEPOS).</li>
 <li><strong>Error categories.</strong> Insufficient documentation
 accounted for 53% of improper dollars, medical necessity 15%, no
-documentation 12%, incorrect coding 11% and other 8.5%.</li>
+documentation 12%, incorrect coding 11%, and other 8.5%.</li>
 </ul>
 <p>Most CERT errors are therefore whole-claim, all-or-nothing errors,
-with partial errors coming mainly from coding. That is the Edwards, Liu
-and Delage (2023) error regime, but at a national sample size where the
-central limit theorem has far more to work with than in a 30-claim
-provider audit.</p>
+with partial errors coming mainly from coding. This is the error setting
+studied by Edwards, Liu and Delage (2023), but at a national sample size
+where the central limit theorem has far more to work with than in a
+30-claim provider audit.</p>
 <p><strong>Unknown from the public record:</strong></p>
 <ul>
-<li>the Part C IPM sample size, strata and interval method;</li>
+<li>the Part C IPM sample size, strata, and interval method;</li>
 <li>Part D’s resampling algorithm and number of replicates;</li>
 <li>the PERM national variance formula;</li>
 <li>EIPM’s strata;</li>
@@ -810,58 +821,59 @@ to the Supplemental Improper Payment Data report).</li>
 accuracy</h2>
 <p>The literature converges on one rule: whether an interval holds its
 nominal coverage depends mainly on the skew of the error distribution
-and the number of nonzero errors in the sample, not on the method’s
-name. Bootstrap intervals repair the low-error, right-skew failure well;
-they have barely been tested in the high-error, all-or-nothing regime
-that Medicare reviews actually produce.</p>
+and the number of nonzero errors in the sample (as opposed to the name
+of the method). Bootstrap intervals correct the low-error, right-skew
+failure well. However, they have barely been tested in the high-error,
+all-or-nothing setting that Medicare reviews actually produce.</p>
 <h3 id="normal-theory-intervals">Normal-theory intervals</h3>
 <ul>
 <li><strong>The principle of skew.</strong> A right-skewed population
-yields a conservative lower bound and a liberal upper bound; a
-left-skewed one reverses this (Cochran 1977, as applied by <a href="https://www150.statcan.gc.ca/n1/pub/12-001-x/2023002/article/00001-eng.pdf">Edwards,
+produces a conservative lower bound and a liberal upper bound, and a
+left-skewed population reverses this pattern (Cochran 1977, as applied
+by <a href="https://www150.statcan.gc.ca/n1/pub/12-001-x/2023002/article/00001-eng.pdf">Edwards,
 Liu &amp; Delage 2023</a>). Overpayment populations are a spike at zero
-plus a payment-shaped tail, so their skew flips as the error rate
+plus a payment-shaped tail, so their skew reverses as the error rate
 rises.</li>
 <li><strong>Low error rates: too conservative.</strong> With few nonzero
 errors, normal lower limits sit far below the truth. In Kvanli and
 Schauer’s simulations, the traditional 90% interval’s lower limit
-exceeded the true total in only 0.3–2.3% of samples against a nominal 5%
-(<a href="https://www.mtc.gov/wp-content/uploads/2023/04/The-Bootstrap-What-the-Government-Auditor-Should-Know.pdf">MTC
+exceeded the true total in only 0.3–2.3% of samples as opposed to a
+nominal 5% (<a href="https://www.mtc.gov/wp-content/uploads/2023/04/The-Bootstrap-What-the-Government-Auditor-Should-Know.pdf">MTC
 paper</a>). Neter and Loebbecke’s 1975 AICPA study of real accounting
 populations is the classic early demonstration that standard estimators’
 intervals miss nominal coverage when errors are rare.</li>
 <li><strong>High error rates: too liberal.</strong> In 166 Medicare
 integrity samples, more than 76% of payments were in error and the data
-fit an all-or-nothing model. Under that model a simple random sample of
+fit an all-or-nothing model. Under this model, a simple random sample of
 30 fell below 90% confidence once the error rate passed 0.6 for two of
 three test populations, and no stratification algorithm tested was
 viable for more than about half of 104 populations (Edwards et
-al. 2023). At very high error rates the bound can even exceed total
+al. 2023). At very high error rates, the bound can even exceed total
 payments.</li>
 <li><strong>Stratification can make it worse.</strong> Payment-based
-strata create left-skewed overpayment strata at high error rates; King
-and Madansky (2013) warn that careless stratification can invalidate the
-confidence coefficient itself.</li>
+strata create left-skewed overpayment strata at high error rates, and
+King and Madansky (2013) warn that careless stratification can
+invalidate the confidence coefficient itself.</li>
 <li><strong>CMS acknowledges the gap.</strong> PIM Chapter 8 accepts
-“standard methods” from texts and journals but concedes 90% coverage
-cannot be guaranteed in every audit (<a href="https://www.cms.gov/Regulations-and-Guidance/Guidance/Manuals/Downloads/pim83c08.pdf">PIM
+“standard methods” from texts and journals but acknowledges that 90%
+coverage cannot be guaranteed in every audit (<a href="https://www.cms.gov/Regulations-and-Guidance/Guidance/Manuals/Downloads/pim83c08.pdf">PIM
 Ch. 8, §8.4.5</a>).</li>
 </ul>
 <h3 id="bootstrap-intervals">Bootstrap intervals</h3>
 <ul>
 <li><strong>Theory.</strong> Percentile intervals are first-order
-accurate; BCa and bootstrap-<em>t</em> are second-order accurate,
+accurate, while BCa and bootstrap-<em>t</em> are second-order accurate,
 correcting for skewness at rate 1/<em>n</em> rather than 1/√<em>n</em>
-(Hall 1988; Efron 1987; DiCiccio &amp; Efron 1996). In small samples the
-percentile interval is too narrow, and bootstrap-<em>t</em> handles skew
-better (Hesterberg 2015).</li>
+(Hall 1988; Efron 1987; DiCiccio &amp; Efron 1996). In small samples,
+the percentile interval is too narrow, and bootstrap-<em>t</em> handles
+skew better (Hesterberg 2015).</li>
 <li><strong>Audit populations with rare errors.</strong> Kvanli and
 Schauer found BCa lower limits exceeded the truth in 3.2–4.5% of samples
 (nominal 5%), much closer than the traditional method, with average
 lower limits 6–530% higher depending on the expected number of errors.
-The gain fades after roughly 30 nonzero errors in the sample, where both
-methods agree. On twelve real tax-audit samples, BCa lower limits were
-3–548% higher.</li>
+The gain fades after roughly 30 nonzero errors in the sample, at which
+point both methods agree. On twelve real tax-audit samples, BCa lower
+limits were 3–548% higher.</li>
 <li><strong>Survey designs.</strong> Rescaled bootstraps reproduce
 design variance under stratified sampling (Rao &amp; Wu 1988; Rao, Wu
 &amp; Yue 1992). Simulation comparisons ranked coverage bootstrap &gt;
@@ -887,10 +899,11 @@ bootstrap</figcaption>
 <p><em>Source: Kvanli &amp; Schauer (Multistate Tax Commission), Tables
 1–3 · 15 population–sample-size cells, minimum 3 nonzero errors per
 sample.</em></p>
-<p>Even at 60 expected errors the normal-theory bound misses less than
-half as often as it should, so it under-recovers; BCa stays slightly
-conservative throughout. Populations had 2%, 5% and 10% error rates with
-exponential error sizes and 5,000 samples per cell.</p>
+<p>Even at 60 expected errors, the normal-theory bound misses less than
+half as often as it should, so it under-recovers. In contrast, BCa
+remains slightly conservative throughout. Populations had 2%, 5%, and
+10% error rates with exponential error sizes and 5,000 samples per
+cell.</p>
 <p><strong>Where the bootstrap is expected to fail or is
 untested:</strong></p>
 <ol type="1">
@@ -900,24 +913,25 @@ or to the single error. EIPM-scale error rates and small RADV contracts
 are at risk.</li>
 <li><strong>Bounded, all-or-nothing errors at high rates.</strong>
 Resampling cannot produce values outside the observed support and
-inherits the sample’s skew; whether that fixes the normal bound’s
-liberal behavior at error rates above 0.6 has not been published for
-Medicare data.</li>
-<li><strong>Tiny strata and systematic samples.</strong> Rescaling needs
-at least two units per stratum; PERM’s sorted systematic selection has
-no exact design-based variance, so any bootstrap treats it as implicitly
-stratified.</li>
+inherits the skew of the sample. Whether this corrects the normal
+bound’s liberal behavior at error rates above 0.6 has not been published
+for Medicare data.</li>
+<li><strong>Tiny strata and systematic samples.</strong> Rescaling
+requires at least two units per stratum, and the sorted systematic
+selection used by PERM has no exact design-based variance, so any
+bootstrap treats it as implicitly stratified.</li>
 <li><strong>Model-ranked frames.</strong> RADV PY 2019+ frames are
 chosen by a prediction model, so inference applies only to the frame. A
-bootstrap inside the frame is valid; extrapolating its interval beyond
-the frame is not.</li>
+bootstrap inside the frame is valid, but extrapolating its interval
+beyond the frame is not.</li>
 <li><strong>Composite and multi-phase estimators.</strong> Rolling PERM
 rates and claims-plus-eligibility composites require resampling each
-phase and component on its own design, then recombining; correlations
-between components (the overlap term) must be carried through.</li>
+phase and component on its own design, and then recombining them.
+Correlations between components (the overlap term) must be carried
+through.</li>
 <li><strong>Reproducibility.</strong> Tail quantiles need thousands of
 replicates, and appeals require that the result be replicable, so the
-seed, replicate count and Monte Carlo error must be documented as PIM
+seed, replicate count, and Monte Carlo error must be documented as PIM
 §8.4.4.2 already requires for sample selection.</li>
 </ol>
 <h3 id="alternatives-with-published-evidence">Alternatives with
@@ -987,19 +1001,19 @@ the settings CMS measures:</p>
 <li>APTC errors;</li>
 <li>the national CERT claims estimate.</li>
 </ul>
-<p>This covers analytic, bootstrap and audit-finding simulation methods
-alike. The closest evidence comes from Medicare FFS provider audits
-(high error, all-or-nothing) and tax and accounting audits (low error,
-right skew). The CMS programs span both regimes. Nor has the validity of
-audit-finding simulation intervals, with or without uncertainty in the
-rates, been tested.</p>
+<p>This gap applies to analytic, bootstrap, and audit-finding simulation
+methods alike. The closest evidence comes from Medicare FFS provider
+audits (high error, all-or-nothing) and tax and accounting audits (low
+error, right skew). The CMS programs span both settings. In addition,
+the validity of audit-finding simulation intervals (with or without
+uncertainty in the rates) has not been tested.</p>
 <h2 id="fit-of-simulation-and-bootstrap-methods-by-program">7. Fit of
 simulation and bootstrap methods by program</h2>
-<p>The case for bootstrap is strongest where samples are small, errors
-are skewed and an interval drives a dollar decision: RADV first, then
-PERM state eligibility rates, then EIPM. Part D already relies on
-simulation, so its question is validation rather than adoption. Part C
-IPM gains least.</p>
+<p>The case for the bootstrap is strongest where samples are small,
+errors are skewed, and an interval drives a dollar decision (RADV first,
+then PERM state eligibility rates, and then EIPM). Part D already relies
+on simulation, so the question for Part D is validation (as opposed to
+adoption). Part C IPM gains the least.</p>
 <table>
 <colgroup>
 <col style="width: 20%" />
@@ -1079,62 +1093,64 @@ all-or-nothing errors; DMEPOS rate above 20%</td>
 the CLT for a skewed, discrete variable (change in risk score).
 Bootstrap-<em>t</em> and BCa correct the skewness term the <em>t</em>
 bound ignores.</li>
-<li>The PY 2021 estimator is a ratio over enrollee-months; resampling
-enrollees (with all their months and HCCs) gets its variance without the
-linearization step.</li>
+<li>The PY 2021 estimator is a ratio over enrollee-months. Resampling
+enrollees (with all their months and HCCs) produces its variance without
+the linearization step.</li>
 <li>Resampling can bound the dollar payment error directly, including
-county-rate weighting, rather than bounding mean risk-score change and
-multiplying afterward.</li>
+county-rate weighting (as opposed to bounding the mean risk-score change
+and multiplying afterward).</li>
 </ul>
 <p><strong>Drawbacks.</strong></p>
 <ul>
 <li>The decision rule is one-sided: extrapolate if the bound exceeds
-zero, then recover the point estimate. What matters is the
-false-extrapolation rate when the true mean change is at or below zero,
-and at <em>n</em> = 35 percentile intervals are known to be too narrow,
-which would <em>raise</em> that rate.</li>
+zero, and then recover the point estimate. What matters is the
+false-extrapolation rate when the true mean change is at or below zero.
+At <em>n</em> = 35, percentile intervals are known to be too narrow,
+which would <em>raise</em> this rate.</li>
 <li>If the targeted frame yields mostly right-skewed changes (many
 zeros, some large HCC deletions), a better-calibrated bound can be
-higher than the <em>t</em> bound, as in Kvanli and Schauer. That would
-shift recoveries upward and invite challenge.</li>
-<li>Inference applies only to the prediction-model frame; the bootstrap
-cannot fix frame definition or the FFS-adjuster dispute.</li>
-<li>A method change mid-litigation is itself a legal event; any
+higher than the <em>t</em> bound, as in Kvanli and Schauer. This would
+shift recoveries upward and would likely invite challenge.</li>
+<li>Inference applies only to the prediction-model frame, and the
+bootstrap cannot resolve the frame definition or the FFS-adjuster
+dispute.</li>
+<li>A method change during litigation is itself a legal event, so any
 bootstrap must be fully replicable from a documented seed.</li>
 </ul>
-<p><strong>Implementation.</strong> Treat each contract as SRS without
-replacement from its frame; use a pseudo-population or rescaled
-bootstrap so the FPC is honored when <em>n</em>/<em>N</em> is large
-(frames can be as small as 30). Resample enrollees as clusters, compute
-the month-weighted mean change and the dollar estimate in each
-replicate, and form bootstrap-<em>t</em> and BCa bounds with at least
-5,000 replicates. Report the probability that the bound exceeds zero
-alongside the bound.</p>
+<p><strong>Implementation.</strong> Each contract should be treated as
+SRS without replacement from its frame, using a pseudo-population or
+rescaled bootstrap so that the FPC is honored when <em>n</em>/<em>N</em>
+is large (frames can be as small as 30). Enrollees should be resampled
+as clusters, the month-weighted mean change and the dollar estimate
+computed in each replicate, and bootstrap-<em>t</em> and BCa bounds
+formed with at least 5,000 replicates. The probability that the bound
+exceeds zero should be reported alongside the bound.</p>
 <h3 id="part-c-ipm">Part C IPM</h3>
 <p><strong>Benefits.</strong> Replicate weights give one variance method
 for gross, net, over- and underpayment rates and for HCC-level or
 plan-type domains. <strong>Drawbacks.</strong> The national sample is
-large and stratified, so the CLT should hold and coverage gains will be
-small. <strong>Implementation.</strong> Rao–Wu–Yue rescaled bootstrap
-within risk strata (resampling <em>n</em>ₕ−1 per stratum), percentile
-and BCa intervals compared against the current method; useful mainly as
-a cross-check and for domains.</p>
+large and stratified, so the CLT should hold, and coverage gains will
+likely be small. <strong>Implementation.</strong> The recommended
+approach is a Rao–Wu–Yue rescaled bootstrap within risk strata
+(resampling <em>n</em>ₕ−1 per stratum), with percentile and BCa
+intervals compared against the current method. This would be useful
+mainly as a cross-check and for domains.</p>
 <h3 id="part-d-ipm">Part D IPM</h3>
 <p><strong>Benefits.</strong> The estimator is a nonlinear simulation
 (corrected PDEs re-run through benefit phases and reinsurance), so
-linearization is impractical and resampling is the natural variance
-method; the asymmetric published intervals suggest this is already the
-approach.</p>
+linearization is impractical, and resampling is the natural variance
+method. The asymmetric published intervals suggest that this is already
+the approach.</p>
 <p><strong>Drawbacks and questions to settle.</strong></p>
 <ul>
 <li><em>What is resampled.</em> Resampling beneficiaries after their
-payment errors are computed is cheap and valid if each beneficiary’s
-simulated error is fixed. Re-running the benefit simulation inside each
-replicate is only needed if the simulation itself has stochastic
-inputs.</li>
+payment errors are computed is inexpensive and valid if the simulated
+error of each beneficiary is fixed. Re-running the benefit simulation
+inside each replicate is only needed if the simulation itself has
+stochastic inputs.</li>
 <li><em>Replicate count.</em> The FY 2023 cut in simulation iterations
-needs a Monte Carlo error target for the 2.5% and 97.5% quantiles, not
-just for the standard error.</li>
+needs a Monte Carlo error target for the 2.5% and 97.5% quantiles (as
+opposed to only the standard error).</li>
 <li><em>Design fidelity.</em> The FY 2025 switch from cohort to random
 beneficiary selection should be mirrored in the resampling scheme
 (strata, FPC).</li>
@@ -1142,85 +1158,91 @@ beneficiary selection should be mirrored in the resampling scheme
 redesign (including the $2,000 out-of-pocket cap) changes the benefit
 simulation for payment years from 2025, reported from FY 2027.</li>
 </ul>
-<p><strong>Implementation.</strong> Validate rather than replace: build
-a synthetic beneficiary population from historical PDE and error data,
-repeat the full sampling-review-simulation pipeline, and measure
-coverage and tail balance of the current interval against BCa and
+<p><strong>Implementation.</strong> The current method should be
+validated (as opposed to replaced) by building a synthetic beneficiary
+population from historical PDE and error data, repeating the full
+sampling-review-simulation pipeline, and measuring the coverage and tail
+balance of the current interval against BCa and
 bootstrap-<em>t</em>.</p>
 <h3 id="perm">PERM</h3>
 <p><strong>Benefits.</strong></p>
 <ul>
 <li>The overall rate is a composite (FFS + managed care + eligibility −
-overlap, at federal share) and the national rate pools three cycles.
+overlap, at federal share), and the national rate pools three cycles.
 Replicate weights carry every covariance through without hand-derived
 formulas.</li>
-<li>From FY 2030 a state eligibility rate above 3% triggers
+<li>Beginning in FY 2030, a state eligibility rate above 3% triggers
 disallowance. With a few hundred cases per state, a one-sided bound near
 3% needs calibrated coverage, and whether the statute’s “rate” means the
 point estimate or a bound is a rulemaking question worth raising.</li>
 </ul>
 <p><strong>Drawbacks.</strong> Systematic selection after sorting by
-paid amount has no exact variance estimator; eligibility cases are a
-second phase attached to sampled payments; difference resolution and
-appeals change findings after sampling; and the three cycles measure
-different years.</p>
-<p><strong>Implementation.</strong> Generate replicate weights per state
-at selection time, treating sorted systematic samples as implicitly
-stratified (paired adjacent units); resample the eligibility phase
-within the sampled payments; compute each component and the composite
-per replicate. Because states are sampled independently, national
-replicates come from summing state replicate totals.</p>
+paid amount has no exact variance estimator. In addition, eligibility
+cases are a second phase attached to sampled payments, difference
+resolution and appeals change findings after sampling, and the three
+cycles measure different years.</p>
+<p><strong>Implementation.</strong> Replicate weights should be
+generated per state at selection time, treating sorted systematic
+samples as implicitly stratified (paired adjacent units). The
+eligibility phase should then be resampled within the sampled payments,
+and each component and the composite computed per replicate. Because
+states are sampled independently, national replicates come from summing
+state replicate totals.</p>
 <h3 id="eipm-aptc">EIPM (APTC)</h3>
 <p><strong>Benefits.</strong> At an error rate under 1%, a
-2,000-application sample sits squarely in the rare-error regime where
-normal upper bounds are liberal and lower bounds conservative; BCa helps
-both tails. SBE measurement from 2027 will produce smaller state samples
-where this matters more.</p>
-<p><strong>Drawbacks.</strong> Strata with zero observed errors give
-degenerate resamples; household-level APTC errors are bounded by the
+2,000-application sample sits squarely in the rare-error setting where
+normal upper bounds are liberal and lower bounds are conservative, and
+BCa helps both tails. SBE measurement beginning in 2027 will produce
+smaller state samples where this matters more.</p>
+<p><strong>Drawbacks.</strong> Strata with zero observed errors produce
+degenerate resamples, and household-level APTC errors are bounded by the
 monthly APTC and may be all-or-nothing when eligibility fails.</p>
-<p><strong>Implementation.</strong> Stratified rescaled bootstrap with
-BCa and bootstrap-<em>t</em>; flag strata with zero or one error and
-compare against empirical likelihood and a zero-inflated parametric
-bound.</p>
+<p><strong>Implementation.</strong> The recommended approach is a
+stratified rescaled bootstrap with BCa and bootstrap-<em>t</em>, with
+strata that have zero or one error flagged and compared against
+empirical likelihood and a zero-inflated parametric bound.</p>
 <h2 id="research-agenda-validating-comparative-accuracy">8. Research
 agenda: validating comparative accuracy</h2>
-<p>The strongest design is a design-based Monte Carlo study: build
-realistic finite populations for each program, rerun the program’s
-actual sampling design and estimator thousands of times, and score every
-interval method against the known truth on the metric that matches how
-the interval is used. This is the approach Edwards et al. use for FFS
-audits, extended to bootstrap and audit-finding simulation comparators
-and to the five CMS designs.</p>
+<p>The strongest design is a design-based Monte Carlo study. Such a
+study would build realistic finite populations for each program, rerun
+the program’s actual sampling design and estimator thousands of times,
+and score every interval method against the known truth on the metric
+that matches how the interval is used. This is the approach Edwards et
+al. use for FFS audits, extended to bootstrap and audit-finding
+simulation comparators and to the five CMS designs.</p>
 <h3 id="study-pipeline">Study pipeline</h3>
 <ol type="1">
-<li><strong>Build populations.</strong> Fit unit-level error models to
-historical review outcomes: HCC-level validation probabilities and
+<li><strong>Build populations.</strong> Unit-level error models are fit
+to historical review outcomes: HCC-level validation probabilities and
 hierarchy moves for Part C and RADV; PDE-level documentation failure and
 pricing discrepancy for Part D; case-level eligibility error for PERM;
-application-level APTC error for EIPM. Impose them on real frame
-covariates (payments, risk scores, county rates) to form “plasmode”
-populations, then add stress populations on an error-rate grid from 0.01
-to 0.95 with right-, left- and two-spike payment shapes.</li>
-<li><strong>Apply the real design.</strong> Reproduce frame rules
-(including the RADV prediction-model frame), strata, sample sizes and
-selection mechanics (sorted systematic selection for PERM; cohort versus
-random beneficiary for Part D).</li>
-<li><strong>Apply the production estimator</strong> and plausible
-alternatives (ratio vs expansion; enrollee-month weighting).</li>
-<li><strong>Compute every interval method</strong> on each simulated
-sample (list below).</li>
-<li><strong>Score</strong> against the population truth and repeat
-10,000 times per scenario cell.</li>
-<li><strong>Stress-test</strong> with review measurement error (coder
-disagreement, overturns on appeal), missing records scored as errors,
-and frame misspecification.</li>
+application-level APTC error for EIPM. These models are imposed on real
+frame covariates (payments, risk scores, and county rates) to form
+“plasmode” populations, and stress populations are added on an
+error-rate grid from 0.01 to 0.95 with right-, left-, and two-spike
+payment shapes.</li>
+<li><strong>Apply the real design.</strong> Frame rules (including the
+RADV prediction-model frame), strata, sample sizes, and selection
+mechanics are reproduced (sorted systematic selection for PERM; cohort
+versus random beneficiary for Part D).</li>
+<li><strong>Apply the production estimator.</strong> The production
+estimator is applied along with plausible alternatives (ratio vs
+expansion; enrollee-month weighting).</li>
+<li><strong>Compute every interval method.</strong> Every interval
+method (listed below) is computed on each simulated sample.</li>
+<li><strong>Score.</strong> Each interval is scored against the
+population truth, and the process is repeated 10,000 times per scenario
+cell.</li>
+<li><strong>Stress-test.</strong> Results are stress-tested with review
+measurement error (for example, coder disagreement and overturns on
+appeal), missing records scored as errors, and frame
+misspecification.</li>
 </ol>
 <h3 id="comparators">Comparators</h3>
 <p>Current analytic interval (<em>z</em> and <em>t</em>, Satterthwaite
 df where stratified); naive bootstrap percentile; design (rescaled or
 pseudo-population) bootstrap with percentile, basic,
-bootstrap-<em>t</em> and BCa intervals; calibrated (double) bootstrap;
+bootstrap-<em>t</em>, and BCa intervals; calibrated (double) bootstrap;
 empirical likelihood; and, for RADV, a hypergeometric or minimum-sum
 bound as a conservative floor.</p>
 <h3 id="metrics-matched-to-the-intervals-use">Metrics, matched to the
@@ -1264,11 +1286,11 @@ is at or below 3%, and the reverse</td>
 </tr>
 </tbody>
 </table>
-<p>Define “viable” before running: for example, one-sided exceedance
-within nominal + 2 Monte Carlo standard errors in every scenario cell.
-With 10,000 replications the Monte Carlo standard error of a 10%
-exceedance rate is 0.3 percentage points. Among viable methods, rank by
-recovery or width.</p>
+<p>“Viable” should be defined before running the study (for example,
+one-sided exceedance within nominal + 2 Monte Carlo standard errors in
+every scenario cell). With 10,000 replications, the Monte Carlo standard
+error of a 10% exceedance rate is 0.3 percentage points. Viable methods
+can then be ranked by recovery or width.</p>
 <h3 id="scenario-grid">Scenario grid</h3>
 <table>
 <colgroup>
@@ -1328,13 +1350,13 @@ frames</td>
 <h3 id="computation">Computation</h3>
 <p>A bootstrap inside a Monte Carlo study multiplies costs: 10,000 outer
 replications × 5,000 resamples is 5 × 10⁷ estimator evaluations per
-cell. Three things keep it tractable: precompute unit-level errors so
-each resample is a weighted sum; generate multinomial or rescaled
-weights in vectorized blocks; and run cells as independent batch jobs
-over Parquet-staged populations. The warp-speed method of Giacomini,
-Politis and White (2013) can screen percentile-type intervals with one
-resample per outer replication before full runs; it does not cover
-BCa.</p>
+cell. Three practices keep this tractable: precomputing unit-level
+errors so that each resample is a weighted sum, generating multinomial
+or rescaled weights in vectorized blocks, and running cells as
+independent batch jobs over Parquet-staged populations. The warp-speed
+method of Giacomini, Politis and White (2013) can screen percentile-type
+intervals with one resample per outer replication before full runs, but
+it does not cover BCa.</p>
 <h3 id="data-and-access-needs">Data and access needs</h3>
 <p>The study would be strongest with:</p>
 <ul>
@@ -1343,15 +1365,16 @@ Estimation Methodology Plans (sample sizes, strata, interval algorithms,
 replicate counts) and the PERM statistical contractor’s variance
 specification.</li>
 <li><strong>Historical review outcomes,</strong> at the unit level, held
-under appropriate data use terms. They would be used to calibrate error
-models.</li>
+under appropriate data use terms. These outcomes would be used to
+calibrate error models.</li>
 <li><strong>Agreed metrics.</strong> A primary metric for each program,
 agreed with the reporting and recovery offices.</li>
 </ul>
 <p>Without these, a study can still proceed on synthetic populations
-calibrated to public aggregates, with illustrative strata where the real
-ones are not published. That is the approach of the companion Monte
-Carlo evaluation, which applies this agenda to all five programs.</p>
+calibrated to public aggregates, with illustrative strata where the
+actual strata are not published. This is the approach of the companion
+Monte Carlo evaluation, which applies this agenda to all five
+programs.</p>
 <h2 id="conclusions">9. Conclusions</h2>
 <p>The methods CMS uses to estimate improper payments are well
 established in survey sampling, but their accuracy in these settings is
@@ -1361,23 +1384,23 @@ largely untested:</p>
 with normal-theory intervals.</li>
 <li><strong>Part D</strong> relies on simulation.</li>
 </ul>
-<p>The evidence that exists points in a consistent direction. Interval
+<p>The existing evidence points in a consistent direction. Interval
 accuracy depends on the skew of the errors and the number of nonzero
 errors in the sample. Normal-theory intervals are conservative when
 errors are rare and liberal when they are frequent. Second-order
-bootstrap intervals correct much of the rare-error failure, but have
+bootstrap intervals correct much of the rare-error failure but have
 barely been tested where errors are frequent and all-or-nothing.</p>
-<p>Audit-finding simulation is attractive for nonlinear payment rules,
-yet its intervals have never been validated. Because it does not
-resample the audit, it carries a specific risk: understating
+<p>Audit-finding simulation is attractive for nonlinear payment rules.
+However, its intervals have never been validated. Because it does not
+resample the audit, it carries a specific risk of understating
 uncertainty.</p>
 <p>The comparative accuracy of these methods should therefore be
 established empirically before any of them is relied on for new uses.
-The design is a Monte Carlo evaluation against populations with known
-truth, run under each program’s actual design and scored on the metric
-that matches how the estimate is used. The new uses include smaller
-audits, state-level PERM disallowances, State-based Exchange measurement
-and contract-level recovery.</p>
+The appropriate design is a Monte Carlo evaluation against populations
+with known truth, run under each program’s actual design and scored on
+the metric that matches how the estimate is used. These new uses include
+smaller audits, state-level PERM disallowances, State-based Exchange
+measurement, and contract-level recovery.</p>
 <h2 id="references-annotated">References (annotated)</h2>
 <p>Sixty-six sources in seven groups. Linked entries were opened for
 this review; unlinked classic references are cited from standard
