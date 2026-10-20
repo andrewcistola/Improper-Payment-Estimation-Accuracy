@@ -44,7 +44,7 @@ The audit-finding bootstrap differs from the textbook bootstrap (Efron and Tibsh
 
 ## 2. Purpose
 
-The purpose of this study is to answer the question: **what is the comparative accuracy of the available methods for estimating improper payments in federal health programs?** The methods are:
+The purpose of this study is to compare the accuracy of **available methods for estimating improper payments in federal health programs**. The methods are:
 
 - three design-based analytic estimators (expansion, ratio, and a model-assisted regression estimator);
 - audit-finding bootstrap simulation.

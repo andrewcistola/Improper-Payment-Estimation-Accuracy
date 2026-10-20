@@ -14,7 +14,7 @@ date: "October 2026"
 
 **Background.** The Payment Integrity Information Act of 2019 requires statistically valid improper payment estimates, with confidence intervals, for federal programs at risk of significant improper payments. The Centers for Medicare & Medicaid Services (CMS) produces five such estimates: Medicare Part C, Medicare Part D, Medicaid and CHIP (PERM), the Marketplace advance premium tax credit (EIPM), and Medicare fee-for-service (CERT). Each estimate projects audited errors from a probability sample using either design-based analytic estimators (expansion, ratio, or regression) or simulation that reruns the payment rules.
 
-**Objective.** The purpose of this review is to describe what is known about the comparative accuracy of the available methods for estimating improper payments in federal health programs. In this review, accuracy has two parts:
+**Objective.** The purpose of this review is to summarize the evidence comparing available methods for estimating improper payments in federal health programs. In this review, accuracy has two parts:
 
 - point accuracy;
 - interval accuracy (coverage at the nominal level and, after that, width).
@@ -45,7 +45,7 @@ Every improper payment estimate in a federal health program does three things:
 
 These estimates matter. The five CMS measurements reported more than $90 billion in improper payments for FY 2025, and their confidence intervals are audited by Inspectors General. In addition, in some settings the estimates become financial determinations (for example, Medicare Advantage contract recoveries and, beginning in FY 2030, Medicaid federal match disallowances above a 3% eligibility error rate).
 
-The purpose of this review is to answer the question: **what is known about the comparative accuracy of the available methods for estimating improper payments in federal health programs?** This review defines accuracy as in the companion Monte Carlo study:
+The purpose of this review is to summarize the evidence comparing **available methods for estimating improper payments in federal health programs**. This review defines accuracy as in the companion Monte Carlo study:
 
 - **Point accuracy:** how close the estimate is to the true improper payment.
 - **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage) and, among intervals that do, how narrow the interval is (width).
