@@ -1,0 +1,10 @@
+Run 2026-10-21 19:05:33 EDT: python start-here/verify.py check
+
+RESULT CHECK
+  Output files identical to the published files: 183 of 183
+  identical            shared/results/report/by_scenario.csv
+  identical            manuscripts/generated/results_long.csv
+  identical            manuscripts/generated/tables.md
+  identical            part-d-ipm/pre-ira-reference.md
+
+REPRODUCED EXACTLY: every output file is byte-for-byte identical to the published results.

@@ -1,0 +1,42 @@
+[
+  {
+    "metric": "gross_rate",
+    "value": 0.009150949508616543,
+    "target": 0.0089,
+    "diff": 0.0002509495086165433,
+    "tolerance": 0.001,
+    "rel": false,
+    "status": "pass",
+    "source": "EIPM gross improper rate 0.89% (FY 2025)"
+  },
+  {
+    "metric": "technical_rate",
+    "value": 0.004337479305429997,
+    "target": 0.0043,
+    "diff": 3.747930542999725e-05,
+    "tolerance": 0.001,
+    "rel": false,
+    "status": "pass",
+    "source": "technically improper 0.43 points (FY 2025, $282.44M)"
+  },
+  {
+    "metric": "underpayments",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "no underpayments (FY 2023-2025)"
+  },
+  {
+    "metric": "unique ids: population",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  }
+]

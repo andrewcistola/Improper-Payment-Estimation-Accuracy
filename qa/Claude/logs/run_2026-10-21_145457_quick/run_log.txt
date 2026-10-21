@@ -1,0 +1,32 @@
+[2026-10-21 14:54:57] === Quick trial run started 2026-10-21 14:54 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_145457_quick/ ===
+
+[2026-10-21 14:54:57] Stage 1 of 2: Build the synthetic populations
+[2026-10-21 14:54:57]   running: part-c-ipm/errors/config.yaml
+[2026-10-21 14:55:00]     done in 0m 03s
+[2026-10-21 14:55:00]   running: part-d-ipm/errors/config.yaml
+[2026-10-21 14:55:25]     done in 0m 25s
+[2026-10-21 14:55:25]   running: eipm/errors/config.yaml
+[2026-10-21 14:55:27]     done in 0m 02s
+[2026-10-21 14:55:27]   running: perm-cert/errors/perm.yaml
+[2026-10-21 14:55:35]     done in 0m 09s
+[2026-10-21 14:55:35]   running: perm-cert/errors/cert.yaml
+[2026-10-21 14:55:48]     done in 0m 13s
+[2026-10-21 14:55:48] Stage 1 finished in 0m 51s
+
+[2026-10-21 14:55:48] Stage 2 of 2: Trial estimation: 3 audit years, 100 iterations (written to start-here/_quick/)
+[2026-10-21 14:55:48]   running: part-c-ipm/estimation/config.yaml --out start-here/_quick/part-c --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:55:55]     done in 0m 07s
+[2026-10-21 14:55:55]   running: part-d-ipm/estimation/config.yaml --out start-here/_quick/part-d --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:56:28]     done in 0m 32s
+[2026-10-21 14:56:28]   running: eipm/estimation/config.yaml --out start-here/_quick/eipm --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:56:31]     done in 0m 03s
+[2026-10-21 14:56:31]   running: perm-cert/estimation/perm.yaml --out start-here/_quick/perm --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:56:53]     done in 0m 22s
+[2026-10-21 14:56:53]   running: perm-cert/estimation/perm_national.yaml --out start-here/_quick/perm --set perm_results_dir=start-here/_quick/perm
+[2026-10-21 14:56:53]     done in 0m 01s
+[2026-10-21 14:56:53]   running: perm-cert/estimation/cert.yaml --out start-here/_quick/cert --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:57:25]     done in 0m 32s
+[2026-10-21 14:57:25] Stage 2 finished in 1m 37s
+
+[2026-10-21 14:57:25] All stages finished in 2m 28s.
+[2026-10-21 14:57:25] Your setup works. Start the full replication with:  python start-here/run_all.py

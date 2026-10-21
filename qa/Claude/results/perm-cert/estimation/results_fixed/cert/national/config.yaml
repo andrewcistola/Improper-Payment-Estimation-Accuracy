@@ -1,0 +1,35 @@
+program: cert_estimation
+scenario: national
+master_seed: 20261016
+scenario_seed: 762094211143775391
+variables:
+  population_dir: perm-cert/errors/output/cert/national
+  claim_audit:
+  - claim_type: ipps
+    n: 8750
+  - claim_type: part_a_other
+    n: 8651
+  - claim_type: part_b
+    n: 11600
+  - claim_type: dmepos
+    n: 8650
+  reps: 25
+  sim_reps: 25
+  sim_iterations: 1000
+  sim_rates: fixed
+  reg_predictors:
+  - x
+  reg_min_errors: 10
+  alpha: 0.05
+  scenario: national
+steps:
+- sql: perm-cert/estimation/sql/cert_01_frame.sql
+- sql: perm-cert/estimation/sql/cert_02_sample.sql
+- sql: perm-cert/estimation/sql/cert_10_expansion.sql
+- sql: perm-cert/estimation/sql/cert_20_ratio.sql
+- sql: perm-cert/estimation/sql/cert_30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
+- sql: perm-cert/estimation/sql/cert_40_simulation_inputs.sql
+- python: perm-cert/estimation/cert_simulation.py
+- sql: perm-cert/estimation/sql/cert_90_score.sql

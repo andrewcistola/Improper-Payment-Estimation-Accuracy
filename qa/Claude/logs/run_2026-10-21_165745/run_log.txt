@@ -1,0 +1,18 @@
+[2026-10-21 16:57:45] === Full replication started 2026-10-21 16:57 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_165745/ ===
+
+[2026-10-21 16:57:45] Stage 3 of 8: Estimate: fixed-rate bootstrap (comparison), same audits
+[2026-10-21 16:57:45]   running: part-c-ipm/estimation/config.yaml --out part-c-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 17:01:43]     done in 3m 57s
+[2026-10-21 17:01:43]   running: part-d-ipm/estimation/config.yaml --out part-d-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 17:24:42]     done in 22m 59s
+[2026-10-21 17:24:42]   running: eipm/estimation/config.yaml --out eipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 17:25:35]     done in 0m 53s
+[2026-10-21 17:25:35]   running: perm-cert/estimation/perm.yaml --out perm-cert/estimation/results_fixed/perm --set sim_rates=fixed
+[2026-10-21 17:36:28]     done in 10m 53s
+[2026-10-21 17:36:28]   running: perm-cert/estimation/perm_national.yaml --out perm-cert/estimation/results_fixed/perm --set perm_results_dir=perm-cert/estimation/results_fixed/perm
+[2026-10-21 17:36:29]     done in 0m 01s
+[2026-10-21 17:36:29]   running: perm-cert/estimation/cert.yaml --out perm-cert/estimation/results_fixed/cert --set sim_rates=fixed
+[2026-10-21 18:00:45]     done in 24m 16s
+[2026-10-21 18:00:45] Stage 3 finished in 1h 02m 59s
+
+[2026-10-21 18:00:45] All stages finished in 1h 02m 59s.

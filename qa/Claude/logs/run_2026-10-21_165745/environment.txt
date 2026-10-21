@@ -1,0 +1,20 @@
+Run started:        2026-10-21 16:57:45 EDT (UTC-0400)
+Run type:           full replication, stages 3 to 3
+Command:            python start-here/run_all.py --only 3
+Project folder:     /tmp/claude-0/-home-claude/42cb9023-b3be-56b3-ab9a-06a6ce4302a7/scratchpad/repo
+Project version:    33c6c47068df10f5f7cb56c8bf3c00cdd210a50d
+Computer name:      vm
+Operating system:   Linux-6.18.44-fc-v139-x86_64-with-glibc2.39
+Processor:          x86_64 x86_64
+Processor cores:    2
+Memory:             7.8 GB
+Python:             3.13.16 (/tmp/claude-0/-home-claude/42cb9023-b3be-56b3-ab9a-06a6ce4302a7/scratchpad/repo/.venv/bin/python)
+  duckdb            1.5.6
+  pyarrow           26.0.0
+  numpy             2.5.4
+  numba             0.68.0
+  pyyaml            6.0.3
+  scipy             1.18.1
+  pandas            3.0.6
+  matplotlib        3.11.2
+  pytest            9.1.1

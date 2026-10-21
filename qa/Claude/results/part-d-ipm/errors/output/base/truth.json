@@ -1,0 +1,33 @@
+{
+  "by": {
+    "calibration": {
+      "pass_1": {
+        "m": 1.0,
+        "realized_gross": 2917962.79
+      }
+    },
+    "error_type_share": {
+      "pde_count": {
+        "full_error": 0.8996864978872684,
+        "partial_error": 0.10031350211273163
+      }
+    }
+  },
+  "overall": {
+    "claim_err_rate_ltc": 0.09935471033032009,
+    "claim_err_rate_other": 0.02501649131026514,
+    "direct_subsidy": 60811560000.0,
+    "gross_rate": 0.013821358297082578,
+    "lics": 11935654900.0,
+    "n_units": 108000.0,
+    "net_rate": 0.01342936858828989,
+    "overpayments": 1438292195.0,
+    "payments": 105559914130.0,
+    "reinsurance": 32812699230.0,
+    "share_catastrophic": 0.1403611111111111,
+    "underpayments": 20689200.0,
+    "unit_err_rate": 0.1981111111111111
+  },
+  "program": "partd",
+  "scenario": "base"
+}

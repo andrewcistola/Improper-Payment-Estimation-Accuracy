@@ -1,0 +1,36 @@
+[2026-10-21 18:04:52] === Full replication started 2026-10-21 18:04 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_180449/ ===
+
+[2026-10-21 18:04:52] Stage 4 of 8: Part D under the pre-IRA benefit (robustness reference)
+[2026-10-21 18:04:52]   running: part-d-ipm/estimation/pre_ira.yaml
+[2026-10-21 18:35:08]     done in 30m 17s
+[2026-10-21 18:35:08]   running: part-d-ipm/estimation/pre_ira.yaml --out part-d-ipm/estimation/results_pre_ira_fixed --set sim_rates=fixed
+[2026-10-21 19:03:14]     done in 28m 05s
+[2026-10-21 19:03:14]   running: part-d-ipm/estimation/pre_ira_reference.py
+[2026-10-21 19:03:14]     done in 0m 01s
+[2026-10-21 19:03:14] Stage 4 finished in 58m 23s
+
+[2026-10-21 19:03:14] Stage 5 of 8: Join every estimate to the truth (README tables)
+[2026-10-21 19:03:14]   running: shared/summary.yaml
+[2026-10-21 19:03:15]     done in 0m 01s
+[2026-10-21 19:03:15]   running: shared/report.yaml
+[2026-10-21 19:03:16]     done in 0m 01s
+[2026-10-21 19:03:16] Stage 5 finished in 0m 01s
+
+[2026-10-21 19:03:16] Stage 6 of 8: Build the manuscript's tables and figures
+[2026-10-21 19:03:16]   running: manuscripts/scripts/build_tables.py
+[2026-10-21 19:03:19]     done in 0m 04s
+[2026-10-21 19:03:19]   running: manuscripts/scripts/assemble.py
+[2026-10-21 19:03:19]     done in 0m 00s
+[2026-10-21 19:03:19] Stage 6 finished in 0m 04s
+
+[2026-10-21 19:03:19] Stage 7 of 8: Run the automated tests
+[2026-10-21 19:03:19]   running: -m pytest -q shared/tests
+[2026-10-21 19:04:19]     done in 1m 00s
+[2026-10-21 19:04:19] Stage 7 finished in 1m 00s
+
+[2026-10-21 19:04:19] Stage 8 of 8: Compare your results with the published results
+[2026-10-21 19:04:19]   running: start-here/verify.py check
+[2026-10-21 19:04:22]     done in 0m 03s
+[2026-10-21 19:04:22] Stage 8 finished in 0m 03s
+
+[2026-10-21 19:04:22] All stages finished in 59m 30s.

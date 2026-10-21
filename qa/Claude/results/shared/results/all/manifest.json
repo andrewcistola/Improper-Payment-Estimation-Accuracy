@@ -1,0 +1,18 @@
+{
+  "config_file": "shared/summary.yaml",
+  "config_sha256": "ff9ad2cc558e0bcb8c5dd474d6c7d91d3fde5011ecad8b68be1e2f7892aea777",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 145,
+      "sha256": "44c9dc4c215a1b32785cb717695c7e62d26ae4cf4581e8104c776082c4e567ea"
+    },
+    "summary.json": {
+      "bytes": 94766,
+      "sha256": "a08e1fa4ceb5f0f6fe5f9858ef971414c1c0e5ec1d6fb7094716139aef9236bc"
+    }
+  },
+  "program": "summary",
+  "python": "3.13.16",
+  "scenario": "all"
+}

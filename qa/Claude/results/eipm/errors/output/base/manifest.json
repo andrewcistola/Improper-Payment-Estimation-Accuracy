@@ -1,0 +1,31 @@
+{
+  "config_file": "eipm/errors/config.yaml",
+  "config_sha256": "23249200a534387254661dae63a7ff59d01e9d99e962f4036a5c4eb3cbd361c7",
+  "duckdb": "1.5.6",
+  "files": {
+    "checks.json": {
+      "bytes": 961,
+      "sha256": "c611767079c7aff065afec24364bf9718ec95a2d9b64b2ed23e930a051665803"
+    },
+    "config.yaml": {
+      "bytes": 778,
+      "sha256": "d53026eb9cb7dc36d375dd0838669be321f3c5b076c2c88a92914d6ba8f6c7b7"
+    },
+    "design.yaml": {
+      "bytes": 311,
+      "sha256": "bbc19cb0bb4c7f9c07a0248ef021ba13148424987c7dc76877658e23bddc29ec"
+    },
+    "population.parquet": {
+      "bytes": 2658242,
+      "rows": 142152,
+      "sha256": "23251e3e5dde59e68404d5a5d731fb05d866277810d80c78b303667a708d0367"
+    },
+    "truth.json": {
+      "bytes": 2905,
+      "sha256": "f37a90a40939fe06a89f0def6f848bc20220bd713c00fe7fe9e3a049e4afbef5"
+    }
+  },
+  "program": "eipm",
+  "python": "3.13.16",
+  "scenario": "base"
+}

@@ -1,0 +1,22 @@
+program: partc
+scenario: base
+master_seed: 20261016
+scenario_seed: 3223099075479152603
+variables:
+  n_contracts: 550
+  total_enrollees: 330000
+  w_pop: 100.0
+  payment_target: 388720000000.0
+  target_unsup: 0.0529
+  target_md: 0.0022
+  target_under: 0.0057
+  p_md: 0.003
+  p_add: 0.03
+  scenario: base
+steps:
+- sql: part-c-ipm/errors/sql/01_contracts.sql
+- sql: part-c-ipm/errors/sql/02_enrollees_hccs.sql
+- sql: part-c-ipm/errors/sql/03_payments.sql
+- sql: part-c-ipm/errors/sql/04_apply_errors.sql
+- sql: part-c-ipm/errors/sql/05_population_truth.sql
+- sql: part-c-ipm/errors/sql/06_checks.sql

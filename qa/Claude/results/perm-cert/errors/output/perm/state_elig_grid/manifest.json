@@ -1,0 +1,36 @@
+{
+  "config_file": "perm-cert/errors/perm.yaml",
+  "config_sha256": "c86f282da1af17caf52081d502be31ada4f205028ca3219b362f9ce3525ae397",
+  "duckdb": "1.5.6",
+  "files": {
+    "checks.json": {
+      "bytes": 2820,
+      "sha256": "7753a502a27f94c360873199d39c59b6afd91091dd5ab6cd17ee20e47033b8fc"
+    },
+    "config.yaml": {
+      "bytes": 961,
+      "sha256": "7f2833561bc8ae03b755dfb048117dfe0cb937cf12ed119483cae26c7fb636ce"
+    },
+    "design.yaml": {
+      "bytes": 529,
+      "sha256": "b0b078092054dbd3282be81e7ec15cd5f6b37e116c7194501de0342f8c83a5c9"
+    },
+    "population.parquet": {
+      "bytes": 18567531,
+      "rows": 3088859,
+      "sha256": "8e9aa27654ce4f534490221def1e3f450d4ea85aba2de29b99335bd680e76b5c"
+    },
+    "states.parquet": {
+      "bytes": 568,
+      "rows": 9,
+      "sha256": "de2353947e736da961df545ed0943ca36d2857b5f87a03b4f6f4624744f4692b"
+    },
+    "truth.json": {
+      "bytes": 8873,
+      "sha256": "6a8c4801af468b44e3b9c24a855dc67edbb3949e123a548eb79de427b1303bad"
+    }
+  },
+  "program": "perm",
+  "python": "3.13.16",
+  "scenario": "state_elig_grid"
+}

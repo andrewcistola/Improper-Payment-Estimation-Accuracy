@@ -1,0 +1,8 @@
+program: summary
+scenario: all
+master_seed: 0
+scenario_seed: 1031706655446494814
+variables:
+  scenario: all
+steps:
+- sql: shared/sql/summary.sql

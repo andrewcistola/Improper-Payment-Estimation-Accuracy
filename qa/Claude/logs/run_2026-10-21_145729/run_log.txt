@@ -1,0 +1,44 @@
+[2026-10-21 14:57:29] === Full replication started 2026-10-21 14:57 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_145729/ ===
+
+[2026-10-21 14:57:29] Stage 1 of 8: Build the synthetic populations
+[2026-10-21 14:57:29]   running: part-c-ipm/errors/config.yaml
+[2026-10-21 14:57:32]     done in 0m 03s
+[2026-10-21 14:57:32]   running: part-d-ipm/errors/config.yaml
+[2026-10-21 14:57:56]     done in 0m 24s
+[2026-10-21 14:57:56]   running: eipm/errors/config.yaml
+[2026-10-21 14:57:57]     done in 0m 01s
+[2026-10-21 14:57:57]   running: perm-cert/errors/perm.yaml
+[2026-10-21 14:58:07]     done in 0m 09s
+[2026-10-21 14:58:07]   running: perm-cert/errors/cert.yaml
+[2026-10-21 14:58:19]     done in 0m 13s
+[2026-10-21 14:58:19]   running: part-d-ipm/errors/pre_ira.yaml
+[2026-10-21 14:58:47]     done in 0m 27s
+[2026-10-21 14:58:47] Stage 1 finished in 1m 17s
+
+[2026-10-21 14:58:47] Stage 2 of 8: Estimate: every method, parametric-rate bootstrap (reported results)
+[2026-10-21 14:58:47]   running: part-c-ipm/estimation/config.yaml
+[2026-10-21 15:02:40]     done in 3m 53s
+[2026-10-21 15:02:40]   running: part-d-ipm/estimation/config.yaml
+[2026-10-21 15:26:00]     done in 23m 21s
+[2026-10-21 15:26:00]   running: eipm/estimation/config.yaml
+[2026-10-21 15:27:03]     done in 1m 02s
+[2026-10-21 15:27:03]   running: perm-cert/estimation/perm.yaml
+[2026-10-21 15:38:22]     done in 11m 20s
+[2026-10-21 15:38:22]   running: perm-cert/estimation/perm_national.yaml
+[2026-10-21 15:38:23]     done in 0m 01s
+[2026-10-21 15:38:23]   running: perm-cert/estimation/cert.yaml
+[2026-10-21 16:04:01]     done in 25m 38s
+[2026-10-21 16:04:01] Stage 2 finished in 1h 05m 15s
+
+[2026-10-21 16:04:01] Stage 3 of 8: Estimate: fixed-rate bootstrap (comparison), same audits
+[2026-10-21 16:04:01]   running: part-c-ipm/estimation/config.yaml --out part-c-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 16:07:50]     done in 3m 49s
+[2026-10-21 16:07:50]   running: part-d-ipm/estimation/config.yaml --out part-d-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 16:30:18]     done in 22m 28s
+[2026-10-21 16:30:18]   running: eipm/estimation/config.yaml --out eipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 16:31:10]     done in 0m 52s
+[2026-10-21 16:31:10]   running: perm-cert/estimation/perm.yaml --out perm-cert/estimation/results_fixed/perm --set sim_rates=fixed
+[2026-10-21 16:42:19]     done in 11m 09s
+[2026-10-21 16:42:19]   running: perm-cert/estimation/perm_national.yaml --out perm-cert/estimation/results_fixed/perm --set perm_results_dir=perm-cert/estimation/results_fixed/perm
+[2026-10-21 16:42:20]     done in 0m 01s
+[2026-10-21 16:42:20]   running: perm-cert/estimation/cert.yaml --out perm-cert/estimation/results_fixed/cert --set sim_rates=fixed

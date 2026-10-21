@@ -1,0 +1,36 @@
+{
+  "config_file": "part-d-ipm/errors/config.yaml",
+  "config_sha256": "fae2a5b9dc49788b282e3544908e671eb47cc1950759718748e1f0229a423bce",
+  "duckdb": "1.5.6",
+  "files": {
+    "checks.json": {
+      "bytes": 2466,
+      "sha256": "f0183aa887cd3bde22d1905182cb77247cfcc34d61979fde40d496f798b7f2e5"
+    },
+    "config.yaml": {
+      "bytes": 947,
+      "sha256": "735e96a3e8b8901d1091da3b7e287694a20a76f89e55330c5f30eebd5769f70b"
+    },
+    "design.yaml": {
+      "bytes": 460,
+      "sha256": "6962557bb194111a5436ec584f6586e0a8ceea0b5d7963f076cad0cbdb54327f"
+    },
+    "pde_detail.parquet": {
+      "bytes": 111125872,
+      "rows": 4526706,
+      "sha256": "cd737daf842f00015c3650df2db07fb3653738e8a8e2130f11da0ced5143770c"
+    },
+    "population.parquet": {
+      "bytes": 1560224,
+      "rows": 108000,
+      "sha256": "38f25867668d71a751d6d0dd8e9964389ce38ca81018655448a1c33517644ae8"
+    },
+    "truth.json": {
+      "bytes": 820,
+      "sha256": "558dbfdd5cac302a6896ced149e227b202d34367aa9485a2b3375ae418d314bc"
+    }
+  },
+  "program": "partd",
+  "python": "3.13.16",
+  "scenario": "base"
+}

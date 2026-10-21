@@ -1,0 +1,130 @@
+[2026-10-21 14:54:57] === Quick trial run started 2026-10-21 14:54 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_145457_quick/ ===
+
+[2026-10-21 14:54:57] Stage 1 of 2: Build the synthetic populations
+[2026-10-21 14:54:57]   running: part-c-ipm/errors/config.yaml
+[2026-10-21 14:55:00]     done in 0m 03s
+[2026-10-21 14:55:00]   running: part-d-ipm/errors/config.yaml
+[2026-10-21 14:55:25]     done in 0m 25s
+[2026-10-21 14:55:25]   running: eipm/errors/config.yaml
+[2026-10-21 14:55:27]     done in 0m 02s
+[2026-10-21 14:55:27]   running: perm-cert/errors/perm.yaml
+[2026-10-21 14:55:35]     done in 0m 09s
+[2026-10-21 14:55:35]   running: perm-cert/errors/cert.yaml
+[2026-10-21 14:55:48]     done in 0m 13s
+[2026-10-21 14:55:48] Stage 1 finished in 0m 51s
+
+[2026-10-21 14:55:48] Stage 2 of 2: Trial estimation: 3 audit years, 100 iterations (written to start-here/_quick/)
+[2026-10-21 14:55:48]   running: part-c-ipm/estimation/config.yaml --out start-here/_quick/part-c --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:55:55]     done in 0m 07s
+[2026-10-21 14:55:55]   running: part-d-ipm/estimation/config.yaml --out start-here/_quick/part-d --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:56:28]     done in 0m 32s
+[2026-10-21 14:56:28]   running: eipm/estimation/config.yaml --out start-here/_quick/eipm --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:56:31]     done in 0m 03s
+[2026-10-21 14:56:31]   running: perm-cert/estimation/perm.yaml --out start-here/_quick/perm --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:56:53]     done in 0m 22s
+[2026-10-21 14:56:53]   running: perm-cert/estimation/perm_national.yaml --out start-here/_quick/perm --set perm_results_dir=start-here/_quick/perm
+[2026-10-21 14:56:53]     done in 0m 01s
+[2026-10-21 14:56:53]   running: perm-cert/estimation/cert.yaml --out start-here/_quick/cert --set reps=3 sim_reps=3 sim_iterations=100
+[2026-10-21 14:57:25]     done in 0m 32s
+[2026-10-21 14:57:25] Stage 2 finished in 1m 37s
+
+[2026-10-21 14:57:25] All stages finished in 2m 28s.
+[2026-10-21 14:57:25] Your setup works. Start the full replication with:  python start-here/run_all.py
+[2026-10-21 14:57:29] === Full replication started 2026-10-21 14:57 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_145729/ ===
+
+[2026-10-21 14:57:29] Stage 1 of 8: Build the synthetic populations
+[2026-10-21 14:57:29]   running: part-c-ipm/errors/config.yaml
+[2026-10-21 14:57:32]     done in 0m 03s
+[2026-10-21 14:57:32]   running: part-d-ipm/errors/config.yaml
+[2026-10-21 14:57:56]     done in 0m 24s
+[2026-10-21 14:57:56]   running: eipm/errors/config.yaml
+[2026-10-21 14:57:57]     done in 0m 01s
+[2026-10-21 14:57:57]   running: perm-cert/errors/perm.yaml
+[2026-10-21 14:58:07]     done in 0m 09s
+[2026-10-21 14:58:07]   running: perm-cert/errors/cert.yaml
+[2026-10-21 14:58:19]     done in 0m 13s
+[2026-10-21 14:58:19]   running: part-d-ipm/errors/pre_ira.yaml
+[2026-10-21 14:58:47]     done in 0m 27s
+[2026-10-21 14:58:47] Stage 1 finished in 1m 17s
+
+[2026-10-21 14:58:47] Stage 2 of 8: Estimate: every method, parametric-rate bootstrap (reported results)
+[2026-10-21 14:58:47]   running: part-c-ipm/estimation/config.yaml
+[2026-10-21 15:02:40]     done in 3m 53s
+[2026-10-21 15:02:40]   running: part-d-ipm/estimation/config.yaml
+[2026-10-21 15:26:00]     done in 23m 21s
+[2026-10-21 15:26:00]   running: eipm/estimation/config.yaml
+[2026-10-21 15:27:03]     done in 1m 02s
+[2026-10-21 15:27:03]   running: perm-cert/estimation/perm.yaml
+[2026-10-21 15:38:22]     done in 11m 20s
+[2026-10-21 15:38:22]   running: perm-cert/estimation/perm_national.yaml
+[2026-10-21 15:38:23]     done in 0m 01s
+[2026-10-21 15:38:23]   running: perm-cert/estimation/cert.yaml
+[2026-10-21 16:04:01]     done in 25m 38s
+[2026-10-21 16:04:01] Stage 2 finished in 1h 05m 15s
+
+[2026-10-21 16:04:01] Stage 3 of 8: Estimate: fixed-rate bootstrap (comparison), same audits
+[2026-10-21 16:04:01]   running: part-c-ipm/estimation/config.yaml --out part-c-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 16:07:50]     done in 3m 49s
+[2026-10-21 16:07:50]   running: part-d-ipm/estimation/config.yaml --out part-d-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 16:30:18]     done in 22m 28s
+[2026-10-21 16:30:18]   running: eipm/estimation/config.yaml --out eipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 16:31:10]     done in 0m 52s
+[2026-10-21 16:31:10]   running: perm-cert/estimation/perm.yaml --out perm-cert/estimation/results_fixed/perm --set sim_rates=fixed
+[2026-10-21 16:42:19]     done in 11m 09s
+[2026-10-21 16:42:19]   running: perm-cert/estimation/perm_national.yaml --out perm-cert/estimation/results_fixed/perm --set perm_results_dir=perm-cert/estimation/results_fixed/perm
+[2026-10-21 16:42:20]     done in 0m 01s
+[2026-10-21 16:42:20]   running: perm-cert/estimation/cert.yaml --out perm-cert/estimation/results_fixed/cert --set sim_rates=fixed
+[2026-10-21 16:57:45] === Full replication started 2026-10-21 16:57 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_165745/ ===
+
+[2026-10-21 16:57:45] Stage 3 of 8: Estimate: fixed-rate bootstrap (comparison), same audits
+[2026-10-21 16:57:45]   running: part-c-ipm/estimation/config.yaml --out part-c-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 17:01:43]     done in 3m 57s
+[2026-10-21 17:01:43]   running: part-d-ipm/estimation/config.yaml --out part-d-ipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 17:24:42]     done in 22m 59s
+[2026-10-21 17:24:42]   running: eipm/estimation/config.yaml --out eipm/estimation/results_fixed --set sim_rates=fixed
+[2026-10-21 17:25:35]     done in 0m 53s
+[2026-10-21 17:25:35]   running: perm-cert/estimation/perm.yaml --out perm-cert/estimation/results_fixed/perm --set sim_rates=fixed
+[2026-10-21 17:36:28]     done in 10m 53s
+[2026-10-21 17:36:28]   running: perm-cert/estimation/perm_national.yaml --out perm-cert/estimation/results_fixed/perm --set perm_results_dir=perm-cert/estimation/results_fixed/perm
+[2026-10-21 17:36:29]     done in 0m 01s
+[2026-10-21 17:36:29]   running: perm-cert/estimation/cert.yaml --out perm-cert/estimation/results_fixed/cert --set sim_rates=fixed
+[2026-10-21 18:00:45]     done in 24m 16s
+[2026-10-21 18:00:45] Stage 3 finished in 1h 02m 59s
+
+[2026-10-21 18:00:45] All stages finished in 1h 02m 59s.
+[2026-10-21 18:04:52] === Full replication started 2026-10-21 18:04 (Python 3.13.16); logs in start-here/logs/run_2026-10-21_180449/ ===
+
+[2026-10-21 18:04:52] Stage 4 of 8: Part D under the pre-IRA benefit (robustness reference)
+[2026-10-21 18:04:52]   running: part-d-ipm/estimation/pre_ira.yaml
+[2026-10-21 18:35:08]     done in 30m 17s
+[2026-10-21 18:35:08]   running: part-d-ipm/estimation/pre_ira.yaml --out part-d-ipm/estimation/results_pre_ira_fixed --set sim_rates=fixed
+[2026-10-21 19:03:14]     done in 28m 05s
+[2026-10-21 19:03:14]   running: part-d-ipm/estimation/pre_ira_reference.py
+[2026-10-21 19:03:14]     done in 0m 01s
+[2026-10-21 19:03:14] Stage 4 finished in 58m 23s
+
+[2026-10-21 19:03:14] Stage 5 of 8: Join every estimate to the truth (README tables)
+[2026-10-21 19:03:14]   running: shared/summary.yaml
+[2026-10-21 19:03:15]     done in 0m 01s
+[2026-10-21 19:03:15]   running: shared/report.yaml
+[2026-10-21 19:03:16]     done in 0m 01s
+[2026-10-21 19:03:16] Stage 5 finished in 0m 01s
+
+[2026-10-21 19:03:16] Stage 6 of 8: Build the manuscript's tables and figures
+[2026-10-21 19:03:16]   running: manuscripts/scripts/build_tables.py
+[2026-10-21 19:03:19]     done in 0m 04s
+[2026-10-21 19:03:19]   running: manuscripts/scripts/assemble.py
+[2026-10-21 19:03:19]     done in 0m 00s
+[2026-10-21 19:03:19] Stage 6 finished in 0m 04s
+
+[2026-10-21 19:03:19] Stage 7 of 8: Run the automated tests
+[2026-10-21 19:03:19]   running: -m pytest -q shared/tests
+[2026-10-21 19:04:19]     done in 1m 00s
+[2026-10-21 19:04:19] Stage 7 finished in 1m 00s
+
+[2026-10-21 19:04:19] Stage 8 of 8: Compare your results with the published results
+[2026-10-21 19:04:19]   running: start-here/verify.py check
+[2026-10-21 19:04:22]     done in 0m 03s
+[2026-10-21 19:04:22] Stage 8 finished in 0m 03s
+
+[2026-10-21 19:04:22] All stages finished in 59m 30s.

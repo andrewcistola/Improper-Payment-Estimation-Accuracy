@@ -1,0 +1,32 @@
+{
+  "config_file": "perm-cert/estimation/perm.yaml",
+  "config_sha256": "befb77132a50f0354c83e82d5d82549901e3fc834de9bfb5eb2a9661cc770dff",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 933,
+      "sha256": "3081326ba8a1564a9917fb22bfd9df1718dfc1f72eb9cedcb83105776e9a96ba"
+    },
+    "estimates.parquet": {
+      "bytes": 10979,
+      "rows": 300,
+      "sha256": "cf76ace0d0793fd0bbdb3b404b555fabe2c630ef93d7e0d2952c9334721ba45e"
+    },
+    "metrics.json": {
+      "bytes": 6494,
+      "sha256": "fd9f8d9cf65d7deb9b01e27f555f5bd3be9e8c84d331e46350e07dfcb7e54dfa"
+    },
+    "sim_draws.parquet": {
+      "bytes": 565237,
+      "rows": 75000,
+      "sha256": "dd9e8902be4856714ffd381673a85a8cbc7aa6c3331d4e71b5eb4812718784ea"
+    },
+    "truth.json": {
+      "bytes": 350,
+      "sha256": "672ba4080538acccdf98989ad6c59dd31799854d1ebb92d749d8ab4c7917a166"
+    }
+  },
+  "program": "perm_estimation",
+  "python": "3.13.16",
+  "scenario": "state_2"
+}

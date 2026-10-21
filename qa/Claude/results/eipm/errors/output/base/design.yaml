@@ -1,0 +1,5 @@
+unit: FFE application (household receiving APTC)
+strata: five equal-count quintiles of annual APTC paid (P1..P5)
+allocation: Neyman over 2,000 applications (estimation/config.yaml)
+selection: stratified_srs_without_replacement
+estimand: gross improper payment rate = sum y / sum x (all errors are overpayments)
