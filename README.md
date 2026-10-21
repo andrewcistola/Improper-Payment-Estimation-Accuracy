@@ -1,7 +1,7 @@
 ## Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation
 
 #### **Andrew Cistola, PhD, MPH** 
-Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/) · **Replicate the study step by step: [`start-here/`](start-here/)** 
+Manuscript and one-page summary: [`manuscripts/`](manuscripts/) · Companion literature review: [`literature-review/`](literature-review/) · **Replicate the study step by step: [`start-here/`](start-here/)** · Independent review and sign-off: [`qa/`](qa/) 
 
 **Research question.** What is the comparative accuracy of the available methods for estimating improper payments in federal health programs?
 
@@ -44,6 +44,7 @@ Each of the four program folders has the same two parts:
 | [`literature-review/`](literature-review/) | Standalone narrative review of the comparative accuracy of improper payment estimation methods (Markdown, PDF, Word) | | |
 | [`manuscripts/`](manuscripts/) | Manuscript and one-page summary of the Monte Carlo study | | |
 | [`start-here/`](start-here/) | Step-by-step replication guide for readers with no programming experience: software to install, one command that runs every stage, and a check against the published results | | |
+| [`qa/`](qa/) | Independent review: a checklist workbook (re-run, every key assumption, results), a holding space for each reviewer's re-run logs and outputs, and a sign-off form | | |
 
 Inside each program, the SQL files are numbered in the order they run, and each file's header states what it does and every probability or formula it uses. Each `config.yaml` lists the files it runs.
 
