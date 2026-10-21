@@ -200,7 +200,7 @@ This one command runs the whole study, in eight stages. Leave the terminal windo
 | 7 | Runs the automated tests of the estimators and payment functions | none | 1 minute |
 | 8 | Compares your results with the published results | none | seconds |
 
-Each stage's run time is recorded in `start-here/run_log.txt`.
+Every run also writes a date-stamped log folder, `start-here/logs/run_<date>_<time>/`. It contains `environment.txt` (the date, your computer, operating system, and Python and package versions), `run_log.txt` (each stage and command with its start time and run time), and one log per command with its complete output, every line date-stamped. A one-line-per-step summary of all runs is also kept in `start-here/run_log.txt`. These logs are the evidence for a formal review; see [`qa/`](../qa/README.md).
 
 If the trial has not already done so, the script first copies the published results into `start-here/_reference/`, so that stage 8 can compare them with what your run produces. Your run then overwrites the result files in the project folder with the files it computes.
 

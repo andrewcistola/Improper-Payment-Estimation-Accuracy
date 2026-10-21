@@ -31,4 +31,5 @@ shared/results/report/by_audit_year.csv
 start-here/_quick/
 start-here/_reference/
 start-here/run_log.txt
+start-here/logs/
 .venv/
