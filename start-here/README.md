@@ -2,7 +2,7 @@
 
 This guide explains how to reproduce every result in this study on your own computer, from an empty machine to the final tables. No programming experience is needed. You will install two free programs, download the project, and type a handful of commands that are given below exactly as you should type them.
 
-Replication takes about **20 to 30 minutes** of hands-on setup and about **3½ to 4 hours** of unattended computing (measured on a computer with 2 processor cores and 8 GB of memory; a computer with more cores will finish sooner). At the end, a check script compares your results with the published results and reports whether they match.
+Replication takes about **20 to 30 minutes** of hands-on setup and about **4 to 4½ hours** of unattended computing (measured on a computer with 2 processor cores and 8 GB of memory; a computer with more cores will finish sooner). At the end, a check script compares your results with the published results and reports whether they match.
 
 | Step | What you do | Time |
 |---|---|---|
@@ -12,7 +12,7 @@ Replication takes about **20 to 30 minutes** of hands-on setup and about **3½ t
 | [4. Open a terminal in the project folder](#4-open-a-terminal-in-the-project-folder) | Open the window where you type commands | 2 minutes |
 | [5. Set up the project](#5-set-up-the-project) | Create a private Python environment and install the packages | 5 minutes |
 | [6. Run a trial](#6-run-a-trial) | Confirm that everything works | 5 minutes |
-| [7. Run the full replication](#7-run-the-full-replication) | Reproduce every result | 3½ to 4 hours |
+| [7. Run the full replication](#7-run-the-full-replication) | Reproduce every result | 4 to 4½ hours |
 | [8. Check and view your results](#8-check-and-view-your-results) | Compare your results with the published results | 5 minutes |
 
 If something goes wrong at any point, see [Troubleshooting](#troubleshooting).
@@ -134,7 +134,7 @@ Open a terminal and use `cd` to move to the project folder, for example `cd ~/Do
 
 ## 5. Set up the project
 
-This step creates a private Python environment (a folder named `.venv` inside the project folder) and installs the packages the study uses into it. Nothing outside the project folder is changed. The packages and their versions are listed in `pyproject.toml`; DuckDB is pinned to version 1.5.6 because the random draws depend on it, and `requirements-lock.txt` records the exact version of every package used for the published results (the bootstrap simulation's random streams come from numpy, so a different numpy release can change the last digits of the simulation results even though every other number is unchanged).
+This step creates a private Python environment (a folder named `.venv` inside the project folder) and installs the packages the study uses into it. Nothing outside the project folder is changed. The packages and their versions are listed in `pyproject.toml`; DuckDB is pinned to version 1.5.6 because the random draws depend on it, and `requirements-lock.txt` records the exact version of every package used for the published results (the simulation's random streams come from numpy, so a different numpy release can change the last digits of the simulation results even though every other number is unchanged).
 
 Type these two commands, one at a time, pressing **Enter** after each. The second command downloads about 200 MB and takes a few minutes; wait until the prompt returns.
 
@@ -192,14 +192,14 @@ This one command runs the whole study, in eight stages. Leave the terminal windo
 | Stage | What it does | Files it writes | Time |
 |---|---|---|---|
 | 1 | Builds the five synthetic populations with their fabricated errors (and the Part D population under the pre-IRA benefit), and checks each against the public figures it is calibrated to | `*/errors/output*/` | 1 minute |
-| 2 | Draws 25 audit years for each program and estimates improper payments with expansion, ratio, regression, and bootstrap simulation with parametric rates | `*/estimation/results/` | 1 hour 10 minutes |
-| 3 | Repeats stage 2 on the same audits with fixed-rate bootstrap simulation (the comparison in the manuscript) | `*/estimation/results_fixed/` | 1 hour 15 minutes |
+| 2 | Draws 25 audit years for each program and estimates improper payments with expansion, ratio, regression, (Part D) the PDE-level estimators, and simulation with parametric rates | `*/estimation/results/` | 1 hour |
+| 3 | Repeats stage 2 on the same audits with plug-in (fixed-rate) simulation (the comparison in the manuscript) | `*/estimation/results_fixed/` | 1 hour 20 minutes |
 | 4 | Repeats Part D under the pre-IRA benefit design (the robustness reference) | `part-d-ipm/estimation/results_pre_ira*/`, `part-d-ipm/pre-ira-reference.md` | 1 hour 10 minutes |
 | 5 | Joins every estimate to the true value | `shared/results/` (the README tables come from `shared/results/report/by_scenario.csv`) | under 1 minute |
 | 6 | Builds the manuscript's tables and figures | `manuscripts/generated/`, `manuscripts/manuscript.md` | under 1 minute |
-| 7 | Runs the automated tests of the estimators and payment functions | none | 1 minute |
+| 7 | Runs the automated tests of the estimators and payment functions | none | 6 minutes |
 | 8 | Compares your results with the published results | none | seconds |
-| 9 (optional) | Robustness and calibration runs for Appendix D; run with `--with-robustness` | `robustness/output/`, `robustness/results/`, `manuscripts/generated/appendix_d.md` | 2 to 3 hours |
+| 9 (optional) | Robustness and calibration runs for Appendix D; run with `--with-robustness` | `robustness/output/`, `robustness/results/`, `manuscripts/generated/appendix_d.md` | about 3 hours |
 
 Every run also writes a date-stamped log folder, `start-here/logs/run_<date>_<time>/`. It contains `environment.txt` (the date, your computer, operating system, and Python and package versions), `run_log.txt` (each stage and command with its start time and run time), and one log per command with its complete output, every line date-stamped. A one-line-per-step summary of all runs is also kept in `start-here/run_log.txt`. These logs are the evidence for a formal review; see [`qa/`](../qa/README.md).
 
@@ -222,7 +222,7 @@ To see every command each stage runs, without running anything, type `.venv/bin/
 Stage 8 prints a section headed `RESULT CHECK`, which ends with one of three conclusions:
 
 - **`REPRODUCED EXACTLY`:** every output file is byte-for-byte identical to the published files. Each file's SHA-256 fingerprint, recorded in the `manifest.json` files throughout the project, matches.
-- **`REPRODUCED`:** every number in the results tables matches the published results, but some stored files differ in their last digits. This can happen on a different operating system or library version (for example a different numpy release, whose random streams feed the bootstrap simulation), which may round the final digit of a floating-point number differently. No reported finding changes. To reproduce the files exactly, install the versions in `requirements-lock.txt`.
+- **`REPRODUCED`:** every number in the results tables matches the published results, but some stored files differ in their last digits. This can happen on a different operating system or library version (for example a different numpy release, whose random streams feed the simulation), which may round the final digit of a floating-point number differently. No reported finding changes. To reproduce the files exactly, install the versions in `requirements-lock.txt`.
 - **`NOT REPRODUCED`:** some numbers differ. See [Troubleshooting](#troubleshooting).
 
 To run the check again at any time:
@@ -287,4 +287,4 @@ On Windows, run the commands listed inside `manuscripts/scripts/render.sh` one a
 
 Every number in the study comes from synthetic data. Each population is built from stated probability distributions, and every random draw is a fixed function of a seed, so the same software produces the same data and the same results on every run. No real or non-public data are used, and nothing needs to be downloaded besides the project and its packages. The main [README](../README.md) describes the study and its design, and each program's folder (`part-c-ipm`, `part-d-ipm`, `perm`, `cert`, `eipm`) has a README describing its population, audit, and methods. The commands that `run_all.py` runs are the same commands listed in the main README's **Run** section and in [`manuscripts/README.md`](../manuscripts/README.md), so an experienced user can also run each step by hand.
 
-This replication package was tested by downloading the project into an empty folder, installing the packages into a new environment exactly as in step 5, and running steps 6 to 8 on Linux with Python 3.13. The run reproduced all 183 published output files byte for byte (`REPRODUCED EXACTLY`) in 3 hours 32 minutes. The scripts use only Python and are written to run unchanged on Windows and macOS.
+This replication package was tested by downloading the project into an empty folder, installing the packages into a new environment exactly as in step 5, and running steps 6 to 8 on Linux with Python 3.13. The run reproduced all 183 published output files byte for byte (`REPRODUCED EXACTLY`) in 3 hours 32 minutes; after the October 2026 revisions (Part D's PDE-level estimators add benefit reruns) a full run takes about 4 hours 10 minutes, and the optional stage 9 another 3 hours. The scripts use only Python and are written to run unchanged on Windows and macOS.

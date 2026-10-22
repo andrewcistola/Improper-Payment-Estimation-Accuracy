@@ -31,4 +31,6 @@ steps:
 - python: part-d-ipm/estimation/simulation.py
   run: run_expansion
 - python: part-d-ipm/estimation/simulation.py
+  run: run_pde_estimators
+- python: part-d-ipm/estimation/simulation.py
 - sql: part-d-ipm/estimation/sql/90_score.sql

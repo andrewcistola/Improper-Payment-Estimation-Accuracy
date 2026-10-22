@@ -86,7 +86,8 @@ def beta_commands():
             for cfg, scen in errs:
                 cmds.append(ipsim(cfg, "--out", out_pop, "--set", *sets))
             pop_dir = f"{out_pop}/{errs[0][1]}"
-            cmds.append(ipsim(est, "--out", out_res, "--set", f"population_dir={pop_dir}", *ROBUST_SIM))
+            mem = ["--memory-limit", "3GB"] if prog == "cert" else []     # 5.3M claims x audits exceeds 8 GB otherwise
+            cmds.append(ipsim(est, "--out", out_res, *mem, "--set", f"population_dir={pop_dir}", *ROBUST_SIM))
             if pool:
                 cmds.append(ipsim(pool, "--out", out_res, "--set", f"perm_results_dir={out_res}"))
     return cmds
@@ -96,7 +97,8 @@ def calib_commands():
     cmds = []
     for prog, errs, est, pool in PROGRAMS:
         out_res = f"robustness/results/{prog}/calibration"
-        cmds.append(ipsim(est, "--out", out_res, "--set", *CALIB))
+        mem = ["--memory-limit", "3GB"] if prog == "cert" else []
+        cmds.append(ipsim(est, "--out", out_res, *mem, "--set", *CALIB))
         if pool:
             cmds.append(ipsim(pool, "--out", out_res, "--set", f"perm_results_dir={out_res}"))
     return cmds

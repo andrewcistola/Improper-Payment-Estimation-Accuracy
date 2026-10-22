@@ -58,7 +58,8 @@ def test_part_c_bootstrap_census_is_exact():
 def test_part_c_bootstrap_rates():
     """No extrapolation: an HCC with no audited instance never fails. With a
     large audit the HCC rates reproduce the net rate (net is linear in the
-    findings, so it is unbiased; gross is not, see the README)."""
+    findings, so it is unbiased; over and under are tested separately in
+    test_part_c_bootstrap_unbiased_per_domain)."""
     con, k = partc_kernel()
     rng = np.random.default_rng(7)
     lacks_j = ((k.fam_mask >> 9) & 1) == 0                         # family J = code 9

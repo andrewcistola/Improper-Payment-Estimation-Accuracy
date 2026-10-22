@@ -1,0 +1,49 @@
+{
+  "config_file": "part-c-ipm/errors/config.yaml",
+  "config_sha256": "a919f178058f01824e4e8da0f5f565f62af22d96b94d0c8cdec1f2c784ae2cc2",
+  "duckdb": "1.5.6",
+  "files": {
+    "checks.json": {
+      "bytes": 1672,
+      "sha256": "24e1fd6b6ecd1c533072d35110d8b3d7496cbb17f56ccf1f67cb63d8ea001f06"
+    },
+    "config.yaml": {
+      "bytes": 613,
+      "sha256": "6f3e14c281dd791cc593e5c3f5618ed253d82fa1970aa53ce109d29945e5322a"
+    },
+    "contracts.parquet": {
+      "bytes": 10917,
+      "rows": 550,
+      "sha256": "aae9a6d1b2d3c276a6cacee765c91148f6b00141841f89813f796e611b936a38"
+    },
+    "design.yaml": {
+      "bytes": 249,
+      "sha256": "33ba4e2bfafbcbc85ed0d09b78d0ba47636713013063036b12a7f922669dc7b7"
+    },
+    "hcc_detail.parquet": {
+      "bytes": 4054787,
+      "rows": 402098,
+      "sha256": "308a0f5fb48d87b0d0fc336914d94391cbaf6e30be53efc741ac4c9c54b87eb7"
+    },
+    "population.parquet": {
+      "bytes": 4618154,
+      "rows": 330253,
+      "sha256": "b14ee98045fc8d61be65fe7df87235931897c965dc4192036a040b16a36a7f00"
+    },
+    "truth.json": {
+      "bytes": 1915,
+      "sha256": "d078b3602c1d3ebae4f1d8ecc55e3525ea13f5f0b2d1cc65a5961626065b74df"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "partc",
+  "python": "3.13.16",
+  "scenario": "base"
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "metric": "claim_err_rate_ltc",
+    "value": 0.03464949684461879,
+    "target": 0.1,
+    "diff": -0.06535050315538121,
+    "tolerance": 0.005,
+    "rel": false,
+    "status": "FAIL",
+    "source": "LTC claims in error: 10%"
+  },
+  {
+    "metric": "claim_err_rate_other",
+    "value": 0.008701232069742075,
+    "target": 0.025,
+    "diff": -0.016298767930257925,
+    "tolerance": 0.001,
+    "rel": false,
+    "status": "FAIL",
+    "source": "other claims in error: 2.5%"
+  },
+  {
+    "metric": "gross_rate",
+    "value": 0.014071802703161218,
+    "target": 0.04,
+    "diff": -0.025928197296838783,
+    "tolerance": null,
+    "rel": false,
+    "status": "reported",
+    "source": "FY 2025 gross rate 4.00% (reported, not a target)"
+  },
+  {
+    "metric": "overpayments",
+    "value": 1465101535.0,
+    "target": 3700000000.0,
+    "diff": -0.6040266121621621,
+    "tolerance": null,
+    "rel": true,
+    "status": "reported",
+    "source": "FY 2025 overpayments $3.70B (reported, not a target)"
+  },
+  {
+    "metric": "payments",
+    "value": 105559914130.0,
+    "target": 105560000000.0,
+    "diff": -8.134710117735366e-07,
+    "tolerance": 0.001,
+    "rel": true,
+    "status": "pass",
+    "source": "Part D payments $105.56B"
+  },
+  {
+    "metric": "share_full_error",
+    "value": 0.8999299200263831,
+    "target": 0.9,
+    "diff": -7.00799736169655e-05,
+    "tolerance": 0.01,
+    "rel": false,
+    "status": "pass",
+    "source": "90% of errors are full (100% of GDC)"
+  },
+  {
+    "metric": "share_partial_error",
+    "value": 0.10007007997361696,
+    "target": 0.1,
+    "diff": 7.007997361695162e-05,
+    "tolerance": 0.01,
+    "rel": false,
+    "status": "pass",
+    "source": "10% of errors are partial"
+  },
+  {
+    "metric": "underpayments",
+    "value": 20316750.0,
+    "target": 520000000.0,
+    "diff": -0.960929326923077,
+    "tolerance": null,
+    "rel": true,
+    "status": "reported",
+    "source": "FY 2025 underpayments $0.52B (reported, not a target)"
+  },
+  {
+    "metric": "unique ids: pde_detail",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  },
+  {
+    "metric": "unique ids: population",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  }
+]

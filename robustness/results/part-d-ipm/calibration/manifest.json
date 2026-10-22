@@ -1,0 +1,8 @@
+{
+  "base": {
+    "config.yaml": "388478be2329aacfb183385bebb6603ea1c6123d76af58d3fe1c4213efb28460",
+    "estimates.parquet": "caad149428b96d0dbdded3fb30d6cc4af5a17b8c23e3d81f15d77c82d6d34316",
+    "metrics.json": "8321eb634dfa78a3c289b903c0c99973567c0b035f55d2459bb3cbaede545d52",
+    "truth.json": "f0803ade0fe93c6584758a60f208c1a83d6c2b3c186cd5b7c285fff732f1b8a6"
+  }
+}

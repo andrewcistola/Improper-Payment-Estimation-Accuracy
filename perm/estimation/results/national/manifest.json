@@ -1,25 +1,33 @@
 {
   "config_file": "perm/estimation/national.yaml",
-  "config_sha256": "1feab8fb8ff456703edf258529b2bc58d42cc44f110e5889554383ee3968a3fa",
+  "config_sha256": "60396053f2eb7c793dae19a00fd931150c2eee72ebb04f2099c15d09f3723a3b",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 259,
-      "sha256": "604fb5eae7561191c959e86b4757a434e28108f3e2e3d1eda41d25766f7e726c"
+      "bytes": 239,
+      "sha256": "db06eebad1a63c400e0ab5cb4c48d0e335e060c3dc72c58a1ba4d13e6b3e04bb"
     },
     "estimates.parquet": {
-      "bytes": 10936,
+      "bytes": 10930,
       "rows": 300,
-      "sha256": "ac4a251f403814d6895ff3a86eb7be53d72e7c3adb2430f4e3aec38b3efc9415"
+      "sha256": "04aaa0e1bb0b3aa85764052426887bf8fc3bcebfd33d756d19452ad9c454f2bc"
     },
     "metrics.json": {
-      "bytes": 6602,
-      "sha256": "0044f759267c4a624fd5f9bfbd76568673a82f8faf0b3c3ce6903a8821fbcc40"
+      "bytes": 6601,
+      "sha256": "93fcbc5758bee4d431c11aeb6f8130d509d5ba6a987ed1ab033cd1e04ee7596c"
     },
     "truth.json": {
       "bytes": 387,
       "sha256": "5db2a4767815d465e1a2c03213ab48d1ccb12b16ab358ba2fb3852ea250c5716"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "perm_national",
   "python": "3.13.16",

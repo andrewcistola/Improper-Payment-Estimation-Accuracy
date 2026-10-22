@@ -1,0 +1,15 @@
+unit: beneficiary (cluster of PDEs); PDE for the claim-level audit
+frame: all Part D beneficiaries with PDEs
+beneficiary_audit:
+  selection: srs_without_replacement
+  n: 990
+pde_audit:
+  selection: stratified_srs
+  n: 5000
+  allocation: neyman
+  strata:
+  - a_ltc
+  - b_non_ltc_lowest_cost_decile
+  - c_non_ltc_other
+estimand: overpayments, underpayments, gross, net (y from re-running the benefit on
+  corrected PDEs, netted per beneficiary) / total payments

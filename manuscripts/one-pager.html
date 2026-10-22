@@ -44,35 +44,38 @@ payments in federal health programs. CMS audits samples of payments in
 five programs (Medicare Part C, Medicare Part D, Medicaid PERM,
 Marketplace APTC EIPM, and Medicare FFS CERT) and projects the errors to
 a national improper payment rate with a 95% confidence interval. This
-projection uses either analytic estimators (expansion, ratio, or
-regression) or <em>audit-finding bootstrap simulation</em>, which
+projection uses either design-based analytic estimators (expansion,
+ratio, or regression) or <em>audit-finding simulation</em>, which
 assigns the audit findings at random across the whole population and
 reruns the payment rules many times. Accuracy includes point accuracy
 and interval accuracy (whether the 95% interval contains the truth about
 95% of the time, and how narrow it is).</p>
 <p><strong>Methods.</strong> This study built five synthetic populations
 (one per program) with fabricated errors so that the true improper
-payment is known. Each population was calibrated only to public FY 2025
-results. Each program’s production-like audit was then drawn 25 times
-(25 “audit years”). In every audit year, the improper payment rate was
-estimated with the expansion, ratio, and regression estimators and with
-bootstrap simulation, and each 95% interval was checked against the
-truth. This study used no real or non-public data.</p>
-<p><strong>Finding 1: the standard bootstrap interval is far too
-narrow.</strong> The bootstrap point estimates are as accurate as, or
-more accurate than, those of the analytic methods. However, the
-bootstrap interval is only 5–21% as wide as it should be, and it
-contained the true rate in <strong>30 of 125</strong> audit-years (24%)
-as opposed to about 95%. The cause is structural. The simulation reuses
-the audited error rates in every iteration, so the interval reflects
-only where the errors land (as opposed to how different the rates would
-have been with a different audit).</p>
-<p><strong>Finding 2: one change corrects it.</strong> Before each
-iteration, each error rate is redrawn from its binomial sampling
-distribution (<em>parametric rates</em>). With this change, the interval
-contained the true rate in <strong>121 of 125</strong> audit-years
-(96.8%). These results also show that the interval was narrower than the
-analytic interval from the same audit:</p>
+payment is known, calibrated only to public FY 2025 results. Each
+program’s production-like audit was drawn 25 times (25 “audit years”),
+and 100 times to check interval calibration. In every audit year the
+rate was estimated with every method and each 95% interval was checked
+against the truth. Each population was then rebuilt with errors more
+likely on large payments, and again on small payments, to test an
+assumption the simulation depends on. No real or non-public data were
+used.</p>
+<p><strong>Finding 1: the plug-in simulation interval is far too
+narrow.</strong> When the audited error rates are reused in every
+iteration, the interval reflects only where the errors land (as opposed
+to how different the rates would have been with a different audit). It
+is 5–21% as wide as it should be and contained the true rate in
+<strong>31 of 125</strong> audit years (25%).</p>
+<p><strong>Finding 2: redrawing the rates corrects it.</strong>
+Redrawing the audited error counts from their binomial sampling
+distribution before each iteration (<em>parametric rates</em>) raised
+coverage to <strong>121 of 125</strong> audit years, and the interval
+was narrower than the analytic interval from the same audit. Over 100
+audit years, however, the parametric interval was 5–12% narrower than
+the simulation estimator’s own sampling variability in four programs, so
+part of the gain is an interval that is too short. The real efficiency
+gain over the ratio estimator was 3% (Part C), 4% (EIPM), 23% (PERM),
+35% (CERT) and 72% (Part D).</p>
 <table style="width:100%;">
 <colgroup>
 <col style="width: 16%" />
@@ -84,7 +87,7 @@ analytic interval from the same audit:</p>
 </colgroup>
 <thead>
 <tr class="header">
-<th>Gross improper payment rate</th>
+<th>Gross improper payment rate, 25 audit years</th>
 <th>Part C</th>
 <th>Part D</th>
 <th>PERM</th>
@@ -110,69 +113,84 @@ analytic interval from the same audit:</p>
 <td>37,651 claims</td>
 </tr>
 <tr class="odd">
-<td><strong>Analytic</strong> (ratio; Part D expansion): coverage,
-half-width</td>
+<td><strong>Ratio estimator</strong> (Part D: PDE ratio, same audit):
+coverage, half-width</td>
 <td>24/25, ±1.03</td>
-<td>18/25, ±0.60</td>
+<td>17/25, ±0.91</td>
 <td>23/25, ±0.80</td>
 <td>22/25, ±0.35</td>
 <td>24/25, ±0.36</td>
 </tr>
 <tr class="even">
-<td><strong>Bootstrap, fixed rates</strong></td>
+<td><strong>Simulation, plug-in (fixed rates)</strong></td>
 <td>3/25, ±0.05</td>
 <td>10/25, ±0.06</td>
 <td>3/25, ±0.10</td>
-<td>6/25, ±0.05</td>
+<td>7/25, ±0.04</td>
 <td>8/25, ±0.07</td>
 </tr>
 <tr class="odd">
-<td><strong>Bootstrap, parametric rates</strong></td>
-<td><strong>24/25, ±0.92</strong></td>
-<td><strong>25/25, ±0.22</strong></td>
+<td><strong>Simulation, parametric rates</strong></td>
+<td><strong>25/25, ±0.94</strong></td>
+<td><strong>25/25, ±0.21</strong></td>
 <td><strong>24/25, ±0.63</strong></td>
-<td><strong>23/25, ±0.31</strong></td>
+<td><strong>22/25, ±0.30</strong></td>
 <td><strong>25/25, ±0.28</strong></td>
 </tr>
 <tr class="even">
-<td>Audit needed for today’s analytic precision, if width ∝ 1/√n</td>
-<td>~79%</td>
-<td>(see note)</td>
-<td>~63%</td>
-<td>~80%</td>
-<td>~62%</td>
+<td>Simulation when errors depend on payment size: bias, coverage</td>
+<td>−3% / +9%; 24, 18</td>
+<td>−65% / +148%; 0, 0</td>
+<td>−14% / +7%; 6, 18</td>
+<td>−8% / −2%; 21, 24</td>
+<td>−22% / +12%; 0, 0</td>
+</tr>
+<tr class="odd">
+<td>Ratio estimator in the same scenarios: coverage</td>
+<td>25, 23</td>
+<td>22, 22</td>
+<td>25, 25</td>
+<td>23, 24</td>
+<td>25, 23</td>
 </tr>
 </tbody>
 </table>
 <p><em>Coverage = audit years (of 25) with the truth inside the 95%
 interval; a valid interval scores about 24. Half-width in percentage
-points.</em></p>
-<p><strong>Recommendation.</strong> CMS should use <strong>bootstrap
-simulation with parametric rates</strong> for PIIA improper payment
-rates. This method is valid, produces the most accurate point estimates,
-and has narrower intervals that leave room to reduce audit sizes by
-roughly <strong>20–38%</strong> at current precision (for example, about
-780 instead of 990 Part C enrollees, 330 instead of 520 PERM payments
-per state, and 23,300 instead of 37,651 CERT claims). Given that medical
-record review is the main cost of each measurement, these savings would
-come without sacrificing accuracy. The analytic interval should be
-reported alongside it during a transition, and the fixed-rate interval
-should not be used.</p>
-<p><strong>Limitations.</strong> The audit reductions are projections
-and must be confirmed directly at the smaller sizes. Measures built from
-few errors (for example, underpayments) were undercovered by every
-method and need their own check. The results come from 25 audit years
-per program (Monte Carlo SE about ±4 points) and from synthetic
-populations, and strata CMS does not publish are illustrative.
-<em>Note:</em> The only analytic comparator for Part D on the same audit
-(expansion) is weak, so its larger projected savings are not
-counted.</p>
-<p><strong>Future research.</strong> Future research should (1) identify
-the optimal audit size by rerunning each design at 50–80% of the current
-audit with 200+ audit years; (2) test model + simulation alternatives
-(hierarchical beta-binomial error rates, unit-level error models feeding
-the simulation, resampled error sizes, and calibrated BCa intervals);
-and (3) extend this work to state PERM rates, State-based Exchanges, and
-one-sided recovery bounds.</p>
+points. Last two rows: errors more likely on large payments / on small
+payments.</em></p>
+<p><strong>Finding 3: the simulation’s advantage depends on an
+assumption.</strong> The simulation borrows only the audited error
+<em>counts</em> and takes every unit’s size from the population, so it
+is accurate only if error probability does not depend on payment size
+within a stratum. In the base populations that is true by construction.
+When it is not, the simulation is biased by 2% to 148% and its narrow
+interval misses, while the design-based ratio estimator stays unbiased
+and covers in 22–25 of 25 audit years in every program.</p>
+<p><strong>Recommendations.</strong> (1) Discontinue any plug-in
+simulation interval; the Part D interval algorithm is not public and
+should be checked. (2) Report the design-based ratio interval as the
+primary PIIA interval, with the parametric-bootstrap simulation
+alongside it; a simulation estimate that drifts from the ratio estimate
+is itself a warning that the assumption fails. (3) Treat the
+simulation’s precision gain, real in Part D, PERM and CERT under the
+stated model, as conditional: compare audited error rates across payment
+quantiles within strata, stratify the simulation’s donor kinds finely on
+payment, and confirm coverage directly at any reduced audit size before
+adopting it. (4) Check sparse components (underpayments, technically
+improper payments) separately; every method undercovered them.</p>
+<p><strong>Limitations.</strong> The populations are synthetic and
+calibrated to public aggregates only; strata CMS does not publish are
+illustrative; 25 audit years give a Monte Carlo SE of about 4 points on
+coverage (2 points for the 100-year run); the Part D comparators are
+weak because audited error dollars are heavy-tailed; review is assumed
+perfect; one-sided recovery bounds were not tested.</p>
+<p><strong>Future research.</strong> Future research should (1) replace
+the simulation’s independence assumption with a unit-level error model
+fit on the audit and test it on populations with size-dependent errors;
+(2) identify the optimal audit size by rerunning each design at 50–80%
+of the current audit with 200+ audit years; and (3) extend this work to
+state PERM eligibility rates, State-based Exchanges, and one-sided
+recovery bounds.</p>
 </body>
 </html>

@@ -65,21 +65,23 @@ def run(con, v):
         totals[(str(tot["stratum"][i]), str(tot["model_stratum"][i]))] = np.array(
             [tot["n"][i]] + [tot[c][i] for c in preds])
 
-    # audited units with their predictors (all domains, all audit years)
-    s = con.execute(f"""
-        SELECT s.rep, s.domain, s.stratum, s.pop_h::DOUBLE AS pop_h, s.samp_h::DOUBLE AS samp_h, s.w,
-               s.unit_id, s.y::DOUBLE AS y, p.model_stratum, {', '.join('p.' + c + '::DOUBLE AS ' + c for c in preds)}
-        FROM sample s JOIN reg_population p USING (unit_id)
-        ORDER BY s.rep, s.domain, s.unit_id""").fetchnumpy()
     X_tot = dict(con.execute("SELECT domain, X FROM frame_totals").fetchall())
-    rep, dom = np.asarray(s["rep"]), np.asarray(s["domain"]).astype(str)
-    strat, mstrat = np.asarray(s["stratum"]).astype(str), np.asarray(s["model_stratum"]).astype(str)
-    unit, y, w = np.asarray(s["unit_id"]), np.asarray(s["y"], float), np.asarray(s["w"], float)
-    pop_h, samp_h = np.asarray(s["pop_h"], float), np.asarray(s["samp_h"], float)
-    Z = np.column_stack([np.ones(len(y))] + [np.asarray(s[c], float) for c in preds])
-
+    all_reps = [r for (r,) in con.execute("SELECT DISTINCT rep FROM sample ORDER BY rep").fetchall()]
     rows = []
-    for r in np.unique(rep):
+    for r in all_reps:
+        # audited units with their predictors, one audit year at a time (all of them at once
+        # is 30M rows for CERT at 100 audit years)
+        s = con.execute(f"""
+            SELECT s.rep, s.domain, s.stratum, s.pop_h::DOUBLE AS pop_h, s.samp_h::DOUBLE AS samp_h, s.w,
+                   s.unit_id, s.y::DOUBLE AS y, p.model_stratum, {', '.join('p.' + c + '::DOUBLE AS ' + c for c in preds)}
+            FROM sample s JOIN reg_population p USING (unit_id)
+            WHERE s.rep = ?
+            ORDER BY s.rep, s.domain, s.unit_id""", [r]).fetchnumpy()
+        rep, dom = np.asarray(s["rep"]), np.asarray(s["domain"]).astype(str)
+        strat, mstrat = np.asarray(s["stratum"]).astype(str), np.asarray(s["model_stratum"]).astype(str)
+        unit, y, w = np.asarray(s["unit_id"]), np.asarray(s["y"], float), np.asarray(s["w"], float)
+        pop_h, samp_h = np.asarray(s["pop_h"], float), np.asarray(s["samp_h"], float)
+        Z = np.column_stack([np.ones(len(y))] + [np.asarray(s[c], float) for c in preds])
         in_r = rep == r
         # units with an error in any domain this audit year (sets intercept-only fallback)
         err_units = np.unique(unit[in_r & (y != 0)])

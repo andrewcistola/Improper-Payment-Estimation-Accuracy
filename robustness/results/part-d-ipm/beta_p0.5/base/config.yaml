@@ -1,0 +1,36 @@
+program: partd_estimation
+scenario: base
+master_seed: 20261016
+scenario_seed: 2465714150538143158
+variables:
+  population_dir: robustness/output/part-d-ipm/beta_p0.5/base
+  allocation:
+  - stratum: all
+    n_h: 990
+  reps: 25
+  sim_reps: 25
+  sim_iterations: 500
+  sim_audit_size: 5000
+  sim_rates: parametric
+  reg_predictors:
+  - x
+  - gdc_sub
+  - n_pde
+  - catastrophic
+  reg_min_errors: 10
+  alpha: 0.05
+  scenario: base
+steps:
+- sql: part-d-ipm/estimation/sql/01_frame.sql
+- sql: shared/sql/sample_srs.sql
+- sql: part-d-ipm/estimation/sql/20_ratio.sql
+- sql: part-d-ipm/estimation/sql/30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
+- sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql
+- python: part-d-ipm/estimation/simulation.py
+  run: run_expansion
+- python: part-d-ipm/estimation/simulation.py
+  run: run_pde_estimators
+- python: part-d-ipm/estimation/simulation.py
+- sql: part-d-ipm/estimation/sql/90_score.sql

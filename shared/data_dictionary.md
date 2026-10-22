@@ -47,7 +47,7 @@ Strata: `<claim_type>_P1` .. `_P5`, equal-count payment quintiles within claim t
 | `add_fam` | HCC family of an additional HCC found on review (an underpayment), NULL if none; drawn only for enrollees with no unsupported HCC and no missing documentation, and only for a family the enrollee did not already have |
 | `add_coef` | Coefficient of that additional HCC (mild level), subtracted from delta_r; 0 if none |
 
-Strata: `low` / `medium` / `high` terciles of `risk_orig`. `missing_doc`, `add_fam` and `add_coef` are the enrollee-level audit findings the bootstrap simulation reuses; HCC-level findings are in `hcc_detail.parquet`.
+Strata: `low` / `medium` / `high` terciles of `risk_orig`. `missing_doc`, `add_fam` and `add_coef` are the enrollee-level audit findings the simulation reuses; HCC-level findings are in `hcc_detail.parquet`.
 
 `hcc_detail.parquet` has one row per enrollee × HCC family:
 
@@ -150,7 +150,7 @@ Dollar truths are national-scale, i.e. multiplied by `w_pop`.
 
 | Column | Meaning |
 |---|---|
-| `method` | `expansion`, `ratio`, `regression` or `simulation` (the audit-finding bootstrap simulation) |
+| `method` | `expansion`, `ratio`, `regression` or `simulation` (the audit-finding simulation) |
 | `interval` | `normal` (expansion, ratio, regression) or `percentile` (simulation: 2.5th–97.5th percentile of the 1,000 iteration rates) |
 | `rep` | Audit year (Monte Carlo replicate) number |
 | `domain` | What is estimated: `national\|gross`, `national\|technical`, `national\|monetary` (EIPM; all overpayments); `national\|over`, `national\|under`, `national\|gross`, `national\|net` (Part C, Part D and CERT: overpayments, underpayments, gross = over + under, net = over − under, each netted per enrollee or beneficiary first); `<claim type>\|gross` for CERT; or `<state>\|<component>` for PERM (component = gross, eligibility, claims; `national\|<component>` pools the 9 states) |

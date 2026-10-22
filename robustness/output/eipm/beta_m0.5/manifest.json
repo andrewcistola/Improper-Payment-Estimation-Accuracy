@@ -1,0 +1,9 @@
+{
+  "base": {
+    "checks.json": "f538c492e85c53560cba4b8a039197bd6140a3cfaa272738a38bf224a0fe4f61",
+    "config.yaml": "7a592bb0e855ec1cc0de3b9b65b0efe453a244da16a5746a2bf6ebc446e379f3",
+    "design.yaml": "bbc19cb0bb4c7f9c07a0248ef021ba13148424987c7dc76877658e23bddc29ec",
+    "population.parquet": "8e99d128e0e45c453351858154ec54290f3eace196b90ee9beaf3f6cdee176f1",
+    "truth.json": "b7a65afecb8f8c746ab5f4221dbb7cc9bd46b603b10a72cb10e2e2e063dcbfee"
+  }
+}

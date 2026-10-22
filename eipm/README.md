@@ -13,7 +13,7 @@ Run: `ipsim eipm/errors/config.yaml` → `errors/output/base/`
 | Truth | `03_truth.sql` | True totals and rates (gross, technical, monetary), overall and by stratum |
 | Checks | `04_checks.sql` | FY 2025 targets: gross 0.89%, technical 0.43 points, no underpayments; unique ids |
 
-The 48% technical share is the FY 2025 split (0.43 of 0.89 points, $282.44M of $657.46M). The EIPM strata are not public; the APTC quintiles are illustrative and follow the same rule as PERM's payment quintiles.
+The 48% technical share is the FY 2025 split in rate points (0.43 of 0.89); the dollar figures CMS reports ($282.44M technically improper of $657.46M) imply 43%, and the rate-point split is used here. The EIPM strata are not public; the APTC quintiles are illustrative and follow the same rule as PERM's payment quintiles.
 
 ## estimation/ — sample the population and estimate with each method
 
@@ -40,42 +40,42 @@ Each row gives the true value and, over the 25 audit years, the median point est
 
 | Measure | Method | True | Estimated | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Gross (all EIPM errors are overpayments) | Expansion | $0.75B | $0.68B | $0.96B | $0.40B |
+| Gross | Expansion | $0.75B | $0.68B | $0.96B | $0.40B |
 |  | Ratio | $0.75B | $0.68B | $0.96B | $0.40B |
 |  | Regression | $0.75B | $0.69B | $0.96B | $0.41B |
-|  | Bootstrap simulation (parametric rates) | $0.75B | $0.66B | $0.94B | $0.43B |
+|  | Simulation (parametric rates) | $0.75B | $0.67B | $0.94B | $0.45B |
 | Technically improper | Expansion | $0.35B | $0.30B | $0.51B | $0.08B |
 |  | Ratio | $0.35B | $0.30B | $0.52B | $0.08B |
 |  | Regression | $0.35B | $0.29B | $0.51B | $0.08B |
-|  | Bootstrap simulation (parametric rates) | $0.35B | $0.29B | $0.55B | $0.11B |
+|  | Simulation (parametric rates) | $0.35B | $0.29B | $0.51B | $0.10B |
 | Monetary | Expansion | $0.39B | $0.39B | $0.57B | $0.22B |
 |  | Ratio | $0.39B | $0.39B | $0.57B | $0.22B |
 |  | Regression | $0.39B | $0.40B | $0.58B | $0.22B |
-|  | Bootstrap simulation (parametric rates) | $0.39B | $0.37B | $0.50B | $0.26B |
+|  | Simulation (parametric rates) | $0.39B | $0.38B | $0.51B | $0.26B |
 
 **Rates**
 
 | Measure | Method | True | Estimated | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Gross (all EIPM errors are overpayments) | Expansion | 0.92% | 0.83% | 1.17% | 0.49% |
+| Gross | Expansion | 0.92% | 0.83% | 1.17% | 0.49% |
 |  | Ratio | 0.92% | 0.83% | 1.17% | 0.49% |
 |  | Regression | 0.92% | 0.84% | 1.18% | 0.50% |
-|  | Bootstrap simulation (parametric rates) | 0.92% | 0.81% | 1.16% | 0.53% |
+|  | Simulation (parametric rates) | 0.92% | 0.83% | 1.15% | 0.55% |
 | Technically improper | Expansion | 0.43% | 0.36% | 0.63% | 0.09% |
 |  | Ratio | 0.43% | 0.36% | 0.63% | 0.09% |
 |  | Regression | 0.43% | 0.36% | 0.63% | 0.09% |
-|  | Bootstrap simulation (parametric rates) | 0.43% | 0.35% | 0.67% | 0.13% |
+|  | Simulation (parametric rates) | 0.43% | 0.35% | 0.63% | 0.12% |
 | Monetary | Expansion | 0.48% | 0.48% | 0.70% | 0.26% |
 |  | Ratio | 0.48% | 0.48% | 0.70% | 0.26% |
 |  | Regression | 0.48% | 0.50% | 0.71% | 0.26% |
-|  | Bootstrap simulation (parametric rates) | 0.48% | 0.45% | 0.62% | 0.31% |
+|  | Simulation (parametric rates) | 0.48% | 0.46% | 0.63% | 0.32% |
 
 **How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
 
-| Measure | Expansion | Ratio | Regression | Bootstrap simulation (parametric rates) |
+| Measure | Expansion | Ratio | Regression | Simulation (parametric rates) |
 |---|---|---|---|---|
-| Gross (all EIPM errors are overpayments) | 22/25 (0/3) | 22/25 (0/3) | 23/25 (0/2) | 23/25 (0/2) |
-| Technically improper | 19/25 (1/5) | 19/25 (1/5) | 19/25 (1/5) | 20/25 (1/4) |
+| Gross | 22/25 (0/3) | 22/25 (0/3) | 23/25 (0/2) | 22/25 (0/3) |
+| Technically improper | 19/25 (1/5) | 19/25 (1/5) | 19/25 (1/5) | 19/25 (1/5) |
 | Monetary | 22/25 (0/3) | 22/25 (0/3) | 22/25 (0/3) | 22/25 (1/2) |
 
-From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).
+From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv) (`python shared/build_readmes.py` regenerates this section).

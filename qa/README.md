@@ -25,7 +25,7 @@ You do not need programming experience to complete the re-run and the results ch
 
 | Step | Hands-on time | Waiting time |
 |---|---|---|
-| 1-4. Set up and start the re-run | 45 minutes | 3½ to 4 hours (computer runs on its own) |
+| 1-4. Set up and start the re-run | 45 minutes | 4 to 4½ hours (computer runs on its own) |
 | 5. Collect the re-run | 5 minutes | |
 | 6. Code review (section C) | 3 to 5 hours | |
 | 7. Results and other checks (sections D-G) | 2 to 3 hours | |
@@ -69,7 +69,7 @@ This is checklist **section B**.
 
    It should end with `Your setup works.`
 
-2. Start the full re-run (3½ to 4 hours):
+2. Start the full re-run (4 to 4½ hours):
 
    ```bash
    .venv/bin/python start-here/run_all.py
@@ -117,8 +117,9 @@ Complete the remaining rows of checklist section B (they ask you to look at thes
 
 Section C lists **each key assumption of the study as its own row**. These include:
 
-- assumptions common to every program: perfect review, one audit per year, errors independent of selection, Neyman allocation, netting, calibration, random numbers, scale factors, interval formulas, regression, the bootstrap simulation and scoring;
-- assumptions specific to each program: population, errors, calibration targets, benefit rules and audit design for Part C, Part D (including the pre-IRA reference), PERM, EIPM and CERT.
+- assumptions common to every program: perfect review, one audit per year, errors independent of selection, Neyman allocation, netting, calibration, random numbers, scale factors, interval formulas, regression, the simulation and scoring;
+- assumptions specific to each program: population, errors, calibration targets, benefit rules and audit design for Part C, Part D (including the pre-IRA reference and the PDE-level estimators), PERM, EIPM and CERT;
+- the `size_beta` robustness parameter and the Appendix D calibration and robustness runs (`robustness/`).
 
 For each row:
 
@@ -127,7 +128,7 @@ For each row:
 3. Set **Status** to Pass, Fail or N/A. Enter the date, your initials, and in **Evidence** the file and line number you checked (for example `shared/ipsim/simulation.py, lines 120-140`).
 4. If it does not match, set **Status** to Fail, add the problem to the **Issues log** sheet, and put its issue ID (for example I-02) in the **Issue ID** column.
 
-One known discrepancy is already listed as an example on the Issues log (row C21: a description in the Part C configuration that does not match the audit size actually used). Confirm or reject it as part of your review.
+The Issues log carries one example row (a Part C configuration discrepancy found and resolved in the October 2026 review) to show the format; the first completed review, with its 19 logged issues and the changes they led to, is in [`qa/Claude/`](Claude/).
 
 ## Step 7. Check the results and complete sections D to G
 

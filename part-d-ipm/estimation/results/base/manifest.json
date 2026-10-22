@@ -1,25 +1,33 @@
 {
   "config_file": "part-d-ipm/estimation/config.yaml",
-  "config_sha256": "92c83de6028ed3f504612af989e7e114bf2fb58d594c09f7a6f0637893406dff",
+  "config_sha256": "ead965c88c934f8efd5121bac5befbf359e2ee9a3dda17f1f1c89d646c827c02",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 860,
-      "sha256": "33fa12c144404d1c32a200ce7b297315729d3f3babcadac2ba79f321c8e9b335"
+      "bytes": 932,
+      "sha256": "b02cb6b55f7727755c201c13d7faa4425218c5bcdc9fa340fdf5c4d0bc0b4a61"
     },
     "estimates.parquet": {
-      "bytes": 12132,
-      "rows": 400,
-      "sha256": "2afb8a8448193cba90030dd465c9f7443ddf68663edf5f3bac9b50326775947d"
+      "bytes": 18229,
+      "rows": 600,
+      "sha256": "be9fe4fba376617682e63aa198de943dd35f79dbb68a38df85c27871d4a74e8f"
     },
     "metrics.json": {
-      "bytes": 8635,
-      "sha256": "5aa43a0dc95f28dd90d3132d4f34afd7381640d32bcbe86a38acb2cb8082156d"
+      "bytes": 13108,
+      "sha256": "54c253e52104f9eb2d0d7ee667dab8e47d74d4413e788d971475efde9773eb35"
     },
     "truth.json": {
       "bytes": 474,
       "sha256": "f0803ade0fe93c6584758a60f208c1a83d6c2b3c186cd5b7c285fff732f1b8a6"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "partd_estimation",
   "python": "3.13.16",

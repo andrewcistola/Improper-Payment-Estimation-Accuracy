@@ -1,0 +1,92 @@
+{
+  "by": {
+    "calibration": {
+      "rate": {
+        "p_monetary": 0.01772013,
+        "p_technical": 0.00447406
+      }
+    },
+    "stratum": {
+      "P1": {
+        "gross_rate": 0.02371719044575589,
+        "monetary": 69129204.0,
+        "monetary_rate": 0.01564615849093789,
+        "n_units": 28431.0,
+        "overpayments": 104789332.0,
+        "payments": 4418286063.0,
+        "technical": 35660128.0,
+        "technical_rate": 0.008071031954817997,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.050684112412507476,
+        "unit_technical_rate": 0.010551862403714255
+      },
+      "P2": {
+        "gross_rate": 0.01436246838361596,
+        "monetary": 95795949.0,
+        "monetary_rate": 0.008452458573773575,
+        "n_units": 28431.0,
+        "overpayments": 162777052.0,
+        "payments": 11333501154.0,
+        "technical": 66981103.0,
+        "technical_rate": 0.005910009809842386,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.027399669374978015,
+        "unit_technical_rate": 0.005838697196721888
+      },
+      "P3": {
+        "gross_rate": 0.009397755518987904,
+        "monetary": 81937844.0,
+        "monetary_rate": 0.005127654205778668,
+        "n_units": 28430.0,
+        "overpayments": 150172339.0,
+        "payments": 15979596266.0,
+        "technical": 68234495.0,
+        "technical_rate": 0.0042701013132092356,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.022652128033767146,
+        "unit_technical_rate": 0.004326415758002111
+      },
+      "P4": {
+        "gross_rate": 0.007838610427672187,
+        "monetary": 75482885.0,
+        "monetary_rate": 0.003645185409499142,
+        "n_units": 28430.0,
+        "overpayments": 162318473.0,
+        "payments": 20707557098.0,
+        "technical": 86835588.0,
+        "technical_rate": 0.004193425018173044,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.019978895532887793,
+        "unit_technical_rate": 0.004150545198733732
+      },
+      "P5": {
+        "gross_rate": 0.0057083976322128815,
+        "monetary": 70154532.0,
+        "monetary_rate": 0.002400095135746244,
+        "n_units": 28430.0,
+        "overpayments": 166855871.0,
+        "payments": 29229896330.0,
+        "technical": 96701339.0,
+        "technical_rate": 0.0033083024964666373,
+        "underpayments": 0.0,
+        "unit_err_rate": 0.016531832571227575,
+        "unit_technical_rate": 0.0033063665142455153
+      }
+    }
+  },
+  "overall": {
+    "gross_rate": 0.009145631249946185,
+    "monetary": 392500414.0,
+    "monetary_rate": 0.004805999801708135,
+    "n_units": 142152.0,
+    "overpayments": 746913067.0,
+    "payments": 81668836911.0,
+    "technical": 354412653.0,
+    "technical_rate": 0.004339631448238049,
+    "underpayments": 0.0,
+    "unit_err_rate": 0.027449490686026225,
+    "unit_technical_rate": 0.005634813439135573
+  },
+  "program": "eipm",
+  "scenario": "base"
+}

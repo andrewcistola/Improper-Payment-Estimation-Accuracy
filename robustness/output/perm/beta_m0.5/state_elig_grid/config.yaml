@@ -1,0 +1,46 @@
+program: perm
+scenario: state_elig_grid
+master_seed: 20261016
+scenario_seed: 1909684044961874183
+variables:
+  benes_per_state: 30000
+  w_pop: 200.0
+  mc_share: 0.7
+  p_ffs: 0.065
+  p_mc: 0.003
+  size_beta: -0.5
+  states:
+  - state_id: 1
+    fmap: 0.5
+    elig_rate: 0.02
+  - state_id: 2
+    fmap: 0.55
+    elig_rate: 0.0225
+  - state_id: 3
+    fmap: 0.6
+    elig_rate: 0.025
+  - state_id: 4
+    fmap: 0.65
+    elig_rate: 0.0275
+  - state_id: 5
+    fmap: 0.7
+    elig_rate: 0.03
+  - state_id: 6
+    fmap: 0.75
+    elig_rate: 0.0325
+  - state_id: 7
+    fmap: 0.58
+    elig_rate: 0.035
+  - state_id: 8
+    fmap: 0.62
+    elig_rate: 0.0375
+  - state_id: 9
+    fmap: 0.77
+    elig_rate: 0.04
+  scenario: state_elig_grid
+steps:
+- sql: perm/errors/sql/01_population.sql
+- sql: perm/errors/sql/02_claims_errors.sql
+- sql: perm/errors/sql/03_eligibility_errors.sql
+- sql: perm/errors/sql/04_truth.sql
+- sql: perm/errors/sql/05_checks.sql

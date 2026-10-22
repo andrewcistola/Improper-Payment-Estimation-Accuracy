@@ -1,0 +1,35 @@
+{
+  "config_file": "perm/estimation/national.yaml",
+  "config_sha256": "60396053f2eb7c793dae19a00fd931150c2eee72ebb04f2099c15d09f3723a3b",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 251,
+      "sha256": "14775871d2ddd109bc1db4006fc69c73a6c782fe2ffc53e1bdea239ebfae5b7b"
+    },
+    "estimates.parquet": {
+      "bytes": 37941,
+      "rows": 1200,
+      "sha256": "bb6cb1734779394e5114d1a0cb7f8a446bfff2134bae7ae67559a18dea97c525"
+    },
+    "metrics.json": {
+      "bytes": 6621,
+      "sha256": "ab7a050d5ad634e39c0d4b69cf68e9e0fcfe49ffddeaa12bb770c9b9e6f3cfce"
+    },
+    "truth.json": {
+      "bytes": 387,
+      "sha256": "5db2a4767815d465e1a2c03213ab48d1ccb12b16ab358ba2fb3852ea250c5716"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "perm_national",
+  "python": "3.13.16",
+  "scenario": "national"
+}

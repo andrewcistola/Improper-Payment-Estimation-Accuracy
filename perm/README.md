@@ -20,13 +20,13 @@ Individual claim or benefit-level errors in Medicaid: payment universes for 9 st
 
 | Run | Design | Output |
 |---|---|---|
-| `ipsim perm/estimation/config.yaml` then `national.yaml` | One scenario per state: strata = payment type (FFS, MC) × five equal-count payment quintiles; Neyman allocation of 520 payments per state-year (n_h ∝ N_h × S_h, S_h = standard deviation of gross improper dollars); systematic selection after sorting by amount paid within stratum; all components share one sample; 25 audit years. The systematic sample's variance is estimated with the stratified-SRS formula, the usual approximation (conservative after sorting by size); the study measures how well that works. The eligibility component is estimated from the beneficiaries attached to the sampled payments, so audited beneficiaries are selected in proportion to their number of payments; the estimate is unbiased because eligibility error is independent of payment count by construction. `national.yaml` pools the states: dollars and variances add for the analytic methods; the bootstrap simulation sums the states' iterations | `estimation/results/state_<id>/` (domain = `state\|component`), `estimation/results/national/` |
+| `ipsim perm/estimation/config.yaml` then `national.yaml` | One scenario per state: strata = payment type (FFS, MC) × five equal-count payment quintiles; Neyman allocation of 520 payments per state-year (n_h ∝ N_h × S_h, S_h = standard deviation of gross improper dollars); systematic selection after sorting by amount paid within stratum; all components share one sample; 25 audit years. The systematic sample's variance is estimated with the stratified-SRS formula, the usual approximation (conservative after sorting by size); the study measures how well that works. The eligibility component is estimated from the beneficiaries attached to the sampled payments, so audited beneficiaries are selected in proportion to their number of payments; the estimate is unbiased because eligibility error is independent of payment count by construction. `national.yaml` pools the states: dollars and variances add for the analytic methods; the simulation sums the states' iterations | `estimation/results/state_<id>/` (domain = `state\|component`), `estimation/results/national/` |
 
 Methods: `10_expansion.sql`, `20_ratio.sql`, `30_regression.sql`, and the audit-finding simulation (`40_simulation_inputs.sql` + `simulation.py`), all scored in `90_score.sql`; `95_national.sql` pools the states. Formulas: [`shared/sql/lib/02_estimators.sql`](../shared/sql/lib/02_estimators.sql).
 
 - **Regression** (`30_regression.sql` + [`shared/ipsim/regression.py`](../shared/ipsim/regression.py)): within each design stratum, improper dollars are regressed on the amount paid and, for PERM, month of service and the beneficiary's number of payments and total paid; the models predict every payment or claim, the audit residuals are added, and the interval comes from the residuals. A stratum with fewer than 10 audited errors uses an intercept-only model (expansion within that stratum). In PERM that is every stratum except the largest-payment FFS stratum, which holds about 60% of each state's audit (about 26 errors).
 
-- **Bootstrap simulation:** within each stratum, a non-audited payment is in error with the audited error rate; an error is partial with the audited partial share (its improper share drawn from the stratum's audited partial errors), otherwise the whole payment is improper. A beneficiary with no audited payment is ineligible with the audited beneficiaries' eligibility error rate; an audited beneficiary's whole-year eligibility finding is propagated to all of that beneficiary's payments, audited or not. Parametric rates (reported) redraw the counts before every iteration: the error count f̃ ~ Binomial(n, f/n), then the partial count out of it, g̃ ~ Binomial(f̃, g/f) (0 when f̃ = 0), and the eligibility count Binomial(n_e, f_e/n_e); or fixed rates (`--set sim_rates=fixed`, comparison only, `estimation/results_fixed/`). 25 audit years per state, 1,000 iterations. Same-beneficiary clustering within a payment sample (about 4–5 pairs per 520) is ignored by every method.
+- **Bootstrap simulation:** within each stratum, a non-audited payment is in error with the audited error rate; an error is partial with the audited partial share (its improper share drawn from the stratum's audited partial errors), otherwise the whole payment is improper. A beneficiary with no audited payment is ineligible with the audited beneficiaries' eligibility error rate; an audited beneficiary's whole-year eligibility finding is propagated to all of that beneficiary's payments, audited or not. Parametric rates (reported) redraw the counts before every iteration: the error count f̃ ~ Binomial(n, f/n), then the partial count out of it, g̃ ~ Binomial(f̃, g/f) (0 when f̃ = 0), and the eligibility count Binomial(n_e, f_e/n_e); or fixed rates (`--set sim_rates=fixed`, comparison only, `estimation/results_fixed/`). 25 audit years per state, 1,000 iterations. Same-beneficiary clustering within a payment sample (a few pairs per 520) is ignored by every method.
 
 ## Results (25 audit years)
 
@@ -36,42 +36,42 @@ Each row gives the true value and, over the 25 audit years, the median point est
 
 | Measure | Method | True | Estimated | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Gross (all PERM errors are overpayments) | Expansion | $8.65B | $8.57B | $9.74B | $7.42B |
+| Gross | Expansion | $8.65B | $8.57B | $9.74B | $7.42B |
 |  | Ratio | $8.65B | $8.52B | $9.70B | $7.38B |
 |  | Regression | $8.65B | $8.57B | $9.67B | $7.43B |
-|  | Bootstrap simulation (parametric rates) | $8.65B | $8.46B | $9.39B | $7.59B |
+|  | Simulation (parametric rates) | $8.65B | $8.49B | $9.40B | $7.61B |
 | Eligibility | Expansion | $4.34B | $4.33B | $5.18B | $3.48B |
 |  | Ratio | $4.34B | $4.33B | $5.18B | $3.48B |
 |  | Regression | $4.34B | $4.36B | $5.21B | $3.52B |
-|  | Bootstrap simulation (parametric rates) | $4.34B | $4.24B | $4.97B | $3.54B |
+|  | Simulation (parametric rates) | $4.34B | $4.24B | $4.94B | $3.57B |
 | Claims | Expansion | $4.44B | $4.50B | $5.26B | $3.63B |
 |  | Ratio | $4.44B | $4.52B | $5.28B | $3.67B |
 |  | Regression | $4.44B | $4.48B | $5.22B | $3.71B |
-|  | Bootstrap simulation (parametric rates) | $4.44B | $4.41B | $5.03B | $3.82B |
+|  | Simulation (parametric rates) | $4.44B | $4.43B | $5.06B | $3.81B |
 
 **Rates**
 
 | Measure | Method | True | Estimated | Upper bound | Lower bound |
 |---|---|---|---|---|---|
-| Gross (all PERM errors are overpayments) | Expansion | 6.09% | 6.04% | 6.86% | 5.23% |
+| Gross | Expansion | 6.09% | 6.04% | 6.86% | 5.23% |
 |  | Ratio | 6.09% | 6.00% | 6.83% | 5.20% |
 |  | Regression | 6.09% | 6.03% | 6.81% | 5.23% |
-|  | Bootstrap simulation (parametric rates) | 6.09% | 5.96% | 6.61% | 5.34% |
+|  | Simulation (parametric rates) | 6.09% | 5.98% | 6.62% | 5.36% |
 | Eligibility | Expansion | 3.06% | 3.05% | 3.64% | 2.45% |
 |  | Ratio | 3.06% | 3.05% | 3.65% | 2.45% |
 |  | Regression | 3.06% | 3.07% | 3.67% | 2.48% |
-|  | Bootstrap simulation (parametric rates) | 3.06% | 2.98% | 3.50% | 2.49% |
+|  | Simulation (parametric rates) | 3.06% | 2.99% | 3.48% | 2.51% |
 | Claims | Expansion | 3.13% | 3.17% | 3.70% | 2.55% |
 |  | Ratio | 3.13% | 3.18% | 3.72% | 2.58% |
 |  | Regression | 3.13% | 3.15% | 3.68% | 2.62% |
-|  | Bootstrap simulation (parametric rates) | 3.13% | 3.10% | 3.54% | 2.69% |
+|  | Simulation (parametric rates) | 3.13% | 3.12% | 3.56% | 2.68% |
 
 **How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
 
-| Measure | Expansion | Ratio | Regression | Bootstrap simulation (parametric rates) |
+| Measure | Expansion | Ratio | Regression | Simulation (parametric rates) |
 |---|---|---|---|---|
-| Gross (all PERM errors are overpayments) | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 24/25 (0/1) |
+| Gross | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 24/25 (0/1) |
 | Eligibility | 21/25 (0/4) | 21/25 (0/4) | 21/25 (0/4) | 24/25 (0/1) |
 | Claims | 23/25 (0/2) | 23/25 (0/2) | 23/25 (0/2) | 23/25 (1/1) |
 
-From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).
+From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv) (`python shared/build_readmes.py` regenerates this section).

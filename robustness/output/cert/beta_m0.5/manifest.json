@@ -1,0 +1,9 @@
+{
+  "national": {
+    "checks.json": "4783223ecc26cbe54ed5b79897b23b14342c50556c6d8055b7a7777d8c13053a",
+    "config.yaml": "1b637772bbbcf210d347f9d9212ecf56dde692d8b2b6aeea306ac48a07502085",
+    "design.yaml": "1bf3fa9c7ccca5b77b59f7cb3d057e2d24afa276773dc8336606872038e5f4b8",
+    "population.parquet": "f8127f4a09f8a345c0d81d2628e88d1b0ef6acbf56ba3cec95774e1bf43a2c1b",
+    "truth.json": "95b86e7045d6343e2f927794c27f808e82b10aac581e3873cdd54c548831a592"
+  }
+}

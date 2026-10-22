@@ -1,30 +1,38 @@
 {
   "config_file": "perm/estimation/config.yaml",
-  "config_sha256": "befb77132a50f0354c83e82d5d82549901e3fc834de9bfb5eb2a9661cc770dff",
+  "config_sha256": "c3999711683d60955053f650439dad58a29ac7fd244c3c0cd3123b61f2850ccd",
   "duckdb": "1.5.6",
   "files": {
     "config.yaml": {
-      "bytes": 938,
-      "sha256": "f8abb162382598a9464b4a707e1db5dc5b06a32904847f3c1af58322455e5b20"
+      "bytes": 858,
+      "sha256": "8a10257184926dd5af9dde7514b583ff9e2388c1983ad4672d3b2d6ea8b9f443"
     },
     "estimates.parquet": {
-      "bytes": 10965,
+      "bytes": 10972,
       "rows": 300,
-      "sha256": "b03e17aa7fa79126ef5f0df06e22e6a9a55c2eabc7a394f5a282b6c3e1518a4f"
+      "sha256": "696b6d530bb80ad024d933f242bc0c2645cc8aa6bc1e0e007febeb308c6f5a1f"
     },
     "metrics.json": {
-      "bytes": 6487,
-      "sha256": "56862d9746df26e7eef5703fcf6e3d7b68d1bf8cd0f4a3365de8312ef539811d"
+      "bytes": 6492,
+      "sha256": "703508e8e9f8db8e2fa42e523fea8b95fb03ec923de8942d5578d5c7678d694e"
     },
     "sim_draws.parquet": {
-      "bytes": 568810,
+      "bytes": 568808,
       "rows": 75000,
-      "sha256": "661e4a9dee150de072ffaceffb7460580405aec665f0e7e280d5913d0a099180"
+      "sha256": "6eb3b1ed1362d7e0360604c5f58617c79ef6f0e6cb8b68d703454bf6f1596cff"
     },
     "truth.json": {
       "bytes": 350,
       "sha256": "672ba4080538acccdf98989ad6c59dd31799854d1ebb92d749d8ab4c7917a166"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "perm_estimation",
   "python": "3.13.16",

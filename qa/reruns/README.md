@@ -27,6 +27,6 @@ qa/reruns/
         └── (notes, screenshots)
 ```
 
-A re-run folder is created by `qa/collect_rerun.py` (see [`qa/README.md`](../README.md), step 5). Do not edit the files in `logs/`, `results/` or `verification/`; they are the evidence of the re-run. Put everything you write yourself in `review/`.
+The first completed review (2026-10-21) is kept in [`qa/Claude/`](../Claude/) rather than here, at the author's request. A re-run folder is created by `qa/collect_rerun.py` (see [`qa/README.md`](../README.md), step 5). Do not edit the files in `logs/`, `results/` or `verification/`; they are the evidence of the re-run. Put everything you write yourself in `review/`.
 
 A completed folder is about 15 MB and contains synthetic data only, so it can be committed to the repository. To find a result in a re-run, use the same path as in the project under `results/`: for example, the project's `part-c-ipm/estimation/results/base/metrics.json` is `results/part-c-ipm/estimation/results/base/metrics.json` here.

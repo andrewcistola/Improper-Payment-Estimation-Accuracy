@@ -1,0 +1,36 @@
+program: perm_estimation
+scenario: state_6
+master_seed: 20261016
+scenario_seed: 3391942623215664333
+variables:
+  population_dir: perm/errors/output/state_elig_grid
+  components:
+  - gross
+  - eligibility
+  - claims
+  audit_size: 520
+  reps: 100
+  sim_reps: 100
+  sim_iterations: 500
+  sim_rates: parametric
+  sim_export_draws: true
+  reg_predictors:
+  - x
+  - month
+  - bene_n_pay
+  - bene_paid
+  reg_min_errors: 10
+  alpha: 0.05
+  state_id: 6
+  scenario: state_6
+steps:
+- sql: perm/estimation/sql/01_frame.sql
+- sql: shared/sql/sample_systematic.sql
+- sql: perm/estimation/sql/10_expansion.sql
+- sql: perm/estimation/sql/20_ratio.sql
+- sql: perm/estimation/sql/30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
+- sql: perm/estimation/sql/40_simulation_inputs.sql
+- python: perm/estimation/simulation.py
+- sql: perm/estimation/sql/90_score.sql

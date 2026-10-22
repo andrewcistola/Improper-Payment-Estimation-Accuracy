@@ -37,7 +37,7 @@ PROGRAMS = [
 ]
 METHOD_LABEL = {"expansion": "Expansion", "ratio": "Ratio", "regression": "Regression",
                 "pde_expansion": "PDE expansion (marginal)", "pde_ratio": "PDE ratio (marginal)",
-                "simulation": "Bootstrap simulation (parametric)"}
+                "simulation": "Simulation (parametric rates)"}
 ORDER = list(METHOD_LABEL)
 
 
@@ -113,7 +113,7 @@ def main():
                            "Half-width ÷ 1.96·SD near 1 means the interval matches the estimator's own sampling variability; "
                            "below 1, the interval is too narrow. Monte Carlo SE of coverage at 95% with 100 audit years: 2.2 points. "
                            "Bootstrap simulation run at 500 iterations per audit year."))
-    for i, b in enumerate(sorted(df.run[df.run.str.startswith("beta")].unique())):
+    for i, b in enumerate(sorted(df.run[df.run.str.startswith("beta")].unique(), reverse=True)):   # +0.5 first (Table D2), then -0.5 (D3)
         val = b.replace("beta_", "").replace("p", "+").replace("m", "-")
         sub = df[df.run == b]
         parts.append(table(sub, f"Table D{i + 2}. Size-dependent error probability, size_beta = {val} (25 audit years, gross rate)",

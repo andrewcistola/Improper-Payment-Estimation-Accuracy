@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Bootstrap Simulation</title>
+  <title>Comparative Accuracy of Improper Payment Estimation Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic Estimators and Audit-Finding Simulation</title>
   <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,65 +42,64 @@ a { color: #1f5fae; text-decoration: none; }
 <header id="title-block-header">
 <h1 class="title">Comparative Accuracy of Improper Payment Estimation
 Methods in Federal Health Programs: A Monte Carlo Evaluation of Analytic
-Estimators and Bootstrap Simulation</h1>
+Estimators and Audit-Finding Simulation</h1>
 </header>
 <p><strong>Andrew Cistola, PhD, MPH</strong> · [Affiliation]</p>
 <p><strong>Research Objective.</strong> The Payment Integrity
 Information Act requires statistically valid improper payment estimates,
-with 95% confidence intervals, for at-risk federal programs. CMS
-produces five: Medicare Part C, Part D, Medicaid (PERM), Marketplace
-APTC (EIPM), and Medicare fee-for-service (CERT). Each projects errors
-from an audited sample using either analytic estimators (expansion,
-ratio, or regression) or audit-finding bootstrap simulation, which
-assigns audited findings across the population and reruns the payment
-rules. Medical record review drives measurement cost, and audit sizes
-are set by interval width. The purpose of this study is to compare the
-accuracy of available methods for estimating improper payments in
-federal health programs.</p>
+with confidence intervals, for at-risk federal programs. CMS produces
+five: Medicare Part C, Part D, Medicaid (PERM), Marketplace APTC (EIPM),
+and Medicare fee-for-service (CERT). Each projects errors from an
+audited sample using design-based analytic estimators (expansion, ratio,
+regression) or audit-finding simulation, which assigns audited findings
+across the population and reruns the payment rules. The purpose of this
+study is to compare the accuracy of available methods for estimating
+improper payments in federal health programs.</p>
 <p><strong>Study Design.</strong> Monte Carlo evaluation against a known
-truth. For each program, a synthetic population was built with
-fabricated errors and calibrated only to public FY 2025 aggregates. Each
-program’s production-like audit (990–37,651 units, stratified, and
-Neyman-allocated where applicable) was drawn in 25 independent audit
-years. Each year, over-, under-, gross, and net improper payments were
-estimated using expansion, ratio, and regression estimators with normal
-intervals and bootstrap simulation with 1,000 iterations, in two
-versions: - <strong>Fixed rates:</strong> audited error rates held
-constant. - <strong>Parametric rates:</strong> rates redrawn from their
-binomial sampling distributions each iteration.</p>
-<p>The outcomes were point accuracy, coverage (truth inside the 95%
-interval), and interval width.</p>
-<p><strong>Population Studied.</strong> Populations of 330,253 Medicare
-Advantage enrollees, 108,000 Part D beneficiaries (4.5 million drug
-claims), 3.1 million Medicaid payments, 142,152 Marketplace
+truth. A synthetic population per program, with fabricated errors, was
+calibrated only to public FY 2025 aggregates. Each program’s
+production-like audit (990–37,651 units) was drawn in 25 independent
+audit years, and in 100 for interval calibration. Improper payments were
+estimated with expansion, ratio, and regression estimators and with
+simulation (1,000 iterations) in two versions: plug-in (audited error
+rates held fixed) and parametric bootstrap (rates redrawn from their
+binomial sampling distributions). Each population was then rebuilt with
+error probability rising, and falling, with payment size within strata.
+Outcomes were point accuracy, coverage, width, and the ratio of
+half-width to the estimator’s empirical standard deviation.</p>
+<p><strong>Population Studied.</strong> Synthetic populations of 330,253
+Medicare Advantage enrollees, 108,000 Part D beneficiaries (4.5 million
+drug claims), 3.1 million Medicaid payments, 142,152 Marketplace
 applications, and 5.34 million fee-for-service claims, scaled to
-national program dollars. This study used no protected health
-information or non-public data.</p>
-<p><strong>Principal Findings.</strong> - <strong>Point
-accuracy.</strong> All methods estimated the gross rate accurately.
-Bootstrap simulation was the most accurate in four programs (mean
-absolute error 1.5–6.6% of the true rate). - <strong>Fixed-rate
-intervals.</strong> These were 5–21% as wide as analytic intervals and
-contained the truth in only 30 of 125 audit-years (24%) because reusing
-the audited rates omits their sampling error. - <strong>Parametric-rate
-intervals.</strong> These contained the true gross rate in 121 of 125
-audit-years (96.8%; 23–25 of 25 per program), as opposed to 111 for the
-ratio estimator. They were 11–21% narrower than ratio intervals in four
-programs and 63% narrower than the same-audit expansion interval in Part
-D. - <strong>Sparse measures.</strong> Measures built from few errors
-(for example, underpayments) were undercovered by every method.</p>
-<p><strong>Conclusions.</strong> Fixed-rate bootstrap simulation
-produces invalid intervals. Redrawing the audited rates from their
-sampling distribution restores nominal coverage and produces intervals
-narrower than current analytic intervals. Of the methods compared,
-bootstrap simulation with parametric rates was the most accurate in both
-point and interval accuracy.</p>
-<p><strong>Implications for Policy or Practice.</strong> CMS improper
-payment measurements should adopt bootstrap simulation with parametric
-rates, and any fixed-rate simulation intervals in use should be
-reviewed. The gain in precision would allow audits roughly 20–38%
-smaller at current precision, reducing review costs without sacrificing
-accuracy. Future research should confirm coverage at reduced sizes,
-checking sparse components separately.</p>
+national dollars. No real or non-public data were used.</p>
+<p><strong>Principal Findings.</strong> - <strong>Plug-in intervals are
+invalid.</strong> They were 5–21% as wide as analytic intervals and
+contained the truth in 31 of 125 audit years (25%), because reusing the
+audited rates omits their sampling error. - <strong>Parametric-bootstrap
+intervals restore coverage.</strong> They contained the true gross rate
+in 121 of 125 audit years and were 9–23% narrower than the ratio
+interval in four programs. Over 100 audit years they were 5–12% narrower
+than the estimator’s own sampling variability in four programs; the real
+efficiency gain over the ratio estimator was 3% (Part C), 4% (EIPM), 23%
+(PERM), 35% (CERT), and 72% (Part D). - <strong>The simulation’s
+advantage depends on an assumption.</strong> When error probability rose
+or fell with payment size, the simulation’s estimate was biased by 2% to
+148% and its interval covered in 0 to 24 of 25 audit years; the ratio
+estimator remained unbiased and covered in 22 to 25. - <strong>Sparse
+measures</strong> (underpayments, technically improper payments) were
+undercovered by every method.</p>
+<p><strong>Conclusions.</strong> Plug-in simulation intervals should be
+discontinued. Redrawing the audited rates produces valid intervals, and
+the simulation is more precise where payment rules are nonlinear, but
+its accuracy rests on an independence assumption the design-based ratio
+estimator does not need.</p>
+<p><strong>Implications for Policy or Practice.</strong> CMS
+measurements should report the design-based ratio interval as the
+primary PIIA interval, with the parametric-bootstrap simulation
+alongside it as a check, and any plug-in simulation interval in use
+should be replaced. The simulation’s precision gain should not be used
+to reduce audit sizes until the independence assumption has been tested
+on real audit data and coverage confirmed at the reduced size;
+unit-level error models are the natural next step.</p>
 </body>
 </html>

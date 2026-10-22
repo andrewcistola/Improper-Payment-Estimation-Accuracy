@@ -17,8 +17,8 @@ for block in (M / "generated" / "tables.md").read_text().split("\n\n**Table ")[0
     key = re.match(r"\*\*Table (\w+)\.", block).group(1)
     tables[key] = block.strip()
 text = "\n\n".join((M / "sections" / f).read_text().strip() for f in
-                   ["00_front.md", "01_background_methods.md", "02_results_discussion.md",
-                    "03_future_conclusion_refs.md", "04_appendix.md"])
+                   ["00_front.md", "01_introduction.md", "02_methods.md", "03_results.md",
+                    "04_discussion.md", "05_appendix.md"])
 text = re.sub(r"\{\{TABLE(\w+)\}\}", lambda m: tables[m.group(1)], text)
 appendix_d = M / "generated" / "appendix_d.md"
 text = text.replace("{{APPENDIXD}}", appendix_d.read_text().strip() if appendix_d.exists()

@@ -41,7 +41,7 @@ Median point estimate and median 95% half-width; coverage = audit years with the
 | Ratio | 1.41% | ±0.67 | 18/25 (1/6) | 2.55% | ±1.32 | 18/25 (1/6) |
 | Regression | 1.44% | ±0.58 | 15/25 (4/6) | 3.14% | ±1.14 | 15/25 (4/6) |
 | Bootstrap (fixed rates) | 1.38% | ±0.06 | 10/25 (8/7) | 2.82% | ±0.13 | 11/25 (7/7) |
-| Bootstrap (parametric rates) | 1.38% | ±0.22 | 25/25 (0/0) | 2.81% | ±0.44 | 25/25 (0/0) |
+| Bootstrap (parametric rates) | 1.38% | ±0.21 | 25/25 (0/0) | 2.82% | ±0.43 | 25/25 (0/0) |
 
 ## Every measure, pre-IRA (25 audit years)
 
@@ -51,40 +51,40 @@ Median point estimate and median 95% half-width; coverage = audit years with the
 |  |  | Ratio | $2.64B (2.50%) | ±$1.40B | 18/25 (1/6) | 25.9% |
 |  |  | Regression | $3.29B (3.12%) | ±$1.21B | 15/25 (4/6) | 33.4% |
 |  |  | Bootstrap (fixed rates) | $2.95B (2.79%) | ±$0.14B | 12/25 (6/7) | 6.4% |
-|  |  | Bootstrap (parametric rates) | $2.94B (2.79%) | ±$0.47B | 23/25 (0/2) | 6.4% |
+|  |  | Bootstrap (parametric rates) | $2.95B (2.80%) | ±$0.46B | 23/25 (0/2) | 6.5% |
 | Underpayments | $0.03B (0.03%) | Expansion | $0.00B (0.00%) | ±$0.00B | 0/25 (0/25) | 100.0% |
 |  |  | Ratio | $0.01B (0.01%) | ±$0.02B | 10/25 (0/15) | 90.3% |
 |  |  | Regression | $0.01B (0.01%) | ±$0.01B | 8/25 (1/16) | 97.1% |
 |  |  | Bootstrap (fixed rates) | $0.04B (0.04%) | ±$0.01B | 12/25 (11/2) | 52.6% |
-|  |  | Bootstrap (parametric rates) | $0.04B (0.04%) | ±$0.03B | 21/25 (4/0) | 53.0% |
+|  |  | Bootstrap (parametric rates) | $0.04B (0.04%) | ±$0.03B | 21/25 (4/0) | 53.3% |
 | Gross | $2.99B (2.83%) | Expansion | $2.63B (2.49%) | ±$1.27B | 19/25 (0/6) | 30.6% |
 |  |  | Ratio | $2.69B (2.55%) | ±$1.40B | 18/25 (1/6) | 25.3% |
 |  |  | Regression | $3.32B (3.14%) | ±$1.21B | 15/25 (4/6) | 32.9% |
 |  |  | Bootstrap (fixed rates) | $2.97B (2.82%) | ±$0.14B | 11/25 (7/7) | 6.4% |
-|  |  | Bootstrap (parametric rates) | $2.97B (2.81%) | ±$0.47B | 25/25 (0/0) | 6.4% |
+|  |  | Bootstrap (parametric rates) | $2.97B (2.82%) | ±$0.46B | 25/25 (0/0) | 6.5% |
 | Net | $2.92B (2.77%) | Expansion | $2.63B (2.49%) | ±$1.27B | 19/25 (0/6) | 30.8% |
 |  |  | Ratio | $2.64B (2.50%) | ±$1.41B | 18/25 (1/6) | 26.5% |
 |  |  | Regression | $3.17B (3.00%) | ±$1.21B | 15/25 (4/6) | 33.9% |
 |  |  | Bootstrap (fixed rates) | $2.91B (2.76%) | ±$0.14B | 13/25 (5/7) | 6.5% |
-|  |  | Bootstrap (parametric rates) | $2.91B (2.76%) | ±$0.46B | 23/25 (0/2) | 6.4% |
+|  |  | Bootstrap (parametric rates) | $2.92B (2.77%) | ±$0.46B | 22/25 (0/3) | 6.5% |
 
 ## Coverage of every measure: post-IRA vs pre-IRA
 
 | Measure | Expansion | Ratio | Regression | Bootstrap (fixed rates) | Bootstrap (parametric rates) |
 |---|---|---|---|---|---|
-| Overpayments, Post-IRA | 18/25 | 18/25 | 16/25 | 9/25 | 25/25 |
+| Overpayments, Post-IRA | 18/25 | 18/25 | 16/25 | 9/25 | 24/25 |
 | Overpayments, Pre-IRA | 19/25 | 18/25 | 15/25 | 12/25 | 23/25 |
 | Underpayments, Post-IRA | 0/25 | 15/25 | 13/25 | 10/25 | 20/25 |
 | Underpayments, Pre-IRA | 0/25 | 10/25 | 8/25 | 12/25 | 21/25 |
 | Gross, Post-IRA | 18/25 | 18/25 | 15/25 | 10/25 | 25/25 |
 | Gross, Pre-IRA | 19/25 | 18/25 | 15/25 | 11/25 | 25/25 |
-| Net, Post-IRA | 19/25 | 19/25 | 16/25 | 11/25 | 24/25 |
-| Net, Pre-IRA | 19/25 | 18/25 | 15/25 | 13/25 | 23/25 |
+| Net, Post-IRA | 19/25 | 19/25 | 16/25 | 11/25 | 23/25 |
+| Net, Pre-IRA | 19/25 | 18/25 | 15/25 | 13/25 | 22/25 |
 
 ## Conclusion
 
 The methods compare the same way under both benefit designs. Under the pre-IRA benefit, the true gross rate doubles (1.38% to 2.83%), and every interval roughly doubles in width with it. The ranking is unchanged:
-- **Parametric-rate bootstrap:** contains the true gross rate in 25 of 25 audit years, with a median half-width of ±0.44 points, against ±1.32 for the ratio estimator.
+- **Parametric-rate bootstrap:** contains the true gross rate in 25 of 25 audit years, with a median half-width of ±0.43 points, against ±1.32 for the ratio estimator.
 - **Analytic estimators:** cover in 15–19 of 25.
 - **Fixed-rate bootstrap:** remains far too narrow (11 of 25).
 - **Underpayments:** stay hard for every method.

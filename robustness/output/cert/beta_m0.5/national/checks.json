@@ -1,0 +1,82 @@
+[
+  {
+    "metric": "gross_rate: dmepos",
+    "value": 0.24366504763410726,
+    "target": 0.24468085106382978,
+    "diff": -0.0010158034297225171,
+    "tolerance": 0.003,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 gross rate by claim type"
+  },
+  {
+    "metric": "gross_rate: ipps",
+    "value": 0.030606018906906993,
+    "target": 0.031223628691983123,
+    "diff": -0.0006176097850761307,
+    "tolerance": 0.003,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 gross rate by claim type"
+  },
+  {
+    "metric": "gross_rate: overall",
+    "value": 0.0652263818681668,
+    "target": 0.0655,
+    "diff": -0.0002736181318332004,
+    "tolerance": 0.003,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 gross improper rate 6.55%"
+  },
+  {
+    "metric": "gross_rate: part_a_other",
+    "value": 0.06641485764680227,
+    "target": 0.06670035371399696,
+    "diff": -0.00028549606719469045,
+    "tolerance": 0.003,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 gross rate by claim type"
+  },
+  {
+    "metric": "gross_rate: part_b",
+    "value": 0.0844199352670898,
+    "target": 0.08413672217353199,
+    "diff": 0.0002832130935578048,
+    "tolerance": 0.003,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 gross rate by claim type"
+  },
+  {
+    "metric": "payments: overall ($B)",
+    "value": 439.900065038,
+    "target": 439.9,
+    "diff": 6.503800000245974e-05,
+    "tolerance": 0.44,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 total payments $439.9B"
+  },
+  {
+    "metric": "underpayments: overall ($B)",
+    "value": 0.927464024,
+    "target": 1.0,
+    "diff": -0.07253597599999995,
+    "tolerance": 0.2,
+    "rel": false,
+    "status": "pass",
+    "source": "CERT FY 2025 underpayments $1.0B (rounded by claim type)"
+  },
+  {
+    "metric": "unique ids: population",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  }
+]

@@ -1,0 +1,36 @@
+program: partd
+scenario: base
+master_seed: 20261016
+scenario_seed: 2744605309791670622
+variables:
+  n_benes: 108000
+  w_pop: 500.0
+  lis_share: 0.25
+  specialty_share: 0.03
+  ltc_share: 0.04
+  ltc_pde_factor: 2.0
+  error_rate: 0.01197
+  ltc_error_rate: 0.04788
+  full_error_share: 0.9
+  size_beta: 0.25
+  payment_target: 105560000000.0
+  target_over: 3700000000.0
+  target_under: 520000000.0
+  deductible: 590.0
+  oop_threshold: 2000.0
+  init_enrollee_coins: 0.25
+  init_mfr_brand: 0.1
+  cat_mfr_brand: 0.2
+  cat_reins_brand: 0.2
+  cat_reins_generic: 0.4
+  lis_copay_generic: 4.9
+  lis_copay_brand: 12.15
+  scenario: base
+steps:
+- sql: part-d-ipm/errors/sql/01_population.sql
+- sql: part-d-ipm/errors/sql/02_candidate_errors.sql
+- sql: part-d-ipm/errors/sql/03_init_calibration.sql
+- sql: part-d-ipm/errors/sql/04_apply_errors.sql
+- sql: part-d-ipm/errors/sql/05_benefit.sql
+- sql: part-d-ipm/errors/sql/07_population_truth.sql
+- sql: part-d-ipm/errors/sql/08_checks.sql

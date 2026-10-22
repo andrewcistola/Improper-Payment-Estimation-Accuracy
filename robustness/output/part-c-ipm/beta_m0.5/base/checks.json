@@ -1,0 +1,72 @@
+[
+  {
+    "metric": "gross_rate",
+    "value": 0.060351936072352355,
+    "target": 0.0609,
+    "diff": -0.0005480639276476476,
+    "tolerance": 0.001,
+    "rel": false,
+    "status": "pass",
+    "source": "gross improper rate 6.09%"
+  },
+  {
+    "metric": "md_rate",
+    "value": 0.002257503935363759,
+    "target": 0.0022,
+    "diff": 5.750393536375865e-05,
+    "tolerance": 0.0005,
+    "rel": false,
+    "status": "pass",
+    "source": "missing documentation 0.22% of payments"
+  },
+  {
+    "metric": "overpayments",
+    "value": 21230714058.0,
+    "target": 21430000000.0,
+    "diff": -0.009299390667288798,
+    "tolerance": 0.02,
+    "rel": true,
+    "status": "pass",
+    "source": "overpayments $21.43B"
+  },
+  {
+    "metric": "payments",
+    "value": 388719996122.0,
+    "target": 388720000000.0,
+    "diff": -9.976332537853239e-09,
+    "tolerance": 0.001,
+    "rel": true,
+    "status": "pass",
+    "source": "payments subject to risk adjustment $388.72B"
+  },
+  {
+    "metric": "underpayments",
+    "value": 2229290298.0,
+    "target": 2230000000.0,
+    "diff": -0.00031825201793722613,
+    "tolerance": 0.02,
+    "rel": true,
+    "status": "pass",
+    "source": "underpayments $2.23B"
+  },
+  {
+    "metric": "unique ids: hccs",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  },
+  {
+    "metric": "unique ids: population",
+    "value": 0.0,
+    "target": 0.0,
+    "diff": 0.0,
+    "tolerance": 0.0,
+    "rel": false,
+    "status": "pass",
+    "source": "every row has a unique id (value = number of duplicates)"
+  }
+]

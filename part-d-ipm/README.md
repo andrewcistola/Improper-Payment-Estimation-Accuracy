@@ -16,7 +16,7 @@ Run: `ipsim part-d-ipm/errors/config.yaml` → `errors/output/base/` (about 45 s
 | Truth | `07_population_truth.sql` | x = direct subsidy + reinsurance + LICS; y = Medicare(submitted) − Medicare(corrected). The direct subsidy is one constant per beneficiary, set so total payments equal $105.56B (no risk adjustment, DIR or risk corridors). All LIS beneficiaries pay the full-subsidy copays ($4.90 generic / $12.15 brand); the $1.60/$4.80 and $0 LIS tiers are not modeled |
 | Checks | `08_checks.sql` | Claim error rates (10% LTC, 2.5% other) and full/partial shares; gross, over and under reported against FY 2025 (4.00%, $3.70B, $0.52B) but not calibrated to them; unique ids |
 
-Outputs: `population.parquet` (one row per beneficiary), `pde_detail.parquet` (every PDE's submitted vs corrected liability by payer), `truth.json`, `checks.json`. The Parquet files are not committed (98 MB); rebuild them and compare hashes with `manifest.json`.
+Outputs: `population.parquet` (one row per beneficiary), `pde_detail.parquet` (every PDE's submitted vs corrected liability by payer), `truth.json`, `checks.json`. The Parquet files are not committed (about 113 MB); rebuild them and compare hashes with `manifest.json`.
 
 ## estimation/ — sample the population and estimate with each method
 
@@ -35,7 +35,7 @@ All methods are scored in `90_score.sql`. The results tables below predate `pde_
 
 ## Results (25 audit years)
 
-Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 500); rates are dollars ÷ total payments ($105.6B).
+Each row gives the true value and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. National dollars (× 500); rates are dollars ÷ total payments ($105.6B). The PDE expansion and PDE ratio estimators define over, under, gross and net at the PDE level (no netting within beneficiaries).
 
 **Dollars**
 
@@ -44,19 +44,27 @@ Each row gives the true value and, over the 25 audit years, the median point est
 | Overpayments | Expansion | $1.44B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.44B | $1.48B | $2.20B | $0.72B |
 |  | Regression | $1.44B | $1.51B | $2.17B | $0.85B |
-|  | Bootstrap simulation (parametric rates) | $1.44B | $1.44B | $1.68B | $1.21B |
-| Underpayments | Expansion | $0.02B | $0.00B | $0.00B | $0.00B |
+|  | PDE expansion (same audit) | $1.44B | $1.40B | $2.36B | $0.26B |
+|  | PDE ratio (same audit) | $1.44B | $1.41B | $2.35B | $0.29B |
+|  | Simulation (parametric rates) | $1.44B | $1.44B | $1.68B | $1.21B |
+| Underpayments | Expansion | $0.02B | $-0.00B | $0.00B | $-0.00B |
 |  | Ratio | $0.02B | $0.01B | $0.03B | $0.00B |
 |  | Regression | $0.02B | $0.01B | $0.02B | $0.00B |
-|  | Bootstrap simulation (parametric rates) | $0.02B | $0.02B | $0.04B | $0.01B |
+|  | PDE expansion (same audit) | $0.02B | $0.01B | $0.02B | $0.00B |
+|  | PDE ratio (same audit) | $0.02B | $0.01B | $0.02B | $0.00B |
+|  | Simulation (parametric rates) | $0.02B | $0.02B | $0.04B | $0.01B |
 | Gross | Expansion | $1.46B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.46B | $1.49B | $2.22B | $0.74B |
 |  | Regression | $1.46B | $1.52B | $2.19B | $0.89B |
-|  | Bootstrap simulation (parametric rates) | $1.46B | $1.46B | $1.69B | $1.23B |
+|  | PDE expansion (same audit) | $1.46B | $1.41B | $2.37B | $0.28B |
+|  | PDE ratio (same audit) | $1.46B | $1.42B | $2.48B | $0.31B |
+|  | Simulation (parametric rates) | $1.46B | $1.46B | $1.70B | $1.23B |
 | Net | Expansion | $1.42B | $1.28B | $1.95B | $0.57B |
 |  | Ratio | $1.42B | $1.45B | $2.19B | $0.72B |
 |  | Regression | $1.42B | $1.49B | $2.15B | $0.84B |
-|  | Bootstrap simulation (parametric rates) | $1.42B | $1.41B | $1.63B | $1.18B |
+|  | PDE expansion (same audit) | $1.42B | $1.39B | $2.35B | $0.24B |
+|  | PDE ratio (same audit) | $1.42B | $1.34B | $2.30B | $0.27B |
+|  | Simulation (parametric rates) | $1.42B | $1.41B | $1.65B | $1.18B |
 
 **Rates**
 
@@ -65,27 +73,35 @@ Each row gives the true value and, over the 25 audit years, the median point est
 | Overpayments | Expansion | 1.36% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.36% | 1.40% | 2.09% | 0.69% |
 |  | Regression | 1.36% | 1.43% | 2.06% | 0.80% |
-|  | Bootstrap simulation (parametric rates) | 1.36% | 1.37% | 1.59% | 1.15% |
-| Underpayments | Expansion | 0.02% | 0.00% | 0.00% | 0.00% |
+|  | PDE expansion (same audit) | 1.36% | 1.33% | 2.23% | 0.24% |
+|  | PDE ratio (same audit) | 1.36% | 1.33% | 2.22% | 0.27% |
+|  | Simulation (parametric rates) | 1.36% | 1.37% | 1.59% | 1.15% |
+| Underpayments | Expansion | 0.02% | -0.00% | 0.00% | -0.00% |
 |  | Ratio | 0.02% | 0.01% | 0.02% | 0.00% |
 |  | Regression | 0.02% | 0.01% | 0.02% | 0.00% |
-|  | Bootstrap simulation (parametric rates) | 0.02% | 0.02% | 0.04% | 0.01% |
+|  | PDE expansion (same audit) | 0.02% | 0.01% | 0.02% | 0.00% |
+|  | PDE ratio (same audit) | 0.02% | 0.01% | 0.02% | 0.00% |
+|  | Simulation (parametric rates) | 0.02% | 0.02% | 0.04% | 0.01% |
 | Gross | Expansion | 1.38% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.38% | 1.41% | 2.10% | 0.70% |
 |  | Regression | 1.38% | 1.44% | 2.07% | 0.84% |
-|  | Bootstrap simulation (parametric rates) | 1.38% | 1.38% | 1.60% | 1.16% |
+|  | PDE expansion (same audit) | 1.38% | 1.33% | 2.24% | 0.26% |
+|  | PDE ratio (same audit) | 1.38% | 1.34% | 2.35% | 0.29% |
+|  | Simulation (parametric rates) | 1.38% | 1.38% | 1.61% | 1.16% |
 | Net | Expansion | 1.34% | 1.22% | 1.85% | 0.54% |
 |  | Ratio | 1.34% | 1.37% | 2.07% | 0.68% |
 |  | Regression | 1.34% | 1.41% | 2.03% | 0.80% |
-|  | Bootstrap simulation (parametric rates) | 1.34% | 1.33% | 1.55% | 1.12% |
+|  | PDE expansion (same audit) | 1.34% | 1.32% | 2.23% | 0.22% |
+|  | PDE ratio (same audit) | 1.34% | 1.27% | 2.18% | 0.25% |
+|  | Simulation (parametric rates) | 1.34% | 1.34% | 1.57% | 1.11% |
 
 **How often the 95% interval contains the truth** (out of 25 audit years; in parentheses, intervals entirely above / entirely below the truth). A valid interval contains it in about 24 of 25.
 
-| Measure | Expansion | Ratio | Regression | Bootstrap simulation (parametric rates) |
-|---|---|---|---|---|
-| Overpayments | 18/25 (0/7) | 18/25 (1/6) | 16/25 (4/5) | 25/25 (0/0) |
-| Underpayments | 0/25 (0/25) | 15/25 (0/10) | 13/25 (2/10) | 20/25 (4/1) |
-| Gross | 18/25 (0/7) | 18/25 (1/6) | 15/25 (4/6) | 25/25 (0/0) |
-| Net | 19/25 (0/6) | 19/25 (1/5) | 16/25 (4/5) | 24/25 (0/1) |
+| Measure | Expansion | Ratio | Regression | PDE expansion (same audit) | PDE ratio (same audit) | Simulation (parametric rates) |
+|---|---|---|---|---|---|---|
+| Overpayments | 18/25 (0/7) | 18/25 (1/6) | 16/25 (4/5) | 16/25 (0/9) | 17/25 (0/8) | 24/25 (0/1) |
+| Underpayments | 0/25 (0/25) | 15/25 (0/10) | 13/25 (2/10) | 15/25 (0/10) | 15/25 (0/10) | 20/25 (4/1) |
+| Gross | 18/25 (0/7) | 18/25 (1/6) | 15/25 (4/6) | 16/25 (0/9) | 17/25 (0/8) | 25/25 (0/0) |
+| Net | 19/25 (0/6) | 19/25 (1/5) | 16/25 (4/5) | 16/25 (0/9) | 17/25 (0/8) | 23/25 (0/2) |
 
-From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv).
+From [`shared/results/report/by_scenario.csv`](../shared/results/report/by_scenario.csv) (`python shared/build_readmes.py` regenerates this section).

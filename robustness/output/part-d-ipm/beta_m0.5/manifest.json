@@ -1,0 +1,10 @@
+{
+  "base": {
+    "checks.json": "45ebf1919a446f6a252eb86c3712debc5357bba211d3bc51aa493800124fc910",
+    "config.yaml": "f89a9f60d1b917c107e79a270bc7db903696da0d23a59a7c664e4030212c2c99",
+    "design.yaml": "6962557bb194111a5436ec584f6586e0a8ceea0b5d7963f076cad0cbdb54327f",
+    "pde_detail.parquet": "0ae8508edd3b8f09f7fea4796daa70761971c0affa763192b0536c5e9eea7ba2",
+    "population.parquet": "a035ab34d8311ff599b661b3c7fdfe8e416f47226748e214f999df90cf6c6d37",
+    "truth.json": "76b190c339eb50f303e2b4dae4548db946148483dfbcefd0a2c2f61f7ab99cdb"
+  }
+}

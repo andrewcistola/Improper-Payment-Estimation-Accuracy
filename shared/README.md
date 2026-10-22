@@ -9,7 +9,7 @@ Code used by all four programs. Each program folder states *what* is estimated a
 | `sql/lib/01_stats.sql` | Normal CDF and quantile (DuckDB has none), list quantiles, and order-independent floating-point sums |
 | `sql/lib/02_estimators.sql` | **The analytic methods**: expansion and ratio with normal intervals, plus scoring (and the single-auxiliary GREG, kept for reference). Formulas are written out in the file header. |
 | `ipsim/regression.py` | **The regression estimator**: on the ratio estimator's audit, least-squares models fit within strata on beneficiary variables plus the amount paid, predicted for every population unit, plus the weighted audit residuals; normal (t) interval from the residuals of the one audit. Each program's `30_regression.sql` supplies the predictors. |
-| `ipsim/simulation.py` | **The audit-finding bootstrap simulation**: the shared loop (donor findings exactly as audited, assignment by kind, 1,000 iterations). Each program's payment function is in its `estimation/*simulation.py`. |
+| `ipsim/simulation.py` | **The audit-finding simulation**: the shared loop (donor findings exactly as audited, assignment by kind, 1,000 iterations). Each program's payment function is in its `estimation/*simulation.py`. |
 | `sql/sample_srs.sql`, `sql/sample_systematic.sql` | Audit years (Monte Carlo replicates), sampled within strata: SRS without replacement, or systematic selection after sorting by amount paid. Each program's config names the one its design uses. |
 | `sql/report.sql`, `report.yaml` | Fabricated truth vs every estimate and CI: `results/report/by_scenario.csv` (one row per scenario × method over audit years 1–25, with audit year 1 as a worked example and the count of CIs containing the truth) and `by_audit_year.parquet` (every reported audit year) |
 | `sql/summary.sql`, `summary.yaml` | All `metrics.json` files in one table |
@@ -25,7 +25,7 @@ Code used by all four programs. Each program folder states *what* is estimated a
                                    10_expansion.sql      SELECT * FROM ipm_expansion(alpha)
                                    20_ratio.sql          SELECT * FROM ipm_ratio(alpha)
                                    30_regression.sql + ipsim/regression.py   predictors; fit within strata, predict, residual interval
-                                   40_simulation_inputs.sql + simulation.py   audit-finding bootstrap simulation
+                                   40_simulation_inputs.sql + simulation.py   audit-finding simulation
                                    90_score.sql          SELECT * FROM ipm_score()
 ```
 

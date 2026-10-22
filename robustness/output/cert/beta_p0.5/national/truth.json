@@ -1,0 +1,307 @@
+{
+  "by": {
+    "calibration": {
+      "dmepos": {
+        "p_full": 0.13059128,
+        "p_po": 0.03486473,
+        "p_u": 0.00224862
+      },
+      "ipps": {
+        "p_full": 0.02136076,
+        "p_po": 0.00572676,
+        "p_u": 0.01019617
+      },
+      "part_a_other": {
+        "p_full": 0.02887978,
+        "p_po": 0.00773977,
+        "p_u": 0.00175569
+      },
+      "part_b": {
+        "p_full": 0.0437309,
+        "p_po": 0.01171761,
+        "p_u": 0.00556682
+      }
+    },
+    "claim_type": {
+      "dmepos": {
+        "gross_rate": 0.24417649055828766,
+        "n_units": 400000.0,
+        "net_rate": 0.24240664611372445,
+        "over_rate": 0.24329156833600604,
+        "overpayments": 2286947646.0,
+        "payments": 9400028376.0,
+        "under_rate": 0.000884922222281598,
+        "underpayments": 8318294.0,
+        "unit_err_rate": 0.13447
+      },
+      "ipps": {
+        "gross_rate": 0.02957042135288845,
+        "n_units": 40000.0,
+        "net_rate": 0.023133697699388354,
+        "over_rate": 0.0263520595261384,
+        "overpayments": 3122719050.0,
+        "payments": 118499999854.0,
+        "under_rate": 0.0032183618267500494,
+        "underpayments": 381375876.0,
+        "unit_err_rate": 0.034725
+      },
+      "part_a_other": {
+        "gross_rate": 0.06517658806360836,
+        "n_units": 900000.0,
+        "net_rate": 0.06333800610406465,
+        "over_rate": 0.0642572970838365,
+        "overpayments": 12716519170.0,
+        "payments": 197900001200.0,
+        "under_rate": 0.0009192909797718586,
+        "underpayments": 181927686.0,
+        "unit_err_rate": 0.02958
+      },
+      "part_b": {
+        "gross_rate": 0.08443598523578824,
+        "n_units": 4000000.0,
+        "net_rate": 0.079162279081416,
+        "over_rate": 0.08179913215860213,
+        "overpayments": 9333283892.0,
+        "payments": 114100035608.0,
+        "under_rate": 0.002636853077186114,
+        "underpayments": 300865030.0,
+        "unit_err_rate": 0.051005
+      }
+    },
+    "stratum": {
+      "dmepos_P1": {
+        "gross_rate": 0.04317698644461848,
+        "n_units": 80000.0,
+        "net_rate": 0.04286009674445281,
+        "over_rate": 0.04301854159453564,
+        "overpayments": 6524804.0,
+        "payments": 151674226.0,
+        "under_rate": 0.00015844485008283476,
+        "underpayments": 24032.0,
+        "unit_err_rate": 0.0457125
+      },
+      "dmepos_P2": {
+        "gross_rate": 0.06806197620616965,
+        "n_units": 80000.0,
+        "net_rate": 0.06750575849969882,
+        "over_rate": 0.06778386735293424,
+        "overpayments": 28094434.000000004,
+        "payments": 414470804.0,
+        "under_rate": 0.0002781088532354139,
+        "underpayments": 115268.0,
+        "unit_err_rate": 0.0787125
+      },
+      "dmepos_P3": {
+        "gross_rate": 0.09566979842034727,
+        "n_units": 80000.0,
+        "net_rate": 0.09478940085328132,
+        "over_rate": 0.0952295996368143,
+        "overpayments": 78306984.0,
+        "payments": 822296684.0,
+        "under_rate": 0.000440198783532976,
+        "underpayments": 361974.0,
+        "unit_err_rate": 0.1104125
+      },
+      "dmepos_P4": {
+        "gross_rate": 0.13432464847303988,
+        "n_units": 80000.0,
+        "net_rate": 0.1329925456710019,
+        "over_rate": 0.1336585970720209,
+        "overpayments": 220756460.0,
+        "payments": 1651644300.0,
+        "under_rate": 0.0006660514010189724,
+        "underpayments": 1100080.0,
+        "unit_err_rate": 0.154575
+      },
+      "dmepos_P5": {
+        "gross_rate": 0.3081760482155766,
+        "n_units": 80000.0,
+        "net_rate": 0.30606378378999527,
+        "over_rate": 0.30711991600278593,
+        "overpayments": 1953264964.0,
+        "payments": 6359942362.0,
+        "under_rate": 0.0010561322127906414,
+        "underpayments": 6716939.999999999,
+        "unit_err_rate": 0.2829375
+      },
+      "ipps_P1": {
+        "gross_rate": 0.016223799472637912,
+        "n_units": 8000.0,
+        "net_rate": 0.014196792886720511,
+        "over_rate": 0.015210296179679212,
+        "overpayments": 110820102.0,
+        "payments": 7285860886.0,
+        "under_rate": 0.0010135032929587012,
+        "underpayments": 7384244.0,
+        "unit_err_rate": 0.0205
+      },
+      "ipps_P2": {
+        "gross_rate": 0.019435056663119326,
+        "n_units": 8000.0,
+        "net_rate": 0.015076030520981267,
+        "over_rate": 0.017255543592050296,
+        "overpayments": 221849318.00000003,
+        "payments": 12856698302.0,
+        "under_rate": 0.0021795130710690297,
+        "underpayments": 28021342.0,
+        "unit_err_rate": 0.029
+      },
+      "ipps_P3": {
+        "gross_rate": 0.0238033477798526,
+        "n_units": 8000.0,
+        "net_rate": 0.01941296245418046,
+        "over_rate": 0.02160815511701653,
+        "overpayments": 403813454.0,
+        "payments": 18688011624.0,
+        "under_rate": 0.0021951926628360706,
+        "underpayments": 41023786.0,
+        "unit_err_rate": 0.0335
+      },
+      "ipps_P4": {
+        "gross_rate": 0.02685373083296508,
+        "n_units": 8000.0,
+        "net_rate": 0.02042792955529719,
+        "over_rate": 0.023640830194131136,
+        "overpayments": 642905822.0,
+        "payments": 27194722720.0,
+        "under_rate": 0.0032129006388339452,
+        "underpayments": 87373942.0,
+        "unit_err_rate": 0.039
+      },
+      "ipps_P5": {
+        "gross_rate": 0.037368535308560505,
+        "n_units": 8000.0,
+        "net_rate": 0.0290760615721698,
+        "over_rate": 0.03322229844036515,
+        "overpayments": 1743330354.0,
+        "payments": 52474706322.0,
+        "under_rate": 0.00414623686819535,
+        "underpayments": 217572562.0,
+        "unit_err_rate": 0.051625
+      },
+      "part_a_other_P1": {
+        "gross_rate": 0.008540561191941744,
+        "n_units": 180000.0,
+        "net_rate": 0.008293491835318717,
+        "over_rate": 0.008417026513630231,
+        "overpayments": 20743134.0,
+        "payments": 2464425408.0,
+        "under_rate": 0.00012353467831151334,
+        "underpayments": 304442.0,
+        "unit_err_rate": 0.009166666666666667
+      },
+      "part_a_other_P2": {
+        "gross_rate": 0.013548349785866503,
+        "n_units": 180000.0,
+        "net_rate": 0.013182503964711793,
+        "over_rate": 0.013365426875289148,
+        "overpayments": 96577336.0,
+        "payments": 7225907328.0,
+        "under_rate": 0.00018292291057735524,
+        "underpayments": 1321784.0,
+        "unit_err_rate": 0.015822222222222224
+      },
+      "part_a_other_P3": {
+        "gross_rate": 0.01997022759025622,
+        "n_units": 180000.0,
+        "net_rate": 0.019386323757814027,
+        "over_rate": 0.01967827567403512,
+        "overpayments": 297618098.0,
+        "payments": 15124195988.0,
+        "under_rate": 0.0002919519162210952,
+        "underpayments": 4415538.0,
+        "unit_err_rate": 0.02341111111111111
+      },
+      "part_a_other_P4": {
+        "gross_rate": 0.028726060708907097,
+        "n_units": 180000.0,
+        "net_rate": 0.02778033293266823,
+        "over_rate": 0.028253196820787665,
+        "overpayments": 905626234.0,
+        "payments": 32053938524.0,
+        "under_rate": 0.00047286388811943554,
+        "underpayments": 15157150.0,
+        "unit_err_rate": 0.03372222222222222
+      },
+      "part_a_other_P5": {
+        "gross_rate": 0.0819439654108372,
+        "n_units": 180000.0,
+        "net_rate": 0.07966463443433794,
+        "over_rate": 0.08080429992258757,
+        "overpayments": 11395954368.0,
+        "payments": 141031533952.0,
+        "under_rate": 0.0011396654882496276,
+        "underpayments": 160728772.0,
+        "unit_err_rate": 0.06577777777777778
+      },
+      "part_b_P1": {
+        "gross_rate": 0.01681763410156719,
+        "n_units": 800000.0,
+        "net_rate": 0.015802983232545798,
+        "over_rate": 0.016310308667056496,
+        "overpayments": 38367330.0,
+        "payments": 2352336230.0,
+        "under_rate": 0.0005073254345106949,
+        "underpayments": 1193400.0,
+        "unit_err_rate": 0.01895125
+      },
+      "part_b_P2": {
+        "gross_rate": 0.025797886770364986,
+        "n_units": 800000.0,
+        "net_rate": 0.02418535786718738,
+        "over_rate": 0.024991622318776184,
+        "overpayments": 149696654.0,
+        "payments": 5989873410.0,
+        "under_rate": 0.0008062644515888025,
+        "underpayments": 4829422.0,
+        "unit_err_rate": 0.03139375
+      },
+      "part_b_P3": {
+        "gross_rate": 0.03512086790297802,
+        "n_units": 800000.0,
+        "net_rate": 0.032924885140815104,
+        "over_rate": 0.03402287652189656,
+        "overpayments": 383555974.0,
+        "payments": 11273472828.0,
+        "under_rate": 0.0010979913810814572,
+        "underpayments": 12378176.0,
+        "unit_err_rate": 0.0430525
+      },
+      "part_b_P4": {
+        "gross_rate": 0.048012439977060235,
+        "n_units": 800000.0,
+        "net_rate": 0.04492780476637553,
+        "over_rate": 0.04647012237171788,
+        "overpayments": 996337518.0,
+        "payments": 21440389376.0,
+        "under_rate": 0.0015423176053423557,
+        "underpayments": 33067890.000000004,
+        "unit_err_rate": 0.0586475
+      },
+      "part_b_P5": {
+        "gross_rate": 0.1097246390392369,
+        "n_units": 800000.0,
+        "net_rate": 0.10289598053965761,
+        "over_rate": 0.10631030978944726,
+        "overpayments": 7765326416.0,
+        "payments": 73043963764.0,
+        "under_rate": 0.003414329249789643,
+        "underpayments": 249396142.0,
+        "unit_err_rate": 0.10298
+      }
+    }
+  },
+  "overall": {
+    "gross_rate": 0.06440543863423297,
+    "n_units": 5340000.0,
+    "net_rate": 0.06043868820456603,
+    "over_rate": 0.0624220634193995,
+    "overpayments": 27459469758.0,
+    "payments": 439900065038.0,
+    "under_rate": 0.0019833752148334686,
+    "underpayments": 872486886.0,
+    "unit_err_rate": 0.05352415730337079
+  },
+  "program": "cert",
+  "scenario": "national"
+}

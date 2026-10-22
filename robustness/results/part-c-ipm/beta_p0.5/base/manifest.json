@@ -1,0 +1,35 @@
+{
+  "config_file": "part-c-ipm/estimation/config.yaml",
+  "config_sha256": "031204d27a0538466031610b26d233c1436a556f8bc6361a1408bca4f57f1695",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 892,
+      "sha256": "75ac188c4384d8c3993fe93e23dc029fc837dea2b01c401c9da303b1a9e7304b"
+    },
+    "estimates.parquet": {
+      "bytes": 13927,
+      "rows": 400,
+      "sha256": "66310a7ae03883c5534016be577ca6fa40385fb8f6b058b23e71e39728cc1eb2"
+    },
+    "metrics.json": {
+      "bytes": 8724,
+      "sha256": "d5acf1460f4674e3b44ba2663cdc604ec266f0616a10fd949d311e4c02c8689e"
+    },
+    "truth.json": {
+      "bytes": 484,
+      "sha256": "cbae00c388563e42a09d0145cbf6b25d43d496095465ccb5a0329be234f09f47"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "partc_estimation",
+  "python": "3.13.16",
+  "scenario": "base"
+}

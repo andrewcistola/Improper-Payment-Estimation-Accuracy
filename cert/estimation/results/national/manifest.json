@@ -1,6 +1,6 @@
 {
   "config_file": "cert/estimation/config.yaml",
-  "config_sha256": "f81b6cdfdd2d400018d2becfa16680d8473aa3814e281d434ef35b70c6ef5601",
+  "config_sha256": "0c9ca0a3e00b1d1d2aecb47829660c5248055421bea69016f21fac4dba93495c",
   "duckdb": "1.5.6",
   "files": {
     "allocation.json": {
@@ -8,22 +8,30 @@
       "sha256": "f8e46773214eebb703583bd850fa3d657c0fe2c0f0bf383d50ee6bfad881b2ca"
     },
     "config.yaml": {
-      "bytes": 957,
-      "sha256": "0f32d37e094d6e5c943877578d62b2c3767eb91a7778e68a8af4749921ff557b"
+      "bytes": 867,
+      "sha256": "68cb5c34b709f1852ef6455a820d88e2b59586771782b0ba0f4e99a9702f0173"
     },
     "estimates.parquet": {
-      "bytes": 25817,
+      "bytes": 25818,
       "rows": 800,
-      "sha256": "fa93b155c8a007d79b669ed07d2fb39a85fb50f3b2814b328ab73a85a452f187"
+      "sha256": "f342c1a35becad51fb7cf88476439da6400b94bbbbc20e1fec749710286f1c35"
     },
     "metrics.json": {
-      "bytes": 17392,
-      "sha256": "6fa81f87a0537a8072c413bac0cacb0be8d34e07c6faf79f3b8cd8097c323e3d"
+      "bytes": 17525,
+      "sha256": "803cd5bcac12523f9eb0fef38eb1d31a5de048f3bf6b029632aebbfa7aa1332c"
     },
     "truth.json": {
       "bytes": 955,
       "sha256": "17442d8bb34c614453afec20911da6eb9c54012e1f01ee19a744f86feb03f4ea"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "cert_estimation",
   "python": "3.13.16",

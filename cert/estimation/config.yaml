@@ -6,7 +6,7 @@
 # and the audit-finding bootstrap simulation).
 program: cert_estimation   # also the seed label for sampling and simulation
 seed: 20261016
-output_dir: results/cert
+output_dir: results
 steps:
   - sql: cert/estimation/sql/01_frame.sql        # estimands + allocation
   - sql: cert/estimation/sql/02_sample.sql       # audit years (Monte Carlo replicates)

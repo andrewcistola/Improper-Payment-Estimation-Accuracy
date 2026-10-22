@@ -1,0 +1,40 @@
+{
+  "config_file": "perm/estimation/config.yaml",
+  "config_sha256": "c3999711683d60955053f650439dad58a29ac7fd244c3c0cd3123b61f2850ccd",
+  "duckdb": "1.5.6",
+  "files": {
+    "config.yaml": {
+      "bytes": 872,
+      "sha256": "95ae143aaded4071d7dc3355ef77de1f17234cbb099595c20da4126e4b719259"
+    },
+    "estimates.parquet": {
+      "bytes": 10962,
+      "rows": 300,
+      "sha256": "5e00516e00ef2a2d2150c66d2609baa5604d50aee2f9919ee91dfbfff00489e8"
+    },
+    "metrics.json": {
+      "bytes": 6480,
+      "sha256": "15b5912c8249086f81e2b265fee38e5345729969155b3c0a114a9357857a842c"
+    },
+    "sim_draws.parquet": {
+      "bytes": 286006,
+      "rows": 37500,
+      "sha256": "432ad5e4c4a7a3e758e24b7411cc90c107a23ef00c3a6423b242aaa1a43f6de9"
+    },
+    "truth.json": {
+      "bytes": 351,
+      "sha256": "4e420cb5c046c3e28e55a62a4d1848bcf124d3be876f1e6bf17bc3d62562f896"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "perm_estimation",
+  "python": "3.13.16",
+  "scenario": "state_8"
+}

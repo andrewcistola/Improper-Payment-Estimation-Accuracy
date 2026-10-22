@@ -1,0 +1,11 @@
+{
+  "base": {
+    "checks.json": "a090e9d790c70a6df6b5ae13bf64bc3ad8aaa578be44b5d2bd2a0232d40aee6d",
+    "config.yaml": "9e8e5d162e5af3c8c4678f6f42ef7ae8da7a6824579ba2d56beeb39de7a3a550",
+    "contracts.parquet": "aae9a6d1b2d3c276a6cacee765c91148f6b00141841f89813f796e611b936a38",
+    "design.yaml": "33ba4e2bfafbcbc85ed0d09b78d0ba47636713013063036b12a7f922669dc7b7",
+    "hcc_detail.parquet": "e56c4c1c8ab7201ecff8f15380c0fa80c2706187abcd5bbde147d42897d96502",
+    "population.parquet": "5c9c7a9515670d7d361bc9759b147dd61d6136395827b5eaa42d02e392464ab1",
+    "truth.json": "5436683b9e4c57b483b2a2b6753faa52f372b4677664e6eed7c2882a1f2def0b"
+  }
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "claim_type": "dmepos",
+    "stratum": "dmepos_P1",
+    "big_n": 80000,
+    "s_h": 2.1321455205133013,
+    "n_h": 45
+  },
+  {
+    "claim_type": "dmepos",
+    "stratum": "dmepos_P2",
+    "big_n": 80000,
+    "s_h": 6.563619530730309,
+    "n_h": 139
+  },
+  {
+    "claim_type": "dmepos",
+    "stratum": "dmepos_P3",
+    "big_n": 80000,
+    "s_h": 15.117495972526418,
+    "n_h": 319
+  },
+  {
+    "claim_type": "dmepos",
+    "stratum": "dmepos_P4",
+    "big_n": 80000,
+    "s_h": 35.535735379176565,
+    "n_h": 750
+  },
+  {
+    "claim_type": "dmepos",
+    "stratum": "dmepos_P5",
+    "big_n": 80000,
+    "s_h": 350.5190094896115,
+    "n_h": 7397
+  },
+  {
+    "claim_type": "ipps",
+    "stratum": "ipps_P1",
+    "big_n": 8000,
+    "s_h": 579.4557685839334,
+    "n_h": 404
+  },
+  {
+    "claim_type": "ipps",
+    "stratum": "ipps_P2",
+    "big_n": 8000,
+    "s_h": 1035.2791182219405,
+    "n_h": 722
+  },
+  {
+    "claim_type": "ipps",
+    "stratum": "ipps_P3",
+    "big_n": 8000,
+    "s_h": 1693.7420329664578,
+    "n_h": 1182
+  },
+  {
+    "claim_type": "ipps",
+    "stratum": "ipps_P4",
+    "big_n": 8000,
+    "s_h": 2588.4172526942557,
+    "n_h": 1806
+  },
+  {
+    "claim_type": "ipps",
+    "stratum": "ipps_P5",
+    "big_n": 8000,
+    "s_h": 6645.563166444294,
+    "n_h": 4636
+  },
+  {
+    "claim_type": "part_a_other",
+    "stratum": "part_a_other_P1",
+    "big_n": 180000,
+    "s_h": 7.010603223832414,
+    "n_h": 22
+  },
+  {
+    "claim_type": "part_a_other",
+    "stratum": "part_a_other_P2",
+    "big_n": 180000,
+    "s_h": 23.414801853035897,
+    "n_h": 75
+  },
+  {
+    "claim_type": "part_a_other",
+    "stratum": "part_a_other_P3",
+    "big_n": 180000,
+    "s_h": 58.817932482165055,
+    "n_h": 188
+  },
+  {
+    "claim_type": "part_a_other",
+    "stratum": "part_a_other_P4",
+    "big_n": 180000,
+    "s_h": 150.41651787720286,
+    "n_h": 481
+  },
+  {
+    "claim_type": "part_a_other",
+    "stratum": "part_a_other_P5",
+    "big_n": 180000,
+    "s_h": 2466.1810221048645,
+    "n_h": 7885
+  },
+  {
+    "claim_type": "part_b",
+    "stratum": "part_b_P1",
+    "big_n": 800000,
+    "s_h": 2.0429709370663924,
+    "n_h": 78
+  },
+  {
+    "claim_type": "part_b",
+    "stratum": "part_b_P2",
+    "big_n": 800000,
+    "s_h": 5.89534576949015,
+    "n_h": 225
+  },
+  {
+    "claim_type": "part_b",
+    "stratum": "part_b_P3",
+    "big_n": 800000,
+    "s_h": 12.798315786720389,
+    "n_h": 489
+  },
+  {
+    "claim_type": "part_b",
+    "stratum": "part_b_P4",
+    "big_n": 800000,
+    "s_h": 28.48507457898974,
+    "n_h": 1089
+  },
+  {
+    "claim_type": "part_b",
+    "stratum": "part_b_P5",
+    "big_n": 800000,
+    "s_h": 254.32798956327915,
+    "n_h": 9719
+  }
+]

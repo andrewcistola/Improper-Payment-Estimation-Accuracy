@@ -4,22 +4,30 @@
   "duckdb": "1.5.6",
   "files": {
     "by_audit_year.csv": {
-      "bytes": 1235201,
-      "sha256": "80bf64394fc8b16ee32cf87f26c79818a4a5f889a37f0f2f01215c0d8956bd44"
+      "bytes": 1247600,
+      "sha256": "11bcc1aa1fd8908e11d65080277ed4d83213b9f80bb54760822f474c43638bf9"
     },
     "by_audit_year.parquet": {
-      "bytes": 296041,
-      "rows": 4900,
-      "sha256": "ffcc6f8cfcd3390783e796985e51a767a364e5ff0bdd9dda9cdca948007ce662"
+      "bytes": 308539,
+      "rows": 5100,
+      "sha256": "84318a21b5da7ce564117657d17d2aa9b0e8dc4d385b4f51e76c6ebee6bfc729"
     },
     "by_scenario.csv": {
-      "bytes": 95000,
-      "sha256": "61b02191394984ce81f6449510ee260733a9fcd18b3039908c866a91345fa45e"
+      "bytes": 97436,
+      "sha256": "b5bfcaf8f8d13e91f8427bb409b3e38919373792b86dfca7855d1ba69cd86e89"
     },
     "config.yaml": {
       "bytes": 167,
       "sha256": "e58b4e08787048fd0755f79ea0ad924b25db3bede35268044dbde413392560ed"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "report",
   "python": "3.13.16",

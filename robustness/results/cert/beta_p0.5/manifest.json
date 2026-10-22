@@ -1,0 +1,9 @@
+{
+  "national": {
+    "allocation.json": "bb58a5bd86e29fdb16741bef7392a042dcdf4c90e18dbe05155cc1398635a916",
+    "config.yaml": "8ca24aed6247b7be3bc1e9493d70fba3c83250caff737f0eab4f810cae749224",
+    "estimates.parquet": "ccbbd9559585455d7cb874fc30e9569b959c49cb86d21dd76e03674e5c5e0bc9",
+    "metrics.json": "2a8d601017b9d19ebd86c0921217bd3df8e857776de0d8888971d77fd95a2560",
+    "truth.json": "d88f68ffa9d775d47beca0ba8b6df29b1642b6d88ffd4a601ce8593fa59c9c3c"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "config_file": "part-d-ipm/errors/config.yaml",
+  "config_sha256": "a2febe0445636b578a21d9ec36e6d3f38be8a5c4ddddec70c8e4a8cf37bffb29",
+  "duckdb": "1.5.6",
+  "files": {
+    "checks.json": {
+      "bytes": 2463,
+      "sha256": "b0bd290a4b97bb6f6fc60197bedfea8bf3d5537a922ccdde55aa2c9290b5e5b2"
+    },
+    "config.yaml": {
+      "bytes": 971,
+      "sha256": "cb8ccccb9fbe8df9f14d44c9a5aa157803386ec484c027c8c24e8b85d098452f"
+    },
+    "design.yaml": {
+      "bytes": 460,
+      "sha256": "6962557bb194111a5436ec584f6586e0a8ceea0b5d7963f076cad0cbdb54327f"
+    },
+    "pde_detail.parquet": {
+      "bytes": 111130037,
+      "rows": 4526706,
+      "sha256": "e1ce340d0606e6e3967701bca715961c97c463ce4f5d00e003bb9fee71d03ab4"
+    },
+    "population.parquet": {
+      "bytes": 1507181,
+      "rows": 108000,
+      "sha256": "57d9f9e05ea14cd7fa807caa243768a2ea2615e80242ce1fa5790f734296d942"
+    },
+    "truth.json": {
+      "bytes": 823,
+      "sha256": "086a6b57b6a3d18caaab2b2357b75c055e1a267840c9dec73eb8453b248f49e2"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "partd",
+  "python": "3.13.16",
+  "scenario": "base"
+}
