@@ -56,7 +56,7 @@ LOG = HERE / "run_log.txt"
 PY = sys.executable
 
 POPULATIONS = ["part-c-ipm/errors/config.yaml", "part-d-ipm/errors/config.yaml", "eipm/errors/config.yaml",
-               "perm-cert/errors/perm.yaml", "perm-cert/errors/cert.yaml", "part-d-ipm/errors/pre_ira.yaml"]
+               "perm/errors/config.yaml", "cert/errors/config.yaml", "part-d-ipm/errors/pre_ira.yaml"]
 
 
 def ipsim(*args):
@@ -71,18 +71,18 @@ def full_stages():
             ipsim("part-c-ipm/estimation/config.yaml"),
             ipsim("part-d-ipm/estimation/config.yaml"),
             ipsim("eipm/estimation/config.yaml"),
-            ipsim("perm-cert/estimation/perm.yaml"),
-            ipsim("perm-cert/estimation/perm_national.yaml"),
-            ipsim("perm-cert/estimation/cert.yaml"),
+            ipsim("perm/estimation/config.yaml"),
+            ipsim("perm/estimation/national.yaml"),
+            ipsim("cert/estimation/config.yaml"),
         ]),
         ("Estimate: fixed-rate bootstrap (comparison), same audits", [
             ipsim("part-c-ipm/estimation/config.yaml", "--out", "part-c-ipm/estimation/results_fixed", *fixed),
             ipsim("part-d-ipm/estimation/config.yaml", "--out", "part-d-ipm/estimation/results_fixed", *fixed),
             ipsim("eipm/estimation/config.yaml", "--out", "eipm/estimation/results_fixed", *fixed),
-            ipsim("perm-cert/estimation/perm.yaml", "--out", "perm-cert/estimation/results_fixed/perm", *fixed),
-            ipsim("perm-cert/estimation/perm_national.yaml", "--out", "perm-cert/estimation/results_fixed/perm",
-                  "--set", "perm_results_dir=perm-cert/estimation/results_fixed/perm"),
-            ipsim("perm-cert/estimation/cert.yaml", "--out", "perm-cert/estimation/results_fixed/cert", *fixed),
+            ipsim("perm/estimation/config.yaml", "--out", "perm/estimation/results_fixed", *fixed),
+            ipsim("perm/estimation/national.yaml", "--out", "perm/estimation/results_fixed",
+                  "--set", "perm_results_dir=perm/estimation/results_fixed"),
+            ipsim("cert/estimation/config.yaml", "--out", "cert/estimation/results_fixed", *fixed),
         ]),
         ("Part D under the pre-IRA benefit (robustness reference)", [
             ipsim("part-d-ipm/estimation/pre_ira.yaml"),
@@ -99,6 +99,8 @@ def full_stages():
         ]),
         ("Run the automated tests", [[PY, "-m", "pytest", "-q", "shared/tests"]]),
         ("Compare your results with the published results", [[PY, "start-here/verify.py", "check"]]),
+        ("Robustness and calibration runs for Appendix D (optional: --with-robustness; 2-3 hours)",
+         [[PY, "robustness/run.py"]]),
     ]
 
 
@@ -112,10 +114,10 @@ def quick_stages():
             ipsim("part-c-ipm/estimation/config.yaml", "--out", f"{q}/part-c", *small),
             ipsim("part-d-ipm/estimation/config.yaml", "--out", f"{q}/part-d", *small),
             ipsim("eipm/estimation/config.yaml", "--out", f"{q}/eipm", *small),
-            ipsim("perm-cert/estimation/perm.yaml", "--out", f"{q}/perm", *small),
-            ipsim("perm-cert/estimation/perm_national.yaml", "--out", f"{q}/perm",
+            ipsim("perm/estimation/config.yaml", "--out", f"{q}/perm", *small),
+            ipsim("perm/estimation/national.yaml", "--out", f"{q}/perm",
                   "--set", f"perm_results_dir={q}/perm"),
-            ipsim("perm-cert/estimation/cert.yaml", "--out", f"{q}/cert", *small),
+            ipsim("cert/estimation/config.yaml", "--out", f"{q}/cert", *small),
         ]),
     ]
 
@@ -221,9 +223,13 @@ def main():
     ap.add_argument("--list", action="store_true", help="list the stages and their commands, then stop")
     ap.add_argument("--from", dest="start", type=int, default=1, help="first stage to run")
     ap.add_argument("--only", type=int, help="run this one stage")
+    ap.add_argument("--with-robustness", action="store_true",
+                    help="also run stage 9 (robustness and calibration runs for Appendix D; 2-3 hours more)")
     a = ap.parse_args()
 
     stages = quick_stages() if a.quick else full_stages()
+    if not a.quick and not a.with_robustness and a.only != len(stages):
+        stages = stages[:-1]          # stage 9 is optional
     first, last = (a.only, a.only) if a.only else (a.start, len(stages))
     if not 1 <= first <= last <= len(stages):
         sys.exit(f"Stage numbers run from 1 to {len(stages)}.")

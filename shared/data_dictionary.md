@@ -13,7 +13,7 @@ Columns shared by every `population.parquet`:
 | `error_type` | VARCHAR | Mechanism that produced `y`; `none` if `y = 0` |
 | `w_pop` | DOUBLE | Real units represented by one synthetic unit (scale weight) |
 
-### cert (`perm-cert/errors/output/cert/national`)
+### cert (`cert/errors/output/national`)
 
 `population.parquet` has one row per Medicare FFS claim (5.34 million; 1 = 200 real claims):
 
@@ -43,8 +43,11 @@ Strata: `<claim_type>_P1` .. `_P5`, equal-count payment quintiles within claim t
 | `delta_r` | R0 − risk_validated (3 decimals; discrete steps) |
 | `x` | R0 × county_rate × months |
 | `y` | delta_r × county_rate × months |
+| `missing_doc` | Enrollee-level finding: no medical record was produced, so every HCC fails (`error_type = missing_documentation`; delta_r = R0 − demo_score) |
+| `add_fam` | HCC family of an additional HCC found on review (an underpayment), NULL if none; drawn only for enrollees with no unsupported HCC and no missing documentation, and only for a family the enrollee did not already have |
+| `add_coef` | Coefficient of that additional HCC (mild level), subtracted from delta_r; 0 if none |
 
-Strata: `low` / `medium` / `high` terciles of `risk_orig`.
+Strata: `low` / `medium` / `high` terciles of `risk_orig`. `missing_doc`, `add_fam` and `add_coef` are the enrollee-level audit findings the bootstrap simulation reuses; HCC-level findings are in `hcc_detail.parquet`.
 
 `hcc_detail.parquet` has one row per enrollee × HCC family:
 
@@ -90,7 +93,7 @@ Strata: `low` / `medium` / `high` terciles of `risk_orig`.
 
 **Alternative benefit design (reference only).** `part-d-ipm/errors/output_pre_ira/base` has the same files, beneficiaries, PDEs and errors, with payments under the pre-IRA CY 2023 benefit (`errors/pre_ira.yaml`). Under that design `ini_sub` is the initial coverage phase up to the $4,660 initial coverage limit, `cat_sub` is the phase above the $7,400 true out-of-pocket threshold, and the coverage gap between them is in `pde_benefit.gap_amt`, which is not exported. Its estimation results are in `part-d-ipm/estimation/results_pre_ira/` (parametric rates) and `results_pre_ira_fixed/`. They are not read by `shared/report.yaml`; see `part-d-ipm/pre-ira-reference.md`.
 
-### perm (`perm-cert/errors/output/perm/state_elig_grid`)
+### perm (`perm/errors/output/state_elig_grid`)
 
 `population.parquet` has one row per payment:
 
@@ -107,7 +110,7 @@ Strata: `low` / `medium` / `high` terciles of `risk_orig`.
 | `y` | Overall error = claims + eligibility − overlap |
 | `claims_error_type`, `elig_error_type` | Error mechanism for each component |
 
-`stratum` is `<state>_Q<q>_<type>_S<k>`: five equal-dollar strata per state × quarter × type. Rates are computed at federal share: Σ y·fmap / Σ x·fmap.
+`stratum` is `<state>_<type>_P<k>`: payment type × five equal-count quintiles of the amount paid within state (10 per state; quarter is not a stratification variable). Eligibility is a whole-year beneficiary attribute: `y_elig = x` on every payment of a beneficiary in error. Rates are computed at federal share: Σ y·fmap / Σ x·fmap.
 
 ### eipm (`eipm/errors/output/base`)
 

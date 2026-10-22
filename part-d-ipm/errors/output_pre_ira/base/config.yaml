@@ -12,6 +12,7 @@ variables:
   error_rate: 0.025
   ltc_error_rate: 0.1
   full_error_share: 0.9
+  size_beta: 0.0
   payment_target: 105560000000.0
   target_over: 3700000000.0
   target_under: 520000000.0

@@ -15,7 +15,8 @@ steps:
   - sql: part-d-ipm/estimation/sql/30_regression.sql   # regression inputs: predictors for every population unit
   - {python: shared/ipsim/regression.py, run: run}   # regression: fit within strata, predict, residual interval
   - sql: part-d-ipm/estimation/sql/40_simulation_inputs.sql   # claim strata, Neyman PDE audit (5,000)
-  - {python: part-d-ipm/estimation/simulation.py, run: run_expansion}   # expansion: stratum rates, benefit rerun
+  - {python: part-d-ipm/estimation/simulation.py, run: run_expansion}   # expansion (plug-in benefit rerun): uniform stratum haircut, delta-method interval
+  - {python: part-d-ipm/estimation/simulation.py, run: run_pde_estimators}   # pde_expansion, pde_ratio: marginal effect per audited PDE, HT and ratio over PDE strata (shared macros)
   - python: part-d-ipm/estimation/simulation.py # bootstrap simulation: benefit rerun 1,000x (numpy)
   - sql: part-d-ipm/estimation/sql/90_score.sql
 exports:
@@ -31,7 +32,7 @@ defaults:
   sim_reps: 25     # audit years run through the PDE audit methods (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
   sim_audit_size: 5000  # PDE audit per audit year: claim strata, Neyman allocation
-  sim_rates: parametric # parametric (reported): p and q redrawn as Binomial(n, p)/n, Binomial(f, q)/f | fixed (comparison; results_fixed/)
+  sim_rates: parametric # parametric (reported): counts redrawn each iteration, f~ = Binomial(n, f/n), g~ = Binomial(f~, g/f); p = f~/n, q = g~/f~ | fixed (comparison; results_fixed/)
   reg_predictors: [x, gdc_sub, n_pde, catastrophic]   # regression: basic beneficiary variables + amount paid
   reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)

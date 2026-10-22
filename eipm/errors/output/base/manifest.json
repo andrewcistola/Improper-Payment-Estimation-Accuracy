@@ -1,6 +1,6 @@
 {
   "config_file": "eipm/errors/config.yaml",
-  "config_sha256": "23249200a534387254661dae63a7ff59d01e9d99e962f4036a5c4eb3cbd361c7",
+  "config_sha256": "5a5559e4e7125129931f84a9840b8b3310b83831b67b031395cdec9f52f879bd",
   "duckdb": "1.5.6",
   "files": {
     "checks.json": {
@@ -8,8 +8,8 @@
       "sha256": "c611767079c7aff065afec24364bf9718ec95a2d9b64b2ed23e930a051665803"
     },
     "config.yaml": {
-      "bytes": 778,
-      "sha256": "d53026eb9cb7dc36d375dd0838669be321f3c5b076c2c88a92914d6ba8f6c7b7"
+      "bytes": 795,
+      "sha256": "5d8e30f387c4e21f55b62767b2733f87efcc962b11cfe9b01a9354d68db07534"
     },
     "design.yaml": {
       "bytes": 311,
@@ -24,6 +24,14 @@
       "bytes": 2905,
       "sha256": "f37a90a40939fe06a89f0def6f848bc20220bd713c00fe7fe9e3a049e4afbef5"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "eipm",
   "python": "3.13.16",

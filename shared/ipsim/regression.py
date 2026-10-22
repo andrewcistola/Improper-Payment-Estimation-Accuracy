@@ -15,10 +15,13 @@ uses):
   1. Fit, in each model stratum m, a design-weighted least-squares regression
      of the audited improper dollars y on an intercept and the predictors.
      If the stratum's audit has fewer than reg_min_errors units with an
-     error (in any domain) or fewer than (terms + 5) units, the model is
-     intercept-only there (the stratum's weighted mean: expansion).
-     The same design matrix is used for every domain, so the fit is linear
-     in y: gross = over + under and net = over - under exactly.
+     error (in any domain, so that a sparse measure such as underpayments
+     shares the model chosen for the gross rate) or fewer than (terms + 5)
+     units, the model is intercept-only there (the stratum's weighted mean:
+     expansion). The same design matrix is used for every domain, so the fit
+     is linear in y: gross = over + under and net = over - under exactly.
+     The price of that linearity is that a sparse domain can be fit with a
+     full model chosen because of errors in another domain.
   2. Predict every population unit of the domain: the population total of
      the predictions is beta_m . (sum of the predictors over the stratum's
      population units), so unit-level predictions are never materialized.
@@ -28,8 +31,8 @@ uses):
   4. Variance from the residuals e = y - y_hat, by design stratum h:
        V = sum_h N_h^2 (1 - n_h / N_h) s_e,h^2 / n_h
      95% interval: T +- t(df) sqrt(V), df = audit units in the domain -
-     design strata - model terms fitted; everything divided by the known
-     total payments X.
+     model terms fitted (intercepts included, one per model stratum);
+     everything divided by the known total payments X.
 Writes table est_regression(method, interval, rep, domain, estimate, se,
 lower, upper), the same columns as the other estimators.
 """
@@ -107,7 +110,9 @@ def run(con, v):
                 n, N = jh.sum(), pop_h[k][jh][0]
                 if n > 1:
                     var += N * N * (1 - n / N) * resid[jh].var(ddof=1) / n
-            df = max(1, len(yk) - len(strata_d) - terms)
+            # terms already counts one intercept per model stratum, so the
+            # design strata are not subtracted again
+            df = max(1, len(yk) - terms)
             tq = float(stats.t.ppf(1 - alpha / 2, df))
             X = float(X_tot[d])
             se = np.sqrt(var) / X

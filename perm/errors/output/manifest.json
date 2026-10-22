@@ -1,0 +1,10 @@
+{
+  "state_elig_grid": {
+    "checks.json": "7753a502a27f94c360873199d39c59b6afd91091dd5ab6cd17ee20e47033b8fc",
+    "config.yaml": "2aacca32753480f0569c60b3e4934e55e783f9c4cec5cdddcf8ae9ae4858c678",
+    "design.yaml": "90974d98ed582280b7f5d2d29425b3c107e76f53e94ed53beccaaec996f44710",
+    "population.parquet": "8e9aa27654ce4f534490221def1e3f450d4ea85aba2de29b99335bd680e76b5c",
+    "states.parquet": "de2353947e736da961df545ed0943ca36d2857b5f87a03b4f6f4624744f4692b",
+    "truth.json": "6a8c4801af468b44e3b9c24a855dc67edbb3949e123a548eb79de427b1303bad"
+  }
+}

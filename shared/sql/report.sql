@@ -49,8 +49,7 @@ SELECT program, scenario,
        CASE WHEN program = 'part-c-ipm' THEN 100
             WHEN program = 'part-d-ipm' THEN 500
             WHEN program = 'eipm' THEN 100
-            WHEN scenario LIKE 'perm/%' THEN 200
-            WHEN scenario LIKE 'cert/%' THEN 200
+            WHEN program IN ('perm', 'cert') THEN 200
             ELSE 1 END::DOUBLE AS w_pop
 FROM (SELECT DISTINCT program, scenario FROM truth_rates);
 

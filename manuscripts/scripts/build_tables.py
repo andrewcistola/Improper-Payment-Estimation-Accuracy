@@ -2,7 +2,8 @@
 
 Inputs (all committed or rebuilt by the estimation configs):
   <program>/estimation/results_fixed/<scenario>/estimates.parquet, truth.json
-      expansion, ratio, regression and the bootstrap simulation with fixed rates
+      expansion, ratio, regression (Part D also: pde_expansion, pde_ratio on the
+      5,000-PDE audit) and the plug-in simulation with fixed rates
       (run with --set sim_rates=fixed)
   <program>/estimation/results/<scenario>/estimates.parquet
       the same audits, bootstrap simulation with parametric rates (the default)
@@ -30,16 +31,19 @@ PROGRAMS = [
     ("Part C", "part-c-ipm/estimation/results_fixed/base", "part-c-ipm/estimation/results/base", 100,
      "990 enrollees, 330 per risk-score tercile"),
     ("Part D", "part-d-ipm/estimation/results_fixed/base", "part-d-ipm/estimation/results/base", 500,
-     "5,000 PDEs (Neyman, 3 strata); ratio and regression: 990 beneficiaries"),
-    ("PERM", "perm-cert/estimation/results_fixed/perm/national", "perm-cert/estimation/results/perm/national", 200,
+     "5,000 PDEs (Neyman, 3 strata); ratio and regression: 990 beneficiaries, every PDE reviewed"),
+    ("PERM", "perm/estimation/results_fixed/national", "perm/estimation/results/national", 200,
      "9 states x 520 payments (Neyman, 10 strata per state)"),
     ("EIPM", "eipm/estimation/results_fixed/base", "eipm/estimation/results/base", 100,
      "2,000 applications (Neyman, 5 APTC quintiles)"),
-    ("CERT", "perm-cert/estimation/results_fixed/cert/national", "perm-cert/estimation/results/cert/national", 200,
+    ("CERT", "cert/estimation/results_fixed/national", "cert/estimation/results/national", 200,
      "37,651 claims (4 claim types x 5 quintiles, Neyman within type)"),
 ]
 METHODS = [("expansion", "Expansion"), ("ratio", "Ratio"), ("regression", "Regression"),
-           ("fixed", "Bootstrap (fixed rates)"), ("parametric", "Bootstrap (parametric rates)")]
+           ("pde_expansion", "PDE expansion (same audit)"), ("pde_ratio", "PDE ratio (same audit)"),
+           ("fixed", "Simulation (plug-in, fixed rates)"), ("parametric", "Simulation (parametric rates)")]
+# pde_expansion / pde_ratio exist only for Part D (design-based estimators on the 5,000-PDE audit);
+# a program without a method is simply skipped in every table
 
 con = duckdb.connect()
 parts = []
@@ -54,7 +58,7 @@ for prog, fixed, param, scale, _ in PROGRAMS:
       FROM '{f}/estimates.parquet' e JOIN read_json('{f}/truth.json') t USING (domain) WHERE e.rep <= 25
       UNION ALL
       SELECT '{prog}', {scale}, e.domain, 'parametric', e.rep, e.estimate, e.lower, e.upper, t.theta, t.X
-      FROM '{p}/estimates.parquet' e JOIN read_json('{f}/truth.json') t USING (domain)
+      FROM '{p}/estimates.parquet' e JOIN read_json('{p}/truth.json') t USING (domain)
       WHERE e.rep <= 25 AND e.method = 'simulation'""")
 con.execute("CREATE TABLE est AS " + " UNION ALL ".join(parts))
 con.execute("""
@@ -94,7 +98,7 @@ def rows(domain_of):
     for prog, *_ in PROGRAMS:
         d = domain_of(prog)
         r = con.execute("SELECT * FROM res WHERE program = ? AND domain = ?", [prog, d]).fetchdf()
-        out[prog] = {m: r[r.method == m].iloc[0] for m in order}
+        out[prog] = {m: r[r.method == m].iloc[0] for m in order if (r.method == m).any()}
     return out
 
 
@@ -107,7 +111,7 @@ md.append("| Program (audit) | True rate | Method | Median estimate | Median hal
 md.append("|---|---|---|---|---|---|")
 for prog, *_rest in PROGRAMS:
     design = _rest[3]
-    for i, (m, ml) in enumerate(METHODS):
+    for i, (m, ml) in enumerate(m for m in METHODS if m[0] in gross[prog]):
         r = gross[prog][m]
         md.append(f"| {prog + ' (' + design + ')' if i == 0 else ''} | {pct(r.true_rate) if i == 0 else ''} | {ml} | "
                   f"{pct(r.med_estimate)} | {pts(r.med_halfwidth)} | {r.inside}/25 ({r.above}/{r.below}) |")
@@ -118,7 +122,7 @@ md.append("**Table C1. Gross improper payments in national dollars (medians over
 md.append("| Program | True gross | Method | Estimated gross | Lower bound | Upper bound |")
 md.append("|---|---|---|---|---|---|")
 for prog, *_ in PROGRAMS:
-    for i, (m, ml) in enumerate(METHODS):
+    for i, (m, ml) in enumerate(m for m in METHODS if m[0] in gross[prog]):
         r = gross[prog][m]
         lo = r.med_lower * r.true_usd / r.true_rate
         hi = r.med_upper * r.true_usd / r.true_rate
@@ -126,7 +130,7 @@ for prog, *_ in PROGRAMS:
 md.append("")
 
 # Table 4: interval problem summary and audit-size implication
-cmp_method = {"Part C": "ratio", "Part D": "expansion", "PERM": "ratio", "EIPM": "ratio", "CERT": "ratio"}
+cmp_method = {"Part C": "ratio", "Part D": "pde_ratio", "PERM": "ratio", "EIPM": "ratio", "CERT": "ratio"}
 md.append("**Table 4. The fixed-rate interval problem and the parametric alternative (gross rate)**\n")
 md.append("| Program | Analytic comparator | Analytic half-width | Fixed-rate half-width (share of analytic) | Fixed-rate coverage | Parametric half-width (share of analytic) | Parametric coverage | Audit size giving the analytic width, if width ∝ 1/√n |")
 md.append("|---|---|---|---|---|---|---|---|")
@@ -147,7 +151,7 @@ for prog, *_ in PROGRAMS:
     key = lambda d: (not d.startswith("national"), ["over", "under", "gross", "net", "technical", "monetary", "eligibility", "claims"].index(d.split("|")[1]) if d.startswith("national") else 0, d)
     for d in sorted(doms, key=key):
         r = con.execute("SELECT * FROM res WHERE program = ? AND domain = ?", [prog, d]).fetchdf().set_index("method")
-        cells = [f"{r.loc[m, 'inside']}/25 ({r.loc[m, 'above']}/{r.loc[m, 'below']})" for m, _ in METHODS]
+        cells = [f"{r.loc[m, 'inside']}/25 ({r.loc[m, 'above']}/{r.loc[m, 'below']})" if m in r.index else "—" for m, _ in METHODS]
         md.append(f"| {prog} | {mlabel(d)} | {pct(r.loc['ratio', 'true_rate'])} | " + " | ".join(cells) + " |")
 md.append("")
 
@@ -156,7 +160,7 @@ md.append("**Table 3. Accuracy of the gross point estimate: average absolute err
 md.append("| Program | " + " | ".join(ml for _, ml in METHODS) + " |")
 md.append("|---|" + "---|" * len(METHODS))
 for prog, *_ in PROGRAMS:
-    md.append(f"| {prog} | " + " | ".join(f"{100 * gross[prog][m].mean_abs_rel_error:.1f}% ({100 * gross[prog][m].mean_rel_error:+.1f}%)" for m, _ in METHODS) + " |")
+    md.append(f"| {prog} | " + " | ".join(f"{100 * gross[prog][m].mean_abs_rel_error:.1f}% ({100 * gross[prog][m].mean_rel_error:+.1f}%)" if m in gross[prog] else "—" for m, _ in METHODS) + " |")
 md.append("")
 (OUT / "tables.md").write_text("\n".join(md) + "\n")
 
@@ -171,8 +175,8 @@ TXT, TXT2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 9, "axes.edgecolor": GRID, "axes.labelcolor": TXT2,
                      "xtick.color": TXT2, "ytick.color": TXT2, "axes.titlecolor": TXT})
 progs = [p for p, *_ in PROGRAMS]
-series = [("analytic", "Analytic (ratio; Part D expansion)"), ("fixed", "Bootstrap, fixed rates"),
-          ("parametric", "Bootstrap, parametric rates")]
+series = [("analytic", "Analytic (ratio; Part D: PDE ratio, same audit)"), ("fixed", "Simulation, plug-in (fixed rates)"),
+          ("parametric", "Simulation, parametric rates")]
 
 
 def value(prog, s, field):

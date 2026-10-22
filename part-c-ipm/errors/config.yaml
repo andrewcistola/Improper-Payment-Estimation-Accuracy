@@ -30,14 +30,22 @@ defaults:
   target_under: 0.0057
   p_md: 0.003     # base probabilities before the calibration multiplier
   p_add: 0.03
+  # Payment-size dependence of error probabilities: each enrollee's
+  # unsupported-HCC and missing-documentation probabilities are multiplied
+  # by (payment x / mean x in the enrollee's risk-score tercile)^size_beta,
+  # then capped at 0.95; the calibration multipliers use the per-enrollee
+  # probabilities, so the targets are still hit. 0.0 = no dependence (the
+  # committed base population, byte for byte). Try --set size_beta=0.5.
+  size_beta: 0.0
 scenarios:
   - name: base
 design:
   unit: enrollee
   frame: all enrollees subject to risk adjustment
   selection: stratified_srs_without_replacement
-  strata:   # sample sizes are NOT public; illustrative equal allocation
-    - {stratum: low, n: 1500}
-    - {stratum: medium, n: 1500}
-    - {stratum: high, n: 1500}
+  strata:   # sample sizes are NOT public; illustrative equal allocation of
+            # 990 enrollees, the same as estimation/config.yaml (allocation)
+    - {stratum: low, n: 330}
+    - {stratum: medium, n: 330}
+    - {stratum: high, n: 330}
   estimand: gross improper payment rate = sum |y| / sum x

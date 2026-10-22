@@ -33,7 +33,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "start-here" / "_reference"
 TABLES = ["shared/results/report/by_scenario.csv", "manuscripts/generated/results_long.csv",
           "manuscripts/generated/tables.md", "part-d-ipm/pre-ira-reference.md"]
-SKIP_DIRS = {"start-here", ".git"}
+SKIP_DIRS = {"start-here", ".git", "robustness", "qa"}   # robustness is the optional stage 9; qa holds reviewers' copies
 NUM = re.compile(r"-?\d+(?:,\d{3})*(?:\.\d+)?(?:[eE][-+]?\d+)?")
 
 

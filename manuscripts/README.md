@@ -26,10 +26,10 @@ manuscripts/scripts/render.sh                # PDF, Word, HTML (needs pandoc and
 ```bash
 ipsim part-c-ipm/estimation/config.yaml --out part-c-ipm/estimation/results_fixed --set sim_rates=fixed
 ipsim part-d-ipm/estimation/config.yaml --out part-d-ipm/estimation/results_fixed --set sim_rates=fixed
-ipsim perm-cert/estimation/perm.yaml --out perm-cert/estimation/results_fixed/perm --set sim_rates=fixed
-ipsim perm-cert/estimation/perm_national.yaml --out perm-cert/estimation/results_fixed/perm --set perm_results_dir=perm-cert/estimation/results_fixed/perm
+ipsim perm/estimation/config.yaml --out perm/estimation/results_fixed --set sim_rates=fixed
+ipsim perm/estimation/national.yaml --out perm/estimation/results_fixed --set perm_results_dir=perm/estimation/results_fixed
 ipsim eipm/estimation/config.yaml --out eipm/estimation/results_fixed --set sim_rates=fixed
-ipsim perm-cert/estimation/cert.yaml --out perm-cert/estimation/results_fixed/cert --set sim_rates=fixed
+ipsim cert/estimation/config.yaml --out cert/estimation/results_fixed --set sim_rates=fixed
 ```
 
 ## Before submission

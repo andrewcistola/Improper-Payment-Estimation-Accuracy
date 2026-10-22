@@ -1,0 +1,44 @@
+# CERT - errors: build an error-free national Medicare FFS claims universe
+# (four claim types), then apply fake claim errors calibrated to the FY 2025
+# CERT results by claim type. Scaled: 1 synthetic claim = 200 real claims.
+program: cert   # also the seed label: changing it changes every random draw
+seed: 20261016
+output_dir: output
+steps:
+  - sql: cert/errors/sql/01_population.sql    # population (error-free claims)
+  - sql: cert/errors/sql/02_apply_errors.sql  # fake errors
+  - sql: cert/errors/sql/03_truth.sql         # truth
+  - sql: cert/errors/sql/04_checks.sql        # checks
+exports:
+  - {table: population, order_by: unit_id}
+json:
+  - {table: checks, order_by: metric, file: checks.json}
+truth: true
+defaults:
+  w_pop: 200.0
+  # FY 2025 CERT (Supplemental Improper Payment Data, Tables A1 and A4, adjusted):
+  # total payments, gross improper and overpayment dollars by claim type
+  # (underpayments = gross - over). Claim counts and payment spread (sigma of
+  # a lognormal) are illustrative: CMS does not publish the claim universe.
+  claim_types:
+    - {claim_type: ipps,         code: 0, n_claims: 40000,   sigma: 0.70, paid: 118.5e9, gross: 3.7e9,  over: 3.3e9}
+    - {claim_type: part_a_other, code: 1, n_claims: 900000,  sigma: 1.40, paid: 197.9e9, gross: 13.2e9, over: 13.0e9}
+    - {claim_type: part_b,       code: 2, n_claims: 4000000, sigma: 1.20, paid: 114.1e9, gross: 9.6e9,  over: 9.3e9}
+    - {claim_type: dmepos,       code: 3, n_claims: 400000,  sigma: 1.30, paid: 9.4e9,   gross: 2.3e9,  over: 2.29e9}
+  partial_over_share: 0.08   # share of overpayment dollars from partial (coding) errors; the rest whole-claim
+  taint_over: [0.05, 0.60]   # partial overpayment: uniform share of the payment
+  taint_under: [0.05, 0.50]  # underpayment (all partial): uniform share of the payment
+  size_beta: 0.0           # error probability x (paid / mean paid within claim type)^size_beta, capped so a
+  #                          # claim's total error probability <= 0.95; the closed-form rates are recalibrated
+  #                          # with the per-claim probabilities so each FY 2025 target still holds (cert_02).
+  #                          # Default 0 (errors independent of claim size; the committed population). Not listed
+  #                          # the base population (size_beta = 0) is byte-identical to the published one; set with --set size_beta=0.5.
+scenarios:
+  - name: national
+design:
+  unit: claim
+  frame: Medicare FFS claims, four claim types (no MAC jurisdictions)
+  strata: claim type x five equal-count payment quintiles (20)
+  allocation: FY 2025 claims reviewed by claim type (8,750 / 8,651 / 11,600 / 8,650); Neyman across quintiles within claim type
+  selection: stratified_srs_without_replacement
+  estimand: overpayments, underpayments, gross and net improper payment rates = sum / sum x

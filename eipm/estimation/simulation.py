@@ -12,18 +12,37 @@ shared/tests/test_simulation.py checks that each application's own finding
 reproduces errors/ y to the cent.
 
 Bootstrap simulation, from the audit year's audit, per stratum (APTC
-quintile):
-  a non-audited application is in error with probability p = f/n (f of the
-  n audited applications in error); given an error, it is monetary with
-  probability q = g/f (g audited monetary errors), its supported / used
-  income ratio drawn from the stratum's audited monetary findings and its
-  APTC recomputed (supported income clipped to 100-600% FPL); otherwise it
-  is technical (whole APTC). This is the same as taking the finding of a
-  random audited application of the stratum, drawn in two steps.
+quintile), with n audited applications, t of them technical and g monetary
+findings (f = t + g in error):
+  a non-audited application is technical (whole APTC) with probability
+  p_t = t/n; an application that CAN have a monetary finding is monetary
+  with probability p_m = g/n_m, where n_m counts the audited applications
+  that can have one. Its supported / used income ratio is drawn from the
+  stratum's audited monetary findings and its APTC recomputed (supported
+  income clipped to 100-600% FPL). The two are drawn as one hit with
+  probability p_t + p_m, monetary with probability p_m / (p_t + p_m) (at
+  most one error per application, as in errors/02_apply_errors.sql).
+  Monetary findings and y = 0. errors/02_apply_errors.sql makes a monetary
+  candidate an error only when the recomputed APTC is below the APTC paid,
+  so every audited monetary finding has y > 0. The kernel keeps that
+  property on the recipients' side, otherwise applications given a
+  monetary finding that cannot move their APTC would dilute the monetary
+  rate (about 4.6% of applications here):
+    - an application whose income is already at the 600% FPL cap can never
+      have a monetary finding (any supported income clips to 600%); such
+      applications are excluded from n_m and from monetary assignment
+      (they can still be technical);
+    - an application whose recomputed APTC equals the APTC paid under the
+      drawn ratio (income below 150% FPL staying below 150%, where the
+      applicable percentage is 0) draws another ratio, up to MAX_REDRAW
+      times; what is left after that (practically none) stays y = 0.
   Audited applications keep their own findings.
   sim_rates: fixed       rates as audited
-             parametric  before each iteration p and q are redrawn as
-                         Binomial(n, p)/n and Binomial(f, q)/f
+             parametric  before each iteration the counts are redrawn: the
+                         error count f~ = Binomial(n, f/n), then the
+                         monetary count out of it, g~ = Binomial(f~, g/f)
+                         (0 when f~ = 0), t~ = f~ - g~, so p_t~ = t~/n and
+                         p_m~ = g~/n_m
 Domains: national|gross, national|technical, national|monetary.
 """
 import json
@@ -33,6 +52,8 @@ import numpy as np
 from ipsim.simulation import bernoulli_positions, round_half_away
 
 N_STRATA = 5
+FPL_CAP = 600.0     # income is capped at 600% FPL in errors/01_population.sql
+MAX_REDRAW = 50
 
 
 def applicable_pct(f, schedule):
@@ -67,6 +88,7 @@ class Kernel:
         self.ratio = np.asarray(u["income_ratio"], dtype=float)
         self.true_fpl = np.asarray(u["true_fpl_pct"], dtype=float)
         self.kind = np.asarray(u["stratum_code"], dtype=np.int64)
+        self.can_monetary = self.fpl < FPL_CAP     # at the cap no supported income lowers the APTC
 
     def improper_cents(self, finding, supported_fpl):
         """y per application (cents) by component, given findings."""
@@ -86,32 +108,54 @@ class Kernel:
     def prepare(self, rep, audited_mask):
         self._finding = np.where(audited_mask, self.finding, 0)
         self._fpl = np.where(audited_mask & (self.finding == 1), self.true_fpl, self.fpl)
-        self._n, self._f, self._g, self._ratios, self._recip = [], [], [], [], []
+        self._n, self._n_m, self._f, self._g, self._ratios = [], [], [], [], []
+        self._recip, self._recip_m = [], []
         for h in range(N_STRATA):
             a = np.flatnonzero(audited_mask & (self.kind == h))
             fnd = self.finding[a]
-            self._n.append(len(a)); self._f.append(int((fnd > 0).sum())); self._g.append(int((fnd == 1).sum()))
+            self._n.append(len(a)); self._n_m.append(int(self.can_monetary[a].sum()))
+            self._f.append(int((fnd > 0).sum())); self._g.append(int((fnd == 1).sum()))
             self._ratios.append(self.ratio[a][fnd == 1])
-            self._recip.append(np.flatnonzero(~audited_mask & (self.kind == h)))
+            r = ~audited_mask & (self.kind == h)
+            self._recip.append(np.flatnonzero(r & ~self.can_monetary))   # technical only
+            self._recip_m.append(np.flatnonzero(r & self.can_monetary))  # technical or monetary
 
     def iterate(self, donors, rng):
         finding, fpl = self._finding.copy(), self._fpl.copy()
         for h in range(N_STRATA):
-            n, f, g = self._n[h], self._f[h], self._g[h]
-            p = f / n if n else 0.0
-            q = g / f if f else 0.0
-            if self.parametric:
-                p = rng.binomial(n, p) / n if n else 0.0
-                q = rng.binomial(f, q) / f if f else 0.0
+            n, n_m, f, g = self._n[h], self._n_m[h], self._f[h], self._g[h]
+            if self.parametric:   # redraw the error count first, then the monetary count out of it
+                f = int(rng.binomial(n, f / n)) if n else 0
+                g = int(rng.binomial(f, g / self._f[h])) if f and self._f[h] else 0
+            p_t = (f - g) / n if n else 0.0
+            p_m = g / n_m if (n_m and len(self._ratios[h])) else 0.0
+            # applications at the income cap: technical only
+            if p_t > 0:
+                finding[self._recip[h][bernoulli_positions(len(self._recip[h]), p_t, rng)]] = 2
+            # the rest: one hit, technical or monetary
+            p = p_t + p_m
             if p <= 0:
                 continue
-            hit = self._recip[h][bernoulli_positions(len(self._recip[h]), p, rng)]
-            mon = (rng.random(len(hit)) < q) if len(self._ratios[h]) else np.zeros(len(hit), bool)
+            hit = self._recip_m[h][bernoulli_positions(len(self._recip_m[h]), p, rng)]
+            mon = rng.random(len(hit)) < p_m / p
             finding[hit[~mon]] = 2
             mh = hit[mon]
             if len(mh):
                 finding[mh] = 1
-                r = self._ratios[h][rng.integers(0, len(self._ratios[h]), len(mh))]
-                fpl[mh] = np.clip(self.fpl[mh] * r, 100.0, 600.0)
+                fpl[mh] = self._supported_fpl(mh, self._ratios[h], rng)
         y = self.improper_cents(finding, fpl)
         return {f"national|{k}": float(v.sum()) / self.X for k, v in y.items()}
+
+    def _supported_fpl(self, rows, ratios, rng):
+        """Supported income (% FPL) for monetary recipients: a donor ratio,
+        redrawn while the recomputed APTC still equals the APTC paid (an
+        audited monetary finding always has y > 0)."""
+        out = np.clip(self.fpl[rows] * ratios[rng.integers(0, len(ratios), len(rows))], 100.0, FPL_CAP)
+        for _ in range(MAX_REDRAW):
+            same = np.flatnonzero(annual_aptc_cents(out, self.bench[rows], self.fpl_dollars[rows],
+                                                    self.months[rows], self.schedule) == self.x[rows])
+            if not len(same):
+                break
+            r = ratios[rng.integers(0, len(ratios), len(same))]
+            out[same] = np.clip(self.fpl[rows[same]] * r, 100.0, FPL_CAP)
+        return out

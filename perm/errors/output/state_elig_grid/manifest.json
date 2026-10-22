@@ -1,0 +1,44 @@
+{
+  "config_file": "perm/errors/config.yaml",
+  "config_sha256": "ffa07c69982361fdbddd149494280cabf383c869056d4f8f9fd4d1118bbd7711",
+  "duckdb": "1.5.6",
+  "files": {
+    "checks.json": {
+      "bytes": 2820,
+      "sha256": "7753a502a27f94c360873199d39c59b6afd91091dd5ab6cd17ee20e47033b8fc"
+    },
+    "config.yaml": {
+      "bytes": 928,
+      "sha256": "2aacca32753480f0569c60b3e4934e55e783f9c4cec5cdddcf8ae9ae4858c678"
+    },
+    "design.yaml": {
+      "bytes": 731,
+      "sha256": "90974d98ed582280b7f5d2d29425b3c107e76f53e94ed53beccaaec996f44710"
+    },
+    "population.parquet": {
+      "bytes": 18567531,
+      "rows": 3088859,
+      "sha256": "8e9aa27654ce4f534490221def1e3f450d4ea85aba2de29b99335bd680e76b5c"
+    },
+    "states.parquet": {
+      "bytes": 568,
+      "rows": 9,
+      "sha256": "de2353947e736da961df545ed0943ca36d2857b5f87a03b4f6f4624744f4692b"
+    },
+    "truth.json": {
+      "bytes": 8873,
+      "sha256": "6a8c4801af468b44e3b9c24a855dc67edbb3949e123a548eb79de427b1303bad"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "perm",
+  "python": "3.13.16",
+  "scenario": "state_elig_grid"
+}

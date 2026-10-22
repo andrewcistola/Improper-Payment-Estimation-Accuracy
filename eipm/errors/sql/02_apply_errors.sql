@@ -14,9 +14,16 @@
 --               income. y = x - correct APTC (partial, or whole when the
 --               correct APTC is 0).        p_t <= u_act < p_t + p_m
 -- Rates are closed form (candidate amounts are known, so expectations are
--- exact):
---   p_t = target_rate x technical_share                (y = x for every unit)
---   p_m = target_rate x (1 - technical_share) x sum x / sum candidate y
+-- exact), with per-application probabilities p_t s_i and p_m s_i:
+--   p_t = target_rate x technical_share x sum x / sum(s_i x_i)
+--   p_m = target_rate x (1 - technical_share) x sum x / sum(s_i x cand y)
+-- size_beta (default 0): dependence of the error probability on the APTC
+-- paid, s_i = (x_i / mean x)^size_beta, capped so that an application's
+-- total error probability (p_t + p_m) s_i stays at or below 0.95. At
+-- size_beta = 0 every s_i = 1 and the adjustment factors are exactly 1,
+-- so the output is byte-identical to the version without this variable;
+-- at size_beta > 0 larger APTC amounts are more likely to be in error
+-- (0.5: with the square root of the amount).
 -- A monetary candidate whose correct APTC equals the APTC paid (income
 -- already at the 600% FPL cap) has y = 0 and is not an error.
 -- Strata (for estimation): five equal-count quintiles of annual APTC
@@ -38,17 +45,31 @@ SELECT t.*,
 FROM t;
 
 -- Step 4. Rates (closed form) and activation
+-- size factor s_i, capped so that (p_t + p_m) s_i <= 0.95 at the size-independent rates
+CREATE OR REPLACE TABLE hh AS
+WITH k AS (
+    SELECT fsum(x) / count(*) AS mean_x,
+           getvariable('target_rate') * getvariable('technical_share')
+             + getvariable('target_rate') * (1 - getvariable('technical_share'))
+               * sum(x)::DOUBLE / sum(x - cand_correct_aptc)::DOUBLE AS p_any0
+    FROM hh
+)
+SELECT h.*, least(pow(h.x::DOUBLE / k.mean_x, coalesce(getvariable('size_beta'), 0.0)::DOUBLE), 0.95 / k.p_any0) AS s_size
+FROM hh h, k;
+
 CREATE OR REPLACE TABLE calib AS
-SELECT round(getvariable('target_rate') * getvariable('technical_share'), 8) AS p_t,
+SELECT round(getvariable('target_rate') * getvariable('technical_share')
+             * (fsum(x) / fsum(x::DOUBLE * s_size)), 8) AS p_t,
        round(getvariable('target_rate') * (1 - getvariable('technical_share'))
-             * sum(x)::DOUBLE / sum(x - cand_correct_aptc)::DOUBLE, 8) AS p_m
+             * sum(x)::DOUBLE / sum(x - cand_correct_aptc)::DOUBLE
+             * (fsum((x - cand_correct_aptc)::DOUBLE) / fsum((x - cand_correct_aptc)::DOUBLE * s_size)), 8) AS p_m
 FROM hh;
 
 CREATE OR REPLACE TABLE population AS
 WITH a AS (
     SELECT h.*,
-           CASE WHEN h.u_act < c.p_t THEN 'technical'
-                WHEN h.u_act < c.p_t + c.p_m AND h.cand_correct_aptc < h.x THEN 'monetary'
+           CASE WHEN h.u_act < h.s_size * c.p_t THEN 'technical'
+                WHEN h.u_act < least(0.95, h.s_size * (c.p_t + c.p_m)) AND h.cand_correct_aptc < h.x THEN 'monetary'
                 ELSE 'none' END AS error_type
     FROM hh h, calib c
 )

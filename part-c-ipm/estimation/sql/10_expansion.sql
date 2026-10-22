@@ -12,6 +12,9 @@
 --   z_i   = r_i x c_bar             (dollars per audited enrollee)
 --   T     = sum_h N_h x mean_h(z)   (improper dollars, terciles h)
 --   V(T)  = sum_h N_h^2 (1 - n_h/N_h) s_h^2(z) / n_h
+--           (a stratum with one audited unit contributes 0 variance, the
+--           same guard as ipm_moments in shared/sql/lib/02_estimators.sql;
+--           fsd would otherwise divide by n_h - 1 = 0)
 --   estimate = T / X, se = sqrt(V) / X, 95% interval = (T +- 1.96 sqrt(V)) / X
 -- X = KNOWN total Part C payments. Dollars and their interval are formed
 -- first and then divided by X, so the rate and the dollars agree.
@@ -35,7 +38,8 @@ WITH z AS (
 ),
 h AS (
     SELECT rep, domain, stratum, any_value(big_n) AS big_n, any_value(small_n) AS small_n,
-           favg(z) AS z_bar, fsd(z) AS s_z
+           favg(z) AS z_bar,
+           CASE WHEN count(*) > 1 THEN fsd(z) ELSE 0.0 END AS s_z
     FROM z GROUP BY rep, domain, stratum
 ),
 t AS (

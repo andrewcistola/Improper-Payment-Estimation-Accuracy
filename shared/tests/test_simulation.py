@@ -72,6 +72,54 @@ def test_part_c_bootstrap_rates():
     assert abs(net / (y.sum() / k.X) - 1) < 0.01
 
 
+def test_part_c_bootstrap_unbiased_per_domain():
+    """Production audit (990 enrollees, 330 per risk-score tercile): the mean
+    simulated over, under, gross and net each match the expectation of
+    the population's rules evaluated at the audit's rates, computed here
+    from the audit independently of the kernel: an HCC instance fails with
+    f_k and loses L_k; an enrollee lacking family f with no failed HCC
+    gains it with a_f = audited additions of f / audited enrollees lacking
+    f with no overpayment finding. Averaged over several audits and
+    iterations, each is within 3% -- tight enough to catch the 8%
+    shortfall in under that netting additions against failures produced
+    (that version also set a_f over all audited enrollees lacking f)."""
+    con, k = partc_kernel()
+    strat = con.execute("SELECT stratum FROM sim_units ORDER BY unit_idx").fetchnumpy()["stratum"].astype(str)
+    rng = np.random.default_rng(11)
+    y = k.y_cents.astype(float)
+    cm = (k.rate * k.months).astype(float)
+    over_unit = np.bincount(k.row_unit[k.failed_row], minlength=k.units) > 0   # overpayment finding
+    exp, sim = np.zeros(2), np.zeros(2)
+    for _ in range(4):
+        aud = np.concatenate([rng.choice(np.flatnonzero(strat == s), 330, replace=False)
+                              for s in ("low", "medium", "high")])
+        am = np.zeros(k.units, bool)
+        am[aud] = True
+        k.prepare(1, am)
+        # audited HCC rates, from the audit
+        aud_row = am[k.row_unit]
+        n_k = np.bincount(k.hcc[aud_row], minlength=20)
+        nf_k = np.bincount(k.hcc[aud_row & k.failed_row], minlength=20)
+        loss_k = np.bincount(k.hcc[aud_row & k.failed_row], weights=k.loss_row[aud_row & k.failed_row], minlength=20)
+        f_rate = nf_k / np.maximum(n_k, 1)
+        f_loss = loss_k / np.maximum(nf_k, 1)
+        p_nofail = np.exp(np.bincount(k.row_unit, weights=np.log1p(-f_rate[k.hcc]), minlength=k.units))
+        non = ~am
+        e_over = (f_rate[k.hcc] * f_loss[k.hcc] * cm[k.row_unit] * non[k.row_unit]).sum() / 1000.0
+        e_under = 0.0
+        for f in range(10):
+            lacks = ((k.fam_mask >> f) & 1) == 0
+            a_f = (am & (k.add_fam == f)).sum() / max((am & lacks & ~over_unit).sum(), 1)
+            e_under += a_f * k.mild[f] * (p_nofail * cm)[non & lacks].sum() / 1000.0
+        exp += [e_over + y[am & (y > 0)].sum(), e_under - y[am & (y < 0)].sum()]
+        it = [k.iterate(aud, rng) for _ in range(15)]
+        sim += [np.mean([r["national|over"] for r in it]) * k.X, np.mean([r["national|under"] for r in it]) * k.X]
+    over, under = sim / exp
+    assert abs(over - 1) < 0.03 and abs(under - 1) < 0.03
+    assert abs(sim.sum() / exp.sum() - 1) < 0.03                       # gross
+    assert abs((sim[0] - sim[1]) / (exp[0] - exp[1]) - 1) < 0.03       # net
+
+
 def partd_kernel(extra=None, design="config.yaml", pop="part-d-ipm/errors/output/base"):
     cfg = yaml.safe_load((ROOT / "part-d-ipm/errors" / design).read_text())["defaults"]
     v = {**cfg, "seed": 1, "sim_reps": 1, "sim_audit_size": 300, **(extra or {})}
@@ -165,10 +213,10 @@ def test_eipm_bootstrap_rates_unbiased():
 
 
 def cert_kernel(extra=None):
-    if not (ROOT / "perm-cert/errors/output/cert/national/population.parquet").exists():
-        pytest.skip("build perm-cert/errors/cert.yaml first")
-    con = setup("perm-cert/errors/output/cert/national", "perm-cert/estimation/sql/cert_40_simulation_inputs.sql")
-    return con, load_kernel(ROOT / "perm-cert/estimation/cert_simulation.py").Kernel(con, extra or {})
+    if not (ROOT / "cert/errors/output/national/population.parquet").exists():
+        pytest.skip("build cert/errors/config.yaml first")
+    con = setup("cert/errors/output/national", "cert/estimation/sql/40_simulation_inputs.sql")
+    return con, load_kernel(ROOT / "cert/estimation/simulation.py").Kernel(con, extra or {})
 
 
 def test_cert_payment_function_exact():
@@ -202,13 +250,13 @@ def test_cert_bootstrap_rates_unbiased():
 
 
 def test_perm_payment_function_exact():
-    con = setup("perm-cert/errors/output/perm/state_elig_grid",
-                "perm-cert/estimation/sql/perm_40_simulation_inputs.sql", {"state_id": 5})
-    k = load_kernel(ROOT / "perm-cert/estimation/perm_simulation.py").Kernel(con, {"state_id": 5})
+    con = setup("perm/errors/output/state_elig_grid",
+                "perm/estimation/sql/40_simulation_inputs.sql", {"state_id": 5})
+    k = load_kernel(ROOT / "perm/estimation/simulation.py").Kernel(con, {"state_id": 5})
     y = k.improper_cents(k.yc, k.elig)
     t = con.execute("SELECT (y * 100)::BIGINT AS y, (y_elig * 100)::BIGINT AS ye FROM read_parquet(?) "
                     "WHERE state_id = 5 ORDER BY unit_id",
-                    [str(ROOT / "perm-cert/errors/output/perm/state_elig_grid/population.parquet")]).fetchnumpy()
+                    [str(ROOT / "perm/errors/output/state_elig_grid/population.parquet")]).fetchnumpy()
     assert np.array_equal(y["gross"], t["y"]) and np.array_equal(y["eligibility"], t["ye"])
     # every payment audited: each keeps its own finding, so rates are exact
     k.prepare(1, np.ones(k.units, bool))
@@ -266,3 +314,102 @@ def test_simulation_reproducible(tmp_path):
     import duckdb
     methods = {m for (m,) in duckdb.sql(f"SELECT DISTINCT method FROM '{tmp_path}/r0/base/estimates.parquet'").fetchall()}
     assert methods == {"expansion", "ratio", "regression", "simulation"}    # one simulation: the audit as audited
+
+
+# --- Part D: design-based PDE-level estimators (pde_expansion, pde_ratio) ---
+
+def partd_pde_census(con, mod, v, size):
+    """Run run_pde_estimators with an audit of `size` PDEs per rep (the
+    frame tables the shared macros need are built here, as the engine's
+    01_frame.sql + sample_srs.sql would)."""
+    con.execute("SET VARIABLE alpha = 0.05")
+    if size is None:                                     # census: every PDE audited
+        # a census of the first 6,000 beneficiaries' PDEs (the full population's
+        # 4.5M PDEs x 4 domains would need several GB in the sample table)
+        con.execute("DELETE FROM sim_rows WHERE unit_idx >= 6000")
+        con.execute("DELETE FROM sim_units WHERE unit_idx >= 6000")
+        con.execute("CREATE OR REPLACE TABLE sim_audit_sample AS SELECT 1 AS rep, row_idx FROM sim_rows")
+    con.execute("CREATE OR REPLACE TABLE frame_totals AS "
+                "SELECT 'national|' || m AS domain, sum(x_cents) / 100.0 AS X, NULL::DOUBLE AS Y, NULL::DOUBLE AS theta "
+                "FROM sim_units, (SELECT unnest(['over', 'under', 'gross', 'net']) AS m) GROUP BY m")
+    con.execute("CREATE OR REPLACE TABLE sample (rep INTEGER, domain VARCHAR, stratum VARCHAR, pop_h BIGINT, "
+                "samp_h BIGINT, unit_id BIGINT, y DECIMAL(18, 6), x DECIMAL(18, 6), w DOUBLE)")
+    mod.run_pde_estimators(con, {**v, "population_dir": con.execute("SELECT getvariable('population_dir')").fetchone()[0]})
+    return {(m, d): (e, se) for m, d, e, se in
+            con.execute("SELECT method, domain, estimate, se FROM est_pde WHERE rep = 1").fetchall()}
+
+
+def test_part_d_marginal_effects_sum_to_netted_error():
+    """A beneficiary with at most one PDE in error: its PDE marginal effects
+    sum EXACTLY to its netted payment error (one PDE corrected = all
+    corrected). With several PDEs in error the sum differs (the benefit is
+    nonlinear); the census test below bounds that difference."""
+    con, mod, v = partd_kernel()
+    k = mod.Kernel(con, v)
+    err_per_bene = np.bincount(k.row_unit, weights=(k.cor != k.sub), minlength=k.n_benes)
+    rng = np.random.default_rng(2)
+    one = np.flatnonzero(err_per_bene == 1)
+    pick = rng.choice(one, 400, replace=False)
+    rows = np.flatnonzero(np.isin(k.row_unit, pick))
+    y = mod.marginal_effects(k, rows)
+    per_bene = np.bincount(k.row_unit[rows], weights=y, minlength=k.n_benes)[pick]
+    assert np.array_equal(per_bene, k.y_true[pick])
+    assert (k.y_true[pick] != 0).sum() > 50                    # the check is not vacuous
+    # no error -> exactly zero; several errors -> not more than the sum of full-GDC reinsurance
+    zero = np.flatnonzero(np.isin(k.row_unit, np.flatnonzero(err_per_bene == 0)))[:500]
+    assert not mod.marginal_effects(k, zero).any()
+
+
+def test_part_d_pde_estimators_census():
+    """Every PDE of a 6,000-beneficiary frame audited: pde_expansion and
+    pde_ratio reproduce the PDE-level totals exactly (zero SE), and those
+    totals are within 10% of the beneficiary-netted truth for over, gross
+    and net (they differ only where a beneficiary has two or more PDEs in
+    error; under is tiny and is not compared)."""
+    con, mod, v = partd_kernel()
+    est = partd_pde_census(con, mod, v, None)
+    k = mod.Kernel(con, v)                                   # the census frame (6,000 beneficiaries)
+    assert k.n_benes == 6000
+    y = mod.marginal_effects(k, np.arange(k.units)).astype(float)
+    X = k.X
+    pde_truth = {"over": y[y > 0].sum() / X, "under": -y[y < 0].sum() / X,
+                 "gross": np.abs(y).sum() / X, "net": y.sum() / X}
+    for m in ("pde_expansion", "pde_ratio"):
+        for d, t in pde_truth.items():
+            e, se = est[(m, f"national|{d}")]
+            assert abs(e - t) <= 1e-9 * max(t, 1e-6), (m, d, e, t)
+            assert se == 0.0
+    yt = k.y_true.astype(float)
+    bene_truth = {"over": yt[yt > 0].sum() / X, "gross": np.abs(yt).sum() / X, "net": yt.sum() / X}
+    for d, t in bene_truth.items():
+        assert abs(pde_truth[d] / t - 1) < 0.10, (d, pde_truth[d], t)
+
+
+def test_part_d_pde_estimators_sampled():
+    """A 5,000-PDE stratified audit: both estimators are near the truth and
+    report positive standard errors; the ratio estimate differs from the
+    expansion estimate (the auxiliary is in use)."""
+    con, mod, v = partd_kernel({"sim_audit_size": 5000})
+    k = mod.Kernel(con, v)
+    est = partd_pde_census(con, mod, v, 5000)
+    truth = np.abs(k.y_true).sum() / k.X
+    for m in ("pde_expansion", "pde_ratio"):
+        e, se = est[(m, "national|gross")]
+        assert se > 0 and abs(e - truth) < 4 * se, (m, e, se, truth)
+    assert est[("pde_ratio", "national|gross")][0] != est[("pde_expansion", "national|gross")][0]
+    assert con.execute("SELECT count(*) FROM sample").fetchone()[0] == 0   # beneficiary audit table restored (empty here)
+
+
+def test_part_d_parametric_redraw_counts():
+    """The parametric redraw draws f~ ~ Binomial(n, f/n) then g~ ~ Binomial(f~, g/f):
+    with f = 0 in a stratum the redrawn p is 0 and q is 0 (no division by zero),
+    and over many iterations the mean redrawn rate equals the audited rate."""
+    con, mod, v = partd_kernel({"sim_rates": "parametric"})
+    k = mod.Kernel(con, v)
+    rng = np.random.default_rng(5)
+    audited = rng.random(k.units) < 0.002
+    k.prepare(1, audited)
+    k._f[1] = 0; k._g[1] = 0; k._partial[1] = np.empty(0)      # force an empty-finding stratum
+    y_true_gross = np.abs(k.y_true).sum() / k.X
+    rates = [k.iterate(None, rng)["national|gross"] for _ in range(40)]
+    assert all(np.isfinite(rates)) and 0 < np.mean(rates) < 3 * y_true_gross

@@ -29,7 +29,7 @@ defaults:
   reps: 25         # audit years (Monte Carlo replicates)
   sim_reps: 25     # audit years run through the bootstrap simulation (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
-  sim_rates: parametric # parametric (reported): rates redrawn as Binomial(n, rate)/n each iteration | fixed (comparison; results_fixed/)
+  sim_rates: parametric # parametric (reported): counts redrawn each iteration, f~ Binomial(n, f/n) then g~ Binomial(f~, g/f) | fixed (comparison; results_fixed/)
   reg_predictors: [x, age, hh_size, fpl_pct, months]   # regression: basic beneficiary variables + amount paid
   reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)

@@ -11,7 +11,7 @@ This repository contains a Monte Carlo study of the accuracy of these methods. I
 - **Point accuracy:** how close the estimate is to the true improper payment.
 - **Interval accuracy:** whether the 95% interval contains the truth in about 95% of repeated audits (coverage) and, among intervals that do, how narrow the interval is (width).
 
-**Approach: Synthetic Data Run through Multiple Audit Years** For each program, this study builds a synthetic population with fabricated errors so that the true improper payment is known. Each population is calibrated only to public FY 2025 aggregates. The program's production-like audit is then drawn in 25 independent audit years, and the estimate and interval from each method are compared with the truth. Each audit year has one audit, drawn with the program's design, and every method uses only that audit. The analytic methods estimate their variance from the audit. The bootstrap simulation uses the audit findings as audited and redraws only the error rates (as opposed to resampling the audit itself). In Part D, both the audit sample used by the bootstrap simulation (5,000 PDEs) and the beneficiary sample (108,000 beneficiaries) are fixed for the audit year.
+**Approach: Synthetic Data Run through Multiple Audit Years** For each program, this study builds a synthetic population with fabricated errors so that the true improper payment is known. Each population is calibrated only to public FY 2025 aggregates. The program's production-like audit is then drawn in 25 independent audit years, and the estimate and interval from each method are compared with the truth. Each audit year has one audit, drawn with the program's design, and every method uses only that audit. The analytic methods estimate their variance from the audit. The bootstrap simulation uses the audit findings as audited and redraws only the error rates (as opposed to resampling the audit itself). In Part D, each audit year draws two audits: a stratified audit of 5,000 PDEs, used by the bootstrap simulation and by the PDE-level analytic estimators (expansion with a plug-in benefit rerun, and the design-based PDE-level expansion and ratio estimators), and a simple random sample of 990 beneficiaries whose every PDE is reviewed (about 41,000 PDEs), used by the ratio and regression estimators; both are fixed for the audit year.
 
 **Scope: PIIA improper payment rate estimation.** Recovery and extrapolation uses (for example, contract-level RADV or provider overpayment demands) are out of scope. This repository contains no PHI, no unit-level data from any source, and nothing non-public. Every number is drawn from stated distributions and calibrated only to public aggregate results.
 
@@ -38,13 +38,15 @@ Each of the four program folders has the same two parts:
 |---|---|---|---|
 | [`part-c-ipm/`](part-c-ipm/) | Risk-score errors on capitated payments (Medicare Advantage) | Enrollees, HCCs, payments → unsupported HCCs, hierarchy moves, missing documentation, additional HCCs | Audit of 990 enrollees, 330 per risk-score tercile (stratified SRS); overpayments, underpayments, gross and net |
 | [`part-d-ipm/`](part-d-ipm/) | Claim errors flowing through the benefit to reinsurance and subsidies | Beneficiaries, PDEs → PDE errors re-run through the post-IRA 2025 benefit | SRS of beneficiaries; the bootstrap simulation uses an audit sample of 5,000 PDEs and a beneficiary sample |
-| [`perm-cert/`](perm-cert/) | Individual claim or benefit errors | PERM: state payment universes → claims and eligibility errors (9 states, true eligibility rates 2.00–4.00%). CERT: national Medicare FFS claims, four claim types → whole-claim and partial over- and underpayments calibrated to FY 2025 | PERM: Neyman allocation over payment type × quintile, systematic selection, 520 per state. CERT: 37,651 claims, FY 2025 count per claim type, Neyman across payment quintiles |
+| [`perm/`](perm/) | Medicaid claim and eligibility errors | State payment universes → claims and eligibility errors (9 states, true eligibility rates 2.00–4.00%) | Neyman allocation over payment type × quintile, systematic selection, 520 per state; national pooling |
+| [`cert/`](cert/) | Medicare FFS claim errors | National claims in four claim types → whole-claim and partial over- and underpayments calibrated to FY 2025 | 37,651 claims, FY 2025 count per claim type, Neyman across payment quintiles |
 | [`eipm/`](eipm/) | Beneficiary subsidy eligibility (Marketplace APTC) | FFE applications and APTC → rare overpayments: technically improper (whole APTC) and monetary (income) | Stratified SRS of 2,000, Neyman allocation over APTC quintiles |
 | [`shared/`](shared/) | Code used by all four | Runner, random numbers, samplers | **The methods, written once**: expansion and ratio with normal intervals; regression (models fit within strata, residual interval); the audit-finding bootstrap simulation loop; scoring |
 | [`literature-review/`](literature-review/) | Standalone narrative review of the comparative accuracy of improper payment estimation methods (Markdown, PDF, Word) | | |
 | [`manuscripts/`](manuscripts/) | Manuscript and one-page summary of the Monte Carlo study | | |
 | [`start-here/`](start-here/) | Step-by-step replication guide for readers with no programming experience: software to install, one command that runs every stage, and a check against the published results | | |
 | [`qa/`](qa/) | Independent review: a checklist workbook (re-run, every key assumption, results), a holding space for each reviewer's re-run logs and outputs, and a sign-off form | | |
+| [`robustness/`](robustness/) | Appendix D: interval calibration over 100 audit years and size-dependent error scenarios (`size_beta`) for every program | | |
 
 Inside each program, the SQL files are numbered in the order they run, and each file's header states what it does and every probability or formula it uses. Each `config.yaml` lists the files it runs.
 
@@ -66,10 +68,10 @@ For a step-by-step guide that assumes no programming experience, see [`start-her
 pip install -e ".[all]"                       # duckdb (pinned), pyarrow, numpy, numba, pyyaml, scipy; [all] adds pandas, matplotlib, pytest
 # 1. populations (a few minutes)
 ipsim part-c-ipm/errors/config.yaml part-d-ipm/errors/config.yaml eipm/errors/config.yaml \
-      perm-cert/errors/perm.yaml perm-cert/errors/cert.yaml
+      perm/errors/config.yaml cert/errors/config.yaml
 # 2. estimation (each program writes estimation/results/)
 ipsim part-c-ipm/estimation/config.yaml part-d-ipm/estimation/config.yaml eipm/estimation/config.yaml \
-      perm-cert/estimation/perm.yaml perm-cert/estimation/perm_national.yaml perm-cert/estimation/cert.yaml
+      perm/estimation/config.yaml perm/estimation/national.yaml cert/estimation/config.yaml
 ipsim shared/summary.yaml                     # all metrics in one table
 ipsim shared/report.yaml                      # truth vs every estimate and CI, audit years 1-25 (by_scenario.csv, by_audit_year)
 python -m pytest -q shared/tests              # tests
@@ -79,7 +81,7 @@ Add `--set reps=20 sim_reps=3 sim_iterations=100` (20 audit years, 3 of them run
 
 ## Results
 
-Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee, beneficiary or claim first (EIPM and PERM have overpayments only). Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200, CERT × 200). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm-cert/README.md#perm-results-25-audit-years), [EIPM](eipm/README.md#results-25-audit-years), [CERT](perm-cert/README.md#cert-results-25-audit-years)).
+Each row gives the true gross improper payment and, over the 25 audit years, the median point estimate and the median upper and lower bounds of the 95% interval. Gross = overpayments + underpayments, netted within each enrollee, beneficiary or claim first (EIPM and PERM have overpayments only). Dollars are national program dollars: each program's population is scaled by its own factor (Part C × 100, Part D × 500, EIPM × 100, PERM × 200, CERT × 200). Overpayments, underpayments, net, and how often each interval contains the truth are in each program's README ([Part C](part-c-ipm/README.md#results-25-audit-years), [Part D](part-d-ipm/README.md#results-25-audit-years), [PERM](perm/README.md#results-25-audit-years), [EIPM](eipm/README.md#results-25-audit-years), [CERT](cert/README.md#results-25-audit-years)).
 
 **Gross improper payments (national dollars)**
 
@@ -157,5 +159,5 @@ The tables come from [`shared/results/report/by_scenario.csv`](shared/results/re
 1. **SQL does the work.** Generation, errors, the Part D benefit, calibration, sampling, the analytic estimators and scoring are DuckDB SQL. Python runs the files in order and runs the bootstrap simulation loop, which reruns each payment function 1,000 times per audit year (too slow in SQL).
 2. **Errors are stated probabilities.** Calibration to a public figure is one closed-form multiplier, logged in `truth.json`.
 3. **Every dollar is traceable.** Unit-level detail (HCCs, PDEs, payments) is exported.
-4. **Reproducible to the byte.** Random draws are hashes of `(seed, stream, key)` in SQL and seeded PCG64 streams in the bootstrap simulation, money is `DECIMAL`, and floating-point sums run in a fixed order. Reruns give identical files at any thread count; `manifest.json` records SHA-256 hashes.
+4. **Reproducible to the byte within one pinned environment.** Random draws are hashes of `(seed, stream, key)` in SQL and seeded PCG64 streams in the bootstrap simulation, money is `DECIMAL`, and floating-point sums run in a fixed order. Reruns give identical files at any thread count; `manifest.json` records SHA-256 hashes and the DuckDB, numpy, scipy, numba and BLAS versions, and `requirements-lock.txt` pins the versions used for the published results.
 5. **Checked independently.** The SQL estimators are tested against a separate numpy implementation (`shared/tests/test_estimators.py`), and each bootstrap simulation payment function is tested to reproduce the SQL result to the cent for every unit (`shared/tests/test_simulation.py`).

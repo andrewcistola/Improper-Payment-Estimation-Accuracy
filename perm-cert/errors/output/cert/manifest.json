@@ -1,9 +1,0 @@
-{
-  "national": {
-    "checks.json": "ace88e09a654017d83eaa36ce731aa48946e08e62abbecd0aa65cf3ec41398d4",
-    "config.yaml": "150910f14678b9203b9d185a66db75b8f891e9a352ff0f1879c5876d369c5707",
-    "design.yaml": "1bf3fa9c7ccca5b77b59f7cb3d057e2d24afa276773dc8336606872038e5f4b8",
-    "population.parquet": "ecf7488c1bdcfbad299f087e941128bf53afc4cd45e3a9e2cf91d5fecaf4a664",
-    "truth.json": "acc4c15e1befc081b6ae2f0aa680736ceef73983ec122f08eb49ff1ba724de06"
-  }
-}

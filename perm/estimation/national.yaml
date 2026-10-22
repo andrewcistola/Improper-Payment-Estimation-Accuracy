@@ -1,0 +1,17 @@
+# PERM - national: pool the 9 states' estimates (run after config.yaml).
+# Output: results/national/ (domain = national|component)
+program: perm_national
+seed: 20261016
+output_dir: results
+steps:
+  - sql: perm/estimation/sql/95_national.sql
+exports:
+  - {table: estimates, order_by: "domain, method, interval, rep"}
+json:
+  - {table: metrics, order_by: "domain, method, interval", file: metrics.json}
+  - {table: frame_totals, order_by: domain, file: truth.json}
+defaults:
+  alpha: 0.05
+  perm_results_dir: perm/estimation/results   # the state results to pool (relative to the repo, or absolute)
+scenarios:
+  - name: national

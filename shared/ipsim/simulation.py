@@ -23,9 +23,12 @@ is the only audit the estimator gets. For each audit and each of sim_iterations 
      and the improper payment rate for each domain.
   The estimate is the mean of the iteration rates; the interval is their
   alpha/2 and 1 - alpha/2 quantiles (linear interpolation, numpy default).
-  The audit itself is never resampled, so the interval reflects only the
-  randomness of the assignment. (Part D also fixes a beneficiary sample
-  per audit year; see part-d-ipm/estimation/simulation.py.)
+  The audit itself is never resampled. With sim_rates = fixed (the plug-in
+  version) the interval reflects only the randomness of the assignment;
+  with sim_rates = parametric the error and partial counts are redrawn from
+  their binomial sampling distributions before each iteration (a parametric
+  bootstrap of the rates). Part D's kernel uses only the 5,000-PDE audit;
+  the 990-beneficiary audit serves the ratio and regression estimators.
 
 Randomness: numpy PCG64 seeded from SeedSequence([scenario seed, rep]),
 so every run reproduces exactly.

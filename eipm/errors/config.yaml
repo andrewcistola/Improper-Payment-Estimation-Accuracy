@@ -18,6 +18,11 @@ defaults:
   w_pop: 100.0
   target_rate: 0.0089          # FY 2025 EIPM gross rate (0.89%, $657.46M)
   technical_share: 0.48        # FY 2025: technically improper 0.43 of 0.89 points; the rest monetary
+  size_beta: 0.0             # technical and monetary error probability x (APTC / mean APTC)^size_beta, capped
+  #                            # so an application's total error probability <= 0.95; p_t and p_m recalibrated
+  #                            # with the per-application probabilities so the targets still hold (02_apply_errors).
+  #                            # Default 0 (errors independent of APTC; the committed population). Not listed as a
+  #                            # the base population (size_beta = 0) is byte-identical to the published one; set with --set size_beta=0.5.
   fpl_base: 15060.0            # 2024 HHS poverty guideline (used for PY 2025)
   fpl_per_person: 5380.0
   benchmark_base: 330.0        # monthly SLCSP at age 21 (illustrative)

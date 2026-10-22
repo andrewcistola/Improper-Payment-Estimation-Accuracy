@@ -1,0 +1,49 @@
+program: cert
+scenario: national
+master_seed: 20261016
+scenario_seed: 101312299369566997
+variables:
+  w_pop: 200.0
+  claim_types:
+  - claim_type: ipps
+    code: 0
+    n_claims: 40000
+    sigma: 0.7
+    paid: 118.5e9
+    gross: 3.7e9
+    over: 3.3e9
+  - claim_type: part_a_other
+    code: 1
+    n_claims: 900000
+    sigma: 1.4
+    paid: 197.9e9
+    gross: 13.2e9
+    over: 13.0e9
+  - claim_type: part_b
+    code: 2
+    n_claims: 4000000
+    sigma: 1.2
+    paid: 114.1e9
+    gross: 9.6e9
+    over: 9.3e9
+  - claim_type: dmepos
+    code: 3
+    n_claims: 400000
+    sigma: 1.3
+    paid: 9.4e9
+    gross: 2.3e9
+    over: 2.29e9
+  partial_over_share: 0.08
+  taint_over:
+  - 0.05
+  - 0.6
+  taint_under:
+  - 0.05
+  - 0.5
+  size_beta: 0.0
+  scenario: national
+steps:
+- sql: cert/errors/sql/01_population.sql
+- sql: cert/errors/sql/02_apply_errors.sql
+- sql: cert/errors/sql/03_truth.sql
+- sql: cert/errors/sql/04_checks.sql

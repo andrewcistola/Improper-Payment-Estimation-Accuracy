@@ -28,6 +28,8 @@ defaults:
   error_rate: 0.025        # share of non-LTC claims in error (lowest cost decile and other)
   ltc_error_rate: 0.10     # share of LTC claims in error
   full_error_share: 0.90   # 90% of errors are full (100% of GDC); the rest partial, uniform on [-1, 1)
+  size_beta: 0.0           # error incidence vs claim size: activation prob = rate x (gdc / mean gdc in the PDE's LTC or non-LTC group)^size_beta, capped at 0.95.
+                           # 0.0 (reported): independent of GDC within LTC / non-LTC. Sensitivity: --set size_beta=0.5 (rates rise with GDC; the stated rates hold for a mean-sized claim)
   payment_target: 105560000000.0   # FY 2025 Part D payments ($105.56B)
   target_over: 3700000000.0        # FY 2025 overpayments ($3.70B): reported for comparison, not a target
   target_under: 520000000.0        # FY 2025 underpayments ($0.52B): reported for comparison, not a target

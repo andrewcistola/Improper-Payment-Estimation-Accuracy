@@ -80,6 +80,26 @@ def connect(threads: int | None = None, memory_limit: str | None = None) -> duck
     return con
 
 
+def _package_versions() -> dict:
+    """Versions of the packages whose numerics or random streams shape the outputs
+    (recorded in every manifest; a rerun is byte-identical within one pinned set)."""
+    out = {}
+    for name in ("numpy", "scipy", "numba", "pyarrow", "pyyaml"):
+        try:
+            from importlib import metadata
+            out[name] = metadata.version(name)
+        except Exception:  # pragma: no cover
+            out[name] = None
+    try:
+        import numpy as _np
+        cfg = _np.show_config(mode="dicts")
+        blas = cfg.get("Build Dependencies", {}).get("blas", {})
+        out["blas"] = f"{blas.get('name')} {blas.get('version')}".strip()
+    except Exception:  # pragma: no cover
+        out["blas"] = None
+    return out
+
+
 def _json_value(v):
     if isinstance(v, float) or v is None or isinstance(v, (int, str, bool)):
         return v
@@ -230,13 +250,16 @@ class Engine:
         man = {"program": self.program, "scenario": name,
                "config_file": str(self.config_path.relative_to(ROOT)),
                "config_sha256": sha256_file(self.config_path),
-               "duckdb": duckdb.__version__, "python": platform.python_version(), "files": entries}
+               "duckdb": duckdb.__version__, "python": platform.python_version(),
+               "packages": _package_versions(), "files": entries}
         (outdir / "manifest.json").write_text(json.dumps(man, indent=2, sort_keys=True) + "\n")
 
     def _program_manifest(self):
         out = {}
         for m in sorted(self.output_dir.glob("*/manifest.json")):
             d = json.loads(m.read_text())
+            if "files" not in d:      # a program-level manifest of a nested run, not a scenario
+                continue
             out[d["scenario"]] = {k: e["sha256"] for k, e in d["files"].items()}
         (self.output_dir / "manifest.json").write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
 
@@ -251,7 +274,8 @@ def main(argv=None):
     ap.add_argument("--timing", action="store_true", help="print the run time of each SQL step")
     ap.add_argument("--memory-limit", help="DuckDB memory limit, e.g. 2GB (when running configs in parallel)")
     ap.add_argument("--set", nargs="*", default=[], metavar="VAR=VALUE",
-                    help="override a default variable for this run, e.g. --set reps=20")
+                    help="override a default variable for this run, e.g. --set reps=20 "
+                         "(applies to `defaults` only; a value set inside a scenario or grid wins)")
     a = ap.parse_args(argv)
     for c in a.config:
         e = Engine(c, a.out, a.threads)

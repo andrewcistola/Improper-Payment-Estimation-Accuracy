@@ -1,12 +1,4 @@
-# Pinned: DuckDB's hash() is stable within a release, and every random
-# draw is a hash of (seed, stream, key). Changing this version changes data.
-duckdb==1.5.6
-pyarrow>=17
-numpy>=2.0
-pyyaml>=6.0
-numba==0.68.0   # compiles the Part D payment-function loop for the simulation method
-scipy>=1.11     # t quantiles for the regression interval
-# manuscript tables and figures, and the tests
-pandas>=2.0
-matplotlib>=3.8
-pytest>=8.0
+# Minimum constraints are in pyproject.toml; this file only points pip at them so that
+# `pip install -r requirements.txt` and `pip install -e ".[all]"` install the same set.
+# For the exact versions used for the published results, use requirements-lock.txt.
+-e .[all]

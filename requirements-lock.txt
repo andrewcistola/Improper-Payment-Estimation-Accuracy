@@ -1,0 +1,26 @@
+# Exact package versions used for the published results (Linux x86_64, Python 3.13.16).
+# Install with: pip install -r requirements-lock.txt -e . ; see start-here/README.md step 5.
+# requirements.txt / pyproject.toml give the minimum constraints; this file pins every package so that
+# the numpy Generator streams and LAPACK routines the bootstrap simulation and regression use are the same.
+contourpy==1.4.0
+cycler==0.12.1
+duckdb==1.5.6
+fonttools==4.67.0
+iniconfig==2.3.1
+kiwisolver==1.5.1
+llvmlite==0.50.0
+matplotlib==3.11.2
+numba==0.68.0
+numpy==2.5.4
+packaging==26.3
+pandas==3.0.6
+pillow==13.0.0
+pluggy==1.7.0
+pyarrow==26.0.0
+Pygments==2.21.0
+pyparsing==3.3.3
+pytest==9.1.1
+python-dateutil==2.9.0.post0
+PyYAML==6.0.3
+scipy==1.18.1
+six==1.17.0

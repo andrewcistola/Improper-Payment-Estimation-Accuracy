@@ -1,6 +1,6 @@
 {
   "config_file": "part-d-ipm/errors/pre_ira.yaml",
-  "config_sha256": "748944babc9f97640e2169fa308e1884fa5cad31fe1853b390d38b5580ae59f4",
+  "config_sha256": "35e9d7cdd9e1b91bac429930e6ecf8a8c879933350bb2bade5df041815394179",
   "duckdb": "1.5.6",
   "files": {
     "checks.json": {
@@ -8,8 +8,8 @@
       "sha256": "5daf45f493d029b87a79d33f910d49c37cb993d2b189ba5e976d3acafb01de6e"
     },
     "config.yaml": {
-      "bytes": 1021,
-      "sha256": "8eb0be794c7b92d33240c413f5aa4dc85a8fee5fb432fea00e65ec6f1330d42c"
+      "bytes": 1038,
+      "sha256": "f3caf925571a50b0cb52376514c695e0401701cecf5f7d3dd1d7b31d5d3f9ccb"
     },
     "design.yaml": {
       "bytes": 460,
@@ -29,6 +29,14 @@
       "bytes": 822,
       "sha256": "90496ca53b6337bbee360281051c54074e007d7b1258c00d7dfcf0b605e620d7"
     }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
   },
   "program": "partd",
   "python": "3.13.16",

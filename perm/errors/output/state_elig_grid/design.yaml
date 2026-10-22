@@ -1,0 +1,13 @@
+unit: payment (FFS claim or MC capitation); eligibility case = beneficiary attached
+  to a sampled payment
+frame: state payment universe for the July-June year (quarter is recorded but not
+  a stratification variable)
+strata: stratum column = state_type_Pk, 5 equal-count payment quintiles per state
+  x payment type (10 per state)
+selection: systematic_after_sort_by_x within stratum, random start; variance estimated
+  with the stratified-SRS formula
+sample_size_per_state_year: 520
+allocation: Neyman over the 10 strata, n_h proportional to N_h x S_h (S_h = sd of
+  gross improper dollars; estimation/config.yaml)
+estimand: state improper payment rates at federal share, sum y*fmap / sum x*fmap (overall,
+  eligibility, claims)

@@ -132,7 +132,9 @@ FROM v JOIN frame_totals f USING (domain), (SELECT norm_ppf(1 - alpha / 2) AS z)
 -- rel_bias, rel_rmse, rel_width: relative to the true rate
 -- median_rel_width: median width / true rate (robust to a few huge
 --                intervals)
--- mc_se_coverage: Monte Carlo standard error of the coverage estimate
+-- mc_se_coverage: Monte Carlo standard error of the coverage estimate at the
+--                nominal level, sqrt((1 - alpha) alpha / reps) (the plug-in
+--                form is 0 whenever every interval covers)
 CREATE OR REPLACE MACRO ipm_score() AS TABLE
 SELECT e.domain, e.method, e.interval,
        count(*) AS reps,
@@ -141,8 +143,7 @@ SELECT e.domain, e.method, e.interval,
        favg(e.estimate) / any_value(f.theta) - 1 AS rel_bias,
        sqrt(favg(power(e.estimate - f.theta, 2))) / any_value(f.theta) AS rel_rmse,
        avg(coalesce(e.lower <= f.theta AND f.theta <= e.upper, false)::INT) AS coverage,
-       sqrt(avg(coalesce(e.lower <= f.theta AND f.theta <= e.upper, false)::INT)
-            * (1 - avg(coalesce(e.lower <= f.theta AND f.theta <= e.upper, false)::INT)) / count(*)) AS mc_se_coverage,
+       sqrt((1 - getvariable('alpha')::DOUBLE) * getvariable('alpha')::DOUBLE / count(*)) AS mc_se_coverage,
        avg(coalesce(e.lower > f.theta, false)::INT) AS above,
        avg(coalesce(e.upper < f.theta, false)::INT) AS below,
        count(*) FILTER (WHERE e.lower IS NULL OR e.upper IS NULL) AS n_undefined,

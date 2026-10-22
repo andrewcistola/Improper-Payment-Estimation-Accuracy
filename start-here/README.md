@@ -134,7 +134,7 @@ Open a terminal and use `cd` to move to the project folder, for example `cd ~/Do
 
 ## 5. Set up the project
 
-This step creates a private Python environment (a folder named `.venv` inside the project folder) and installs the packages the study uses into it. Nothing outside the project folder is changed. The packages and their versions are listed in `pyproject.toml` and `requirements.txt`; DuckDB is pinned to version 1.5.6 because the random draws depend on it.
+This step creates a private Python environment (a folder named `.venv` inside the project folder) and installs the packages the study uses into it. Nothing outside the project folder is changed. The packages and their versions are listed in `pyproject.toml`; DuckDB is pinned to version 1.5.6 because the random draws depend on it, and `requirements-lock.txt` records the exact version of every package used for the published results (the bootstrap simulation's random streams come from numpy, so a different numpy release can change the last digits of the simulation results even though every other number is unchanged).
 
 Type these two commands, one at a time, pressing **Enter** after each. The second command downloads about 200 MB and takes a few minutes; wait until the prompt returns.
 
@@ -199,6 +199,7 @@ This one command runs the whole study, in eight stages. Leave the terminal windo
 | 6 | Builds the manuscript's tables and figures | `manuscripts/generated/`, `manuscripts/manuscript.md` | under 1 minute |
 | 7 | Runs the automated tests of the estimators and payment functions | none | 1 minute |
 | 8 | Compares your results with the published results | none | seconds |
+| 9 (optional) | Robustness and calibration runs for Appendix D; run with `--with-robustness` | `robustness/output/`, `robustness/results/`, `manuscripts/generated/appendix_d.md` | 2 to 3 hours |
 
 Every run also writes a date-stamped log folder, `start-here/logs/run_<date>_<time>/`. It contains `environment.txt` (the date, your computer, operating system, and Python and package versions), `run_log.txt` (each stage and command with its start time and run time), and one log per command with its complete output, every line date-stamped. A one-line-per-step summary of all runs is also kept in `start-here/run_log.txt`. These logs are the evidence for a formal review; see [`qa/`](../qa/README.md).
 
@@ -221,7 +222,7 @@ To see every command each stage runs, without running anything, type `.venv/bin/
 Stage 8 prints a section headed `RESULT CHECK`, which ends with one of three conclusions:
 
 - **`REPRODUCED EXACTLY`:** every output file is byte-for-byte identical to the published files. Each file's SHA-256 fingerprint, recorded in the `manifest.json` files throughout the project, matches.
-- **`REPRODUCED`:** every number in the results tables matches the published results, but some stored files differ in their last digits. This can happen on a different operating system or library version, which may round the final digit of a floating-point number differently. No reported finding changes.
+- **`REPRODUCED`:** every number in the results tables matches the published results, but some stored files differ in their last digits. This can happen on a different operating system or library version (for example a different numpy release, whose random streams feed the bootstrap simulation), which may round the final digit of a floating-point number differently. No reported finding changes. To reproduce the files exactly, install the versions in `requirements-lock.txt`.
 - **`NOT REPRODUCED`:** some numbers differ. See [Troubleshooting](#troubleshooting).
 
 To run the check again at any time:
@@ -284,6 +285,6 @@ On Windows, run the commands listed inside `manuscripts/scripts/render.sh` one a
 
 ## How the replication works
 
-Every number in the study comes from synthetic data. Each population is built from stated probability distributions, and every random draw is a fixed function of a seed, so the same software produces the same data and the same results on every run. No real or non-public data are used, and nothing needs to be downloaded besides the project and its packages. The main [README](../README.md) describes the study and its design, and each program's folder (`part-c-ipm`, `part-d-ipm`, `perm-cert`, `eipm`) has a README describing its population, audit, and methods. The commands that `run_all.py` runs are the same commands listed in the main README's **Run** section and in [`manuscripts/README.md`](../manuscripts/README.md), so an experienced user can also run each step by hand.
+Every number in the study comes from synthetic data. Each population is built from stated probability distributions, and every random draw is a fixed function of a seed, so the same software produces the same data and the same results on every run. No real or non-public data are used, and nothing needs to be downloaded besides the project and its packages. The main [README](../README.md) describes the study and its design, and each program's folder (`part-c-ipm`, `part-d-ipm`, `perm`, `cert`, `eipm`) has a README describing its population, audit, and methods. The commands that `run_all.py` runs are the same commands listed in the main README's **Run** section and in [`manuscripts/README.md`](../manuscripts/README.md), so an experienced user can also run each step by hand.
 
 This replication package was tested by downloading the project into an empty folder, installing the packages into a new environment exactly as in step 5, and running steps 6 to 8 on Linux with Python 3.13. The run reproduced all 183 published output files byte for byte (`REPRODUCED EXACTLY`) in 3 hours 32 minutes. The scripts use only Python and are written to run unchanged on Windows and macOS.

@@ -1,0 +1,10 @@
+program: perm_national
+scenario: national
+master_seed: 20261016
+scenario_seed: 1421494141879650988
+variables:
+  alpha: 0.05
+  perm_results_dir: perm/estimation/results
+  scenario: national
+steps:
+- sql: perm/estimation/sql/95_national.sql

@@ -14,7 +14,7 @@ qa/reruns/
     │   │   └── stage1_01_part_c_ipm_errors_config.log ...   full output of each command, every line date-stamped
     │   └── run_log_all_runs.txt
     ├── results/                        the re-run's outputs, in the same folders as in the project
-    │   ├── part-c-ipm/  part-d-ipm/  eipm/  perm-cert/     errors/output*/ (truth, checks, manifests), estimation/results*/
+    │   ├── part-c-ipm/  part-d-ipm/  eipm/  perm/  cert/     errors/output*/ (truth, checks, manifests), estimation/results*/
     │   ├── shared/results/             report/by_scenario.csv (README tables), by_audit_year.*
     │   └── manuscripts/generated/      tables.md, results_long.csv, figures
     ├── verification/

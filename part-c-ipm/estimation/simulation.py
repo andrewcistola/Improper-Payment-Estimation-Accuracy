@@ -19,12 +19,25 @@ whole population, 1,000 iterations.
       instances gets f_k = 0: no extrapolation.
   HCC addition rate, one per family (10):
       a_f = audited enrollees with family f added / audited enrollees
-      without family f coded. An addition subtracts the family's mild
-      coefficient (an underpayment).
+      without family f coded AND with no overpayment finding (no deleted
+      or moved HCC, no missing documentation). An addition subtracts the
+      family's mild coefficient (an underpayment). The denominator is the
+      set an addition can be found in: errors/ records an additional HCC
+      only for an enrollee with no overpayment (04_apply_errors.sql, step
+      6), so a_f estimates P(addition | lacks f, no overpayment).
   Each iteration: every HCC instance of a non-audited enrollee fails with
-  probability f_k, and every non-audited enrollee without family f coded
-  gains it with probability a_f (independent draws). Audited enrollees
-  keep their own findings. Each enrollee's error is
+  probability f_k (independent draws). Then every non-audited enrollee
+  without family f coded AND with no failed HCC in this iteration gains
+  family f with probability a_f. Additions are never netted against
+  failures: an enrollee is either an overpayment (some HCC failed) or a
+  candidate for an underpayment, as in the population. The expected
+  simulated underpayment is therefore
+      sum_f a_f x mild_f x sum_i [lacks f] P(no failure_i) x rate_i x months_i,
+  which is the population's rule with the audit's rates in place of the
+  true ones (netting additions against failures instead understated
+  under, over and gross, since both the addition and the failure were
+  partly cancelled). Audited enrollees keep their own findings. Each
+  enrollee's error is
       y_i = round(Delta-R_i x county rate_i x months_i)   (cents)
   over = sum of positive y_i, under = sum of -y_i where negative,
   gross = over + under, net = over - under; each divided by total payments.
@@ -107,12 +120,16 @@ class Kernel:
         recip = recip[np.argsort(self.hcc[recip], kind="stable")]
         bounds = np.searchsorted(self.hcc[recip], np.arange(N_HCC + 1))
         self._recip_hcc = [recip[bounds[k]:bounds[k + 1]] for k in range(N_HCC)]
+        # audited enrollees with an overpayment finding (a failed HCC or
+        # missing documentation): an additional HCC cannot be found there
+        over_unit = np.bincount(self.row_unit[self.failed_row], minlength=self.units) > 0
+        no_over = audited_mask & ~over_unit
         self.a_rate = np.zeros(N_FAM)
         self._elig = np.zeros(N_FAM, dtype=np.int64)
         self._recip_add = []
         for f in range(N_FAM):
             lacks = ((self.fam_mask >> f) & 1) == 0
-            eligible = int((audited_mask & lacks).sum())
+            eligible = int((no_over & lacks).sum())
             added = int((audited_mask & (self.add_fam == f)).sum())
             self.a_rate[f] = added / eligible if eligible else 0.0
             self._elig[f] = eligible
@@ -134,9 +151,11 @@ class Kernel:
         rows = np.concatenate(rows) if rows else np.empty(0, dtype=np.int64)
         losses = np.concatenate(losses) if losses else np.empty(0)
         dr = np.bincount(self.row_unit[rows], weights=losses, minlength=self.units)   # thousandths
+        failed_unit = dr != 0
         for f in range(N_FAM):
             if a_rate[f] > 0:
                 gain = self._recip_add[f][bernoulli_positions(len(self._recip_add[f]), a_rate[f], rng)]
+                gain = gain[~failed_unit[gain]]       # additions only where no HCC failed (population rule)
                 dr[gain] -= self.mild[f]
         y = round_half_away(dr * (self.rate * self.months) / 1000.0)                 # cents
         y = np.where(self._audited, self.y_cents, y)
