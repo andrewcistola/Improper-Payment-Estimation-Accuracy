@@ -4,9 +4,11 @@ Reads estimates.parquet and truth.json from
     <program>/estimation/results/...          the reported run (25 audit years)
     robustness/results/<program>/calibration  100 audit years, base population
     robustness/results/<program>/beta_*       25 audit years, size-dependent error probability
+    robustness/results/<program>/*_k10        the same runs with sim_kind_deciles = 10 (donor-kind
+                                              post-stratification of the simulation; Part C has none)
 and writes
-    robustness/results/summary_calibration.csv, summary_beta.csv
-    manuscripts/generated/appendix_d.md       (Tables D1-D3, assembled by manuscripts/scripts/assemble.py)
+    robustness/results/summary_calibration.csv, summary_beta.csv, summary_k10.csv
+    manuscripts/generated/appendix_d.md       (Tables D1-D6, assembled by manuscripts/scripts/assemble.py)
 
 For each program, run and method, on the national gross rate:
     true rate, mean estimate, mean absolute error (% of truth), empirical SD of the
@@ -41,10 +43,22 @@ METHOD_LABEL = {"expansion": "Expansion", "ratio": "Ratio", "regression": "Regre
 ORDER = list(METHOD_LABEL)
 
 
+K10 = "_k10"                                   # runs with sim_kind_deciles = 10 (Tables D4-D6)
+K10_ORDER = ["base" + K10, "beta_p0.5" + K10, "beta_m0.5" + K10]
+
+
 def result_dir(prog_key, base_dir, run):
     if run == "base":
         return ROOT / base_dir
     return RES / prog_key / run / Path(base_dir).name   # <run>/base or <run>/national
+
+
+def is_beta(run):
+    return run.startswith("beta") and not run.endswith(K10)
+
+
+def is_k10(run):
+    return run.endswith(K10)
 
 
 def summarize(label, folder, domain, run):
@@ -93,7 +107,10 @@ def table(df, title, note):
 def main():
     rows = []
     for label, base_dir, key, domain in PROGRAMS:
-        runs = ["base", "calibration"] + (sorted(p.name for p in (RES / key).glob("beta_*")) if (RES / key).exists() else [])
+        runs = ["base", "calibration"]
+        if (RES / key).exists():
+            runs += sorted(p.name for p in (RES / key).glob("beta_*") if not is_k10(p.name))
+            runs += [r for r in K10_ORDER if (RES / key / r).exists()]
         for run in runs:
             r = summarize(label, result_dir(key, base_dir, run), domain, run)
             if r:
@@ -103,7 +120,9 @@ def main():
     df = pd.DataFrame(rows)
     RES.mkdir(parents=True, exist_ok=True)
     df[df.run.isin(["base", "calibration"])].to_csv(RES / "summary_calibration.csv", index=False)
-    df[df.run.str.startswith("beta")].to_csv(RES / "summary_beta.csv", index=False)
+    df[df.run.map(is_beta)].to_csv(RES / "summary_beta.csv", index=False)
+    if df.run.map(is_k10).any():
+        df[df.run.map(is_k10)].to_csv(RES / "summary_k10.csv", index=False)
 
     parts = []
     cal = df[df.run == "calibration"]
@@ -113,13 +132,30 @@ def main():
                            "Half-width ÷ 1.96·SD near 1 means the interval matches the estimator's own sampling variability; "
                            "below 1, the interval is too narrow. Monte Carlo SE of coverage at 95% with 100 audit years: 2.2 points. "
                            "Bootstrap simulation run at 500 iterations per audit year."))
-    for i, b in enumerate(sorted(df.run[df.run.str.startswith("beta")].unique(), reverse=True)):   # +0.5 first (Table D2), then -0.5 (D3)
+    for i, b in enumerate(sorted(df.run[df.run.map(is_beta)].unique(), reverse=True)):   # +0.5 first (Table D2), then -0.5 (D3)
         val = b.replace("beta_", "").replace("p", "+").replace("m", "-")
         sub = df[df.run == b]
         parts.append(table(sub, f"Table D{i + 2}. Size-dependent error probability, size_beta = {val} (25 audit years, gross rate)",
                            f"Each unit's error probability is multiplied by (payment / stratum mean payment)^{val}, capped at 0.95, "
                            "before calibration to the same public targets; designs, audit sizes and methods are unchanged. "
                            "Bootstrap simulation run at 500 iterations per audit year."))
+    k10_note = ("Donor-kind post-stratification of the bootstrap simulation (`sim_kind_deciles = 10`): each "
+                "non-audited unit receives findings only from audited units of its own design stratum AND its own "
+                "payment decile within that stratum (10 equal-count quantiles of the payment variable, computed on "
+                "the population; Part D: submitted gross drug cost per PDE, PERM: the payment, EIPM: annual APTC, "
+                "CERT: amount paid), so that error incidence can vary with payment size within a stratum. The audit "
+                "design, strata, allocation and the analytic estimators are unchanged (their rows equal those of "
+                "the corresponding table above up to Monte Carlo seeding); Part C is omitted because its HCC donor "
+                "kinds already carry this structure. A kind with no audited unit borrows its parent stratum's pooled counts, "
+                "partial sizes and parametric redraw; a kind with audited units but no failure assigns none, as before. "
+                "Bootstrap simulation run at 500 iterations per audit year.")
+    for i, run in enumerate(r for r in K10_ORDER if r in set(df.run)):   # D4 base, D5 +0.5, D6 -0.5
+        sub = df[df.run == run]
+        pop = run[: -len(K10)]
+        what = ("base populations" if pop == "base"
+                else f"size_beta = {pop.replace('beta_', '').replace('p', '+').replace('m', '-')} populations")
+        parts.append(table(sub, f"Table D{i + 4}. Simulation donor kinds post-stratified by payment decile, "
+                                f"sim_kind_deciles = 10, {what} (25 audit years, gross rate)", k10_note))
     GEN.mkdir(parents=True, exist_ok=True)
     (GEN / "appendix_d.md").write_text("\n\n".join(parts) + "\n")
     print(f"wrote {GEN / 'appendix_d.md'} ({len(parts)} tables) and {RES}/summary_*.csv")

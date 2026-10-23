@@ -11,8 +11,10 @@ Every error is an overpayment. Float arithmetic follows the SQL;
 shared/tests/test_simulation.py checks that each application's own finding
 reproduces errors/ y to the cent.
 
-Bootstrap simulation, from the audit year's audit, per stratum (APTC
-quintile), with n audited applications, t of them technical and g monetary
+Bootstrap simulation, from the audit year's audit, per donor kind (the
+design stratum, APTC quintile; with sim_kind_deciles = K > 0, stratum x K
+APTC quantiles within the stratum -- see sql/40_simulation_inputs.sql),
+with n audited applications, t of them technical and g monetary
 findings (f = t + g in error):
   a non-audited application is technical (whole APTC) with probability
   p_t = t/n; an application that CAN have a monetary finding is monetary
@@ -37,6 +39,11 @@ findings (f = t + g in error):
       applicable percentage is 0) draws another ratio, up to MAX_REDRAW
       times; what is left after that (practically none) stays y = 0.
   Audited applications keep their own findings.
+  A kind with NO audited application (possible only with sim_kind_deciles > 0)
+  borrows its parent design stratum's pooled audit: p, q, the ratio list
+  and the parametric redraw all come from the stratum's audited applications
+  (stratum = kind // K). A kind with audited applications but no failure stays
+  at zero, as before.
   sim_rates: fixed       rates as audited
              parametric  before each iteration the counts are redrawn: the
                          error count f~ = Binomial(n, f/n), then the
@@ -51,7 +58,6 @@ import numpy as np
 
 from ipsim.simulation import bernoulli_positions, round_half_away
 
-N_STRATA = 5
 FPL_CAP = 600.0     # income is capped at 600% FPL in errors/01_population.sql
 MAX_REDRAW = 50
 
@@ -87,7 +93,11 @@ class Kernel:
         self.finding = np.asarray(u["finding"], dtype=np.int64)
         self.ratio = np.asarray(u["income_ratio"], dtype=float)
         self.true_fpl = np.asarray(u["true_fpl_pct"], dtype=float)
-        self.kind = np.asarray(u["stratum_code"], dtype=np.int64)
+        self.kind = np.asarray(u["kind"], dtype=np.int64)   # donor kind: stratum, or stratum x quantile
+        self.n_kind = int(self.kind.max()) + 1               # 5, or 5 x sim_kind_deciles
+        self.stratum = np.asarray(u["stratum_code"], dtype=np.int64)
+        self.stratum_of_kind = np.zeros(self.n_kind, dtype=np.int64)   # kind -> design stratum (identity when K = 0)
+        self.stratum_of_kind[self.kind] = self.stratum
         self.can_monetary = self.fpl < FPL_CAP     # at the cap no supported income lowers the APTC
 
     def improper_cents(self, finding, supported_fpl):
@@ -110,8 +120,10 @@ class Kernel:
         self._fpl = np.where(audited_mask & (self.finding == 1), self.true_fpl, self.fpl)
         self._n, self._n_m, self._f, self._g, self._ratios = [], [], [], [], []
         self._recip, self._recip_m = [], []
-        for h in range(N_STRATA):
+        for h in range(self.n_kind):
             a = np.flatnonzero(audited_mask & (self.kind == h))
+            if len(a) == 0:   # no audited unit of this kind: the parent stratum's pooled audit
+                a = np.flatnonzero(audited_mask & (self.stratum == self.stratum_of_kind[h]))
             fnd = self.finding[a]
             self._n.append(len(a)); self._n_m.append(int(self.can_monetary[a].sum()))
             self._f.append(int((fnd > 0).sum())); self._g.append(int((fnd == 1).sum()))
@@ -122,7 +134,7 @@ class Kernel:
 
     def iterate(self, donors, rng):
         finding, fpl = self._finding.copy(), self._fpl.copy()
-        for h in range(N_STRATA):
+        for h in range(self.n_kind):
             n, n_m, f, g = self._n[h], self._n_m[h], self._f[h], self._g[h]
             if self.parametric:   # redraw the error count first, then the monetary count out of it
                 f = int(rng.binomial(n, f / n)) if n else 0

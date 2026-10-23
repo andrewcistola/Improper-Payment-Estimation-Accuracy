@@ -13,7 +13,14 @@
 -- largest remainder, at least 2 per stratum. Finding = corrected GDC /
 -- submitted GDC.
 --   sim_units  : one row per beneficiary (unit index = position)
---   sim_rows   : one row per PDE, sorted by beneficiary then fill order
+--   sim_rows   : one row per PDE, sorted by beneficiary then fill order,
+--                with the simulation's donor kind: the claim stratum, or,
+--                with sim_kind_deciles = K > 0, stratum_code x K + the
+--                PDE's equal-count quantile (1..K) of submitted GDC within
+--                its stratum, computed on the population (ntile over
+--                sub_cents, ties broken by pde_id), minus 1 (0..3K-1).
+--                The strata, the Neyman PDE audit and the expansion /
+--                pde_expansion / pde_ratio estimators keep the 3 strata.
 --   pde_strata : N_h, S_h, n_h per stratum
 --   sim_audit_sample(rep, row_idx)
 -- Amounts are integer cents so the benefit rerun is exact.
@@ -35,11 +42,19 @@ r AS (
            p.brand, p.lis,
            CASE WHEN p.ltc THEN 0 WHEN p.gdc_submitted::DOUBLE <= cut.low THEN 1 ELSE 2 END AS stratum_code,
            (p.gdc_submitted * 100)::BIGINT AS sub_cents,
-           (p.gdc_corrected * 100)::BIGINT AS cor_cents
+           (p.gdc_corrected * 100)::BIGINT AS cor_cents,
+           coalesce(getvariable('sim_kind_deciles'), 0)::INTEGER AS kq
     FROM p JOIN sim_units u USING (bene_id), cut
+),
+k AS (   -- the simulation's donor kind (post-stratified by submitted GDC when sim_kind_deciles > 0)
+    SELECT * EXCLUDE (kq),
+           CASE WHEN kq > 0
+                THEN stratum_code * kq + ntile(greatest(kq, 1)) OVER (PARTITION BY stratum_code ORDER BY sub_cents, pde_id) - 1
+                ELSE stratum_code END AS kind
+    FROM r
 )
 SELECT row_number() OVER (ORDER BY unit_idx, seq) - 1 AS row_idx, *
-FROM r ORDER BY unit_idx, seq;
+FROM k ORDER BY unit_idx, seq;
 
 -- Neyman allocation of the PDE audit
 CREATE OR REPLACE TABLE pde_strata AS

@@ -30,6 +30,7 @@ defaults:
   sim_reps: 25     # audit years run through the bootstrap simulation (all of them)
   sim_iterations: 1000  # simulation iterations per audit year
   sim_rates: parametric # parametric (reported): counts redrawn each iteration, f~ Binomial(n, f/n) then g~ Binomial(f~, g/f) | fixed (comparison; results_fixed/)
+  sim_kind_deciles: 0  # simulation donor kinds: 0 = the design strata (reported); K > 0 = each stratum x K equal-count payment quantiles within it (population ntile), design and analytic estimators unchanged (robustness/run.py d4)
   sim_export_draws: true
   reg_predictors: [x, month, bene_n_pay, bene_paid]   # regression: basic beneficiary variables + amount paid
   reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors

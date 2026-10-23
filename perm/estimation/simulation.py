@@ -10,7 +10,10 @@ the state (FMAP is constant within a state, so the federal-share rate is
 the same).
 
 Bootstrap simulation, from the audit year's audit:
-  claims      : per stratum (payment type x payment quintile), a non-audited
+  claims      : per donor kind (the design stratum, payment type x payment
+                quintile; with sim_kind_deciles = K > 0, stratum x K payment
+                quantiles within the stratum, computed on the state's
+                population -- see sql/40_simulation_inputs.sql), a non-audited
                 payment is in error with probability p = f/n (f of n
                 audited payments in error); given an error, it is partial
                 with probability q = g/f (g audited errors with taint < 1),
@@ -22,6 +25,11 @@ Bootstrap simulation, from the audit year's audit:
                 error with probability p_e = audited beneficiaries in error /
                 audited beneficiaries.
   Audited payments and beneficiaries keep their own findings.
+  A kind with NO audited payment (possible only with sim_kind_deciles > 0)
+  borrows its parent design stratum's pooled audit: p, q, the partial list
+  and the parametric redraw all come from the stratum's audited payments
+  (stratum = kind // K). A kind with audited payments but no failure stays
+  at zero, as before.
   sim_rates: fixed       rates as audited
              parametric  before each iteration the counts are redrawn: the
                          error count f~ = Binomial(n, p), then the partial
@@ -32,8 +40,6 @@ Bootstrap simulation, from the audit year's audit:
 import numpy as np
 
 from ipsim.simulation import bernoulli_positions, round_half_away
-
-N_KIND = 10   # payment type (FFS, MC) x 5 payment quintiles
 
 
 class Kernel:
@@ -49,6 +55,10 @@ class Kernel:
         self.yc = np.asarray(u["y_claims_cents"], dtype=np.int64)
         self.taint = self.yc / self.x
         self.kind = np.asarray(u["claims_kind"], dtype=np.int64)
+        self.n_kind = int(self.kind.max()) + 1          # 10, or 10 x sim_kind_deciles
+        self.stratum = np.asarray(u["stratum_kind"], dtype=np.int64)
+        self.stratum_of_kind = np.zeros(self.n_kind, dtype=np.int64)   # kind -> design stratum (identity when K = 0)
+        self.stratum_of_kind[self.kind] = self.stratum
         bene = np.asarray(u["bene_id"])
         self.benes, self.bene_of = np.unique(bene, return_inverse=True)
         self.n_benes = len(self.benes)
@@ -73,8 +83,10 @@ class Kernel:
     def prepare(self, rep, audited_mask):
         self._yc = np.where(audited_mask, self.yc, 0)
         self._n, self._f, self._g, self._partial, self._recip = [], [], [], [], []
-        for h in range(N_KIND):
+        for h in range(self.n_kind):
             a = np.flatnonzero(audited_mask & (self.kind == h))
+            if len(a) == 0:   # no audited unit of this kind: the parent stratum's pooled audit
+                a = np.flatnonzero(audited_mask & (self.stratum == self.stratum_of_kind[h]))
             err = self.yc[a] > 0
             part = err & (self.yc[a] < self.x[a])
             self._n.append(len(a)); self._f.append(int(err.sum())); self._g.append(int(part.sum()))
@@ -88,7 +100,7 @@ class Kernel:
 
     def iterate(self, donors, rng):
         yc = self._yc.copy()
-        for h in range(N_KIND):
+        for h in range(self.n_kind):
             n, f, k = self._n[h], self._f[h], self._g[h]
             p = f / n if n else 0.0
             q = k / f if f else 0.0

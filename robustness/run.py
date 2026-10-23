@@ -17,18 +17,31 @@ Two questions the main results cannot answer on their own:
    deviation of the point estimates over 100 audit years (the ratio
    half-width / (1.96 x SD) should be close to 1).
 
-Run from the repository root (about 2 to 3 hours on a 2-core machine):
+3. Donor-kind post-stratification (d4). The bootstrap simulation of Part D,
+   PERM, EIPM and CERT is rerun with sim_kind_deciles = 10: its donor kinds
+   become each design stratum x 10 equal-count payment quantiles within the
+   stratum (computed on the population), so that a unit only receives
+   findings from audited units of about its own payment size. The audit
+   design, strata, allocation and the analytic estimators are unchanged, so
+   only the simulation rows differ from the base and beta_* runs. A kind
+   with no audited unit borrows its parent stratum's pooled rates. Run on
+   the base population and on both size_beta populations (Tables D4-D6).
+   Part C is left out: its HCC donor kinds already carry the structure.
+
+Run from the repository root (about 3 to 4 hours on a 2-core machine):
 
     python robustness/run.py                 # everything below
     python robustness/run.py --only beta     # populations + estimation at each size_beta
     python robustness/run.py --only calib    # 100-audit-year calibration run on the base populations
+    python robustness/run.py --only d4       # sim_kind_deciles = 10 on the base and beta_* populations (after beta)
     python robustness/run.py --only summary  # tables only (robustness/results/*.csv, manuscripts/generated/appendix_d.md)
-    python robustness/run.py --list
+    python robustness/run.py --list [--only <group>]
 
 Outputs:
     robustness/output/<program>/beta_<b>/...          rebuilt populations (parquet files are not committed; manifests are)
     robustness/results/<program>/beta_<b>/...         estimates for every method at that size_beta
     robustness/results/<program>/calibration/...      100 audit years, parametric rates, base population
+    robustness/results/<program>/<run>_k10/...        base_k10, beta_<b>_k10: the same with sim_kind_deciles = 10
     robustness/results/summary_*.csv                  the tables behind Appendix D
     manuscripts/generated/appendix_d.md               Appendix D tables (assembled into the manuscript)
 """
@@ -55,6 +68,8 @@ PROGRAM_SETS = {
 }
 CALIB = ["reps=100", "sim_reps=100", "sim_iterations=500"]
 ROBUST_SIM = ["sim_iterations=500"]
+D4_PROGRAMS = ("part-d-ipm", "perm", "eipm", "cert")   # donor-kind post-stratification; Part C excluded
+D4_SIM = ["sim_kind_deciles=10", *ROBUST_SIM]
 
 # program key, errors config(s) with their output scenario folder, estimation config, perm pooling
 PROGRAMS = [
@@ -93,6 +108,25 @@ def beta_commands():
     return cmds
 
 
+def d4_commands():
+    """sim_kind_deciles = 10 on the base population and on each size_beta population
+    (the beta populations must exist: run `beta` first)."""
+    cmds = []
+    for prog, errs, est, pool in PROGRAMS:
+        if prog not in D4_PROGRAMS:
+            continue
+        mem = ["--memory-limit", "3GB"] if prog == "cert" else []
+        scen = errs[0][1]
+        runs = [("base", f"{prog}/errors/output/{scen}")] + \
+               [(beta_tag(b), f"robustness/output/{prog}/{beta_tag(b)}/{scen}") for b in BETAS]
+        for run, pop_dir in runs:
+            out_res = f"robustness/results/{prog}/{run}_k10"
+            cmds.append(ipsim(est, "--out", out_res, *mem, "--set", f"population_dir={pop_dir}", *D4_SIM))
+            if pool:
+                cmds.append(ipsim(pool, "--out", out_res, "--set", f"perm_results_dir={out_res}"))
+    return cmds
+
+
 def calib_commands():
     cmds = []
     for prog, errs, est, pool in PROGRAMS:
@@ -110,11 +144,11 @@ def summary_commands():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--only", choices=["beta", "calib", "summary"])
+    ap.add_argument("--only", choices=["beta", "d4", "calib", "summary"])
     ap.add_argument("--list", action="store_true")
     a = ap.parse_args()
-    groups = {"beta": beta_commands, "calib": calib_commands, "summary": summary_commands}
-    keys = [a.only] if a.only else ["beta", "calib", "summary"]
+    groups = {"beta": beta_commands, "d4": d4_commands, "calib": calib_commands, "summary": summary_commands}
+    keys = [a.only] if a.only else ["beta", "d4", "calib", "summary"]
     for k in keys:
         for cmd in groups[k]():
             print(" ".join(cmd[1:]) if cmd[0] == PY else " ".join(cmd))

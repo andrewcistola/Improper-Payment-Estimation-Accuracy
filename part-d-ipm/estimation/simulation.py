@@ -63,9 +63,13 @@ Design-based PDE-level estimators (run_pde_estimators, methods
   netted payment error).
 
 Bootstrap simulation (Kernel): every non-audited PDE in the full
-  population takes a finding from the audited PDEs of its own stratum;
-  audited PDEs keep their own. Drawing a random audited donor is done in
-  two equivalent steps per stratum: an error with probability p = f/n
+  population takes a finding from the audited PDEs of its own donor kind
+  (the claim stratum; with sim_kind_deciles = K > 0, the stratum x K
+  quantiles of submitted GDC within the stratum, computed on the
+  population -- sql/40_simulation_inputs.sql; the strata and the other
+  estimators are unchanged); audited PDEs keep their own. Drawing a random
+  audited donor is done in two equivalent steps per kind: an error with
+  probability p = f/n
   (f of n audited PDEs in error), and, given an error, a partial one
   (correct GDC > 0) with probability q = g/f, its corrected/submitted
   ratio drawn from the audited partial errors; full errors set GDC to 0.
@@ -74,6 +78,11 @@ Bootstrap simulation (Kernel): every non-audited PDE in the full
                          redrawn: f~ = Binomial(n, p), then
                          g~ = Binomial(f~, q); p~ = f~/n, q~ = g~/f~
                          (q~ = 0 when f~ = 0)
+  A kind with NO audited PDE (possible only with sim_kind_deciles > 0)
+  borrows its parent design stratum's pooled audit: p, q, the partial list
+  and the parametric redraw all come from the stratum's audited PDEs
+  (stratum = kind // K). A kind with audited PDEs but no failure stays
+  at zero, as before.
   The benefit is rerun for all beneficiaries; 1,000 iterations; mean and
   2.5th-97.5th percentiles.
 """
@@ -172,7 +181,7 @@ def medicare_cents(g, row_unit, lis, brand, n_units, D, I, coins, reins_brand, r
 
 def load_rows(con):
     u = con.execute("SELECT unit_idx, x_cents, y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()
-    r = con.execute("SELECT unit_idx, brand, lis, stratum_code, sub_cents, cor_cents FROM sim_rows "
+    r = con.execute("SELECT unit_idx, brand, lis, stratum_code, kind, sub_cents, cor_cents FROM sim_rows "
                     "ORDER BY row_idx").fetchnumpy()
     return u, r
 
@@ -197,7 +206,11 @@ class Kernel:
         self.row_unit = np.asarray(r["unit_idx"], dtype=np.int64)
         self.brand = np.asarray(r["brand"], dtype=np.bool_)
         self.lis = np.asarray(r["lis"], dtype=np.bool_)
-        self.stratum = np.asarray(r["stratum_code"], dtype=np.int64)
+        self.stratum = np.asarray(r["stratum_code"], dtype=np.int64)   # claim strata (audit design, 3)
+        self.kind = np.asarray(r["kind"], dtype=np.int64)              # simulation donor kind (3, or 3 x sim_kind_deciles)
+        self.n_kind = int(self.kind.max()) + 1
+        self.stratum_of_kind = np.zeros(self.n_kind, dtype=np.int64)   # kind -> claim stratum (identity when K = 0)
+        self.stratum_of_kind[self.kind] = self.stratum
         self.sub = np.asarray(r["sub_cents"], dtype=np.int64)
         self.cor = np.asarray(r["cor_cents"], dtype=np.int64)
         self.payment, self.p = benefit_params(v)        # post-IRA (default) or pre-IRA payment function
@@ -214,20 +227,22 @@ class Kernel:
         return np.asarray(s["row_idx"], dtype=np.int64)
 
     def prepare(self, rep, audited_mask):
-        """The audit year's counts and partial-error lists, per stratum."""
+        """The audit year's counts and partial-error lists, per donor kind."""
         self._audited = audited_mask
         self._n, self._f, self._g, self._partial, self._recip = [], [], [], [], []
-        for h in range(N_STRATA):
-            a = np.flatnonzero(audited_mask & (self.stratum == h))
+        for h in range(self.n_kind):
+            a = np.flatnonzero(audited_mask & (self.kind == h))
+            if len(a) == 0:   # no audited PDE of this kind: the parent stratum's pooled audit
+                a = np.flatnonzero(audited_mask & (self.stratum == self.stratum_of_kind[h]))
             err = self.cor[a] != self.sub[a]
             part = err & (self.cor[a] != 0)
             self._n.append(len(a)); self._f.append(int(err.sum())); self._g.append(int(part.sum()))
             self._partial.append(self.cor[a][part] / self.sub[a][part])
-            self._recip.append(np.flatnonzero(~audited_mask & (self.stratum == h)))
+            self._recip.append(np.flatnonzero(~audited_mask & (self.kind == h)))
 
     def iterate(self, donors, rng):
         g = np.where(self._audited, self.cor, self.sub)          # audited keep their own findings
-        for h in range(N_STRATA):
+        for h in range(self.n_kind):
             n, f, k = self._n[h], self._f[h], self._g[h]
             p = f / n if n else 0.0
             q = k / f if f else 0.0

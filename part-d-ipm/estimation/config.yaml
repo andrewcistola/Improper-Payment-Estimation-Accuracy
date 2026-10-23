@@ -31,6 +31,7 @@ defaults:
   sim_iterations: 1000  # simulation iterations per audit year
   sim_audit_size: 5000  # PDE audit per audit year: claim strata, Neyman allocation
   sim_rates: parametric # parametric (reported): counts redrawn each iteration, f~ = Binomial(n, f/n), g~ = Binomial(f~, g/f); p = f~/n, q = g~/f~ | fixed (comparison; results_fixed/)
+  sim_kind_deciles: 0  # simulation donor kinds: 0 = the design strata (reported); K > 0 = each stratum x K equal-count submitted-GDC quantiles within it (population ntile), design and analytic estimators unchanged (robustness/run.py d4)
   reg_predictors: [x, gdc_sub, n_pde, catastrophic]   # regression: basic beneficiary variables + amount paid
   reg_min_errors: 10   # regression: intercept-only in a model stratum with fewer audited errors
   alpha: 0.05      # two-sided 95% intervals (PIIA reporting)

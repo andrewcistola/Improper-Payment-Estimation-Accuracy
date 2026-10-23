@@ -414,3 +414,123 @@ def test_part_d_parametric_redraw_counts():
     y_true_gross = np.abs(k.y_true).sum() / k.X
     rates = [k.iterate(None, rng)["national|gross"] for _ in range(40)]
     assert all(np.isfinite(rates)) and 0 < np.mean(rates) < 3 * y_true_gross
+
+
+# --- donor-kind post-stratification (sim_kind_deciles) ---
+
+def kinded_kernel(prog, K):
+    """Kernel with sim_kind_deciles = K, its donor kinds, the design strata
+    they refine, and the exact y (cents) of every audit unit."""
+    if prog == "cert":
+        con, k = cert_kernel()                                    # the kernel reads the variable from sim_units
+        con.execute("SET VARIABLE sim_kind_deciles = ?", [K])
+        con.execute((ROOT / "cert/estimation/sql/40_simulation_inputs.sql").read_text())
+        k = load_kernel(ROOT / "cert/estimation/simulation.py").Kernel(con, {})
+        strat = con.execute("SELECT type_code * 5 + right(stratum, 1)::INTEGER - 1 FROM read_parquet(?) ORDER BY unit_id",
+                            [str(ROOT / "cert/errors/output/national/population.parquet")]).fetchnumpy()
+        return con, k, k.kind, np.asarray(list(strat.values())[0]), k.y, k.x, 20
+    if prog == "perm":
+        con = setup("perm/errors/output/state_elig_grid", "perm/estimation/sql/40_simulation_inputs.sql",
+                    {"state_id": 5, "sim_kind_deciles": K})
+        k = load_kernel(ROOT / "perm/estimation/simulation.py").Kernel(con, {"state_id": 5})
+        strat = con.execute("SELECT (CASE payment_type WHEN 'FFS' THEN 0 ELSE 1 END) * 5 + right(stratum, 1)::INTEGER - 1 "
+                            "FROM read_parquet(?) WHERE state_id = 5 ORDER BY unit_id",
+                            [str(ROOT / "perm/errors/output/state_elig_grid/population.parquet")]).fetchnumpy()
+        return con, k, k.kind, np.asarray(list(strat.values())[0]), k.yc, k.x, 10
+    if prog == "eipm":
+        cfg = yaml.safe_load((ROOT / "eipm/errors/config.yaml").read_text())["defaults"]
+        con = setup("eipm/errors/output/base", "eipm/estimation/sql/40_simulation_inputs.sql", {"sim_kind_deciles": K})
+        k = load_kernel(ROOT / "eipm/estimation/simulation.py").Kernel(con, cfg)
+        strat = con.execute("SELECT stratum_code FROM sim_units ORDER BY unit_idx").fetchnumpy()["stratum_code"]
+        y = con.execute("SELECT y_cents FROM sim_units ORDER BY unit_idx").fetchnumpy()["y_cents"]
+        return con, k, k.kind, np.asarray(strat), y, k.x, 5
+    con, mod, v = partd_kernel({"sim_kind_deciles": K})
+    k = mod.Kernel(con, v)
+    return con, k, k.kind, k.stratum, k.sub - k.cor, k.sub, 3
+
+
+@pytest.mark.parametrize("prog", ["cert", "perm", "eipm", "part-d-ipm"])
+def test_kind_deciles_census_is_exact(prog):
+    """sim_kind_deciles = 10: the donor kinds are the design strata x 10
+    equal-count payment quantiles within each stratum (kind // 10 = stratum,
+    quantiles ordered by payment, population counts within 1 of each other),
+    the design strata are untouched, and with every unit audited each keeps
+    its own finding, so every iteration gives the exact rates (both rate
+    versions)."""
+    con, k, kind, strat, y, x, n_strata = kinded_kernel(prog, 10)
+    assert k.n_kind == n_strata * 10 and kind.min() == 0 and kind.max() == n_strata * 10 - 1
+    assert np.array_equal(kind // 10, strat)
+    for h in range(n_strata):                                        # equal-count quantiles of x within the stratum
+        m = strat == h
+        counts = np.bincount(kind[m] - h * 10, minlength=10)
+        assert counts.max() - counts.min() <= 1 and counts.min() > 0
+        q = (kind[m] - h * 10)[np.argsort(x[m], kind="stable")]       # the quantile is non-decreasing in x
+        assert (np.diff(q) >= 0).all(), (prog, h)
+    if prog == "cert":
+        exact = {"national|over": float(y[y > 0].sum()) / k.X, "national|under": float(-y[y < 0].sum()) / k.X}
+        domain = "national|over"
+    elif prog == "perm":
+        exact = {"5|claims": float(y.sum()) / k.X}; domain = "5|claims"
+    elif prog == "eipm":
+        exact = {"national|gross": float(y.sum()) / k.X}; domain = "national|gross"
+    else:
+        yt = k.y_true.astype(float)
+        exact = {"national|gross": float(np.abs(yt).sum()) / k.X}; domain = "national|gross"
+    for parametric in (False, True):
+        k.parametric = parametric
+        k.prepare(1, np.ones(k.units, bool))
+        got = k.iterate(None, np.random.default_rng(1))
+        for d, t in exact.items():
+            assert got[d] == t, (prog, d, got[d], t)
+    assert exact[domain] > 0
+
+
+def test_kind_deciles_zero_is_the_stratum():
+    """sim_kind_deciles = 0 (and unset): the donor kind is the design stratum."""
+    con = setup("eipm/errors/output/base", "eipm/estimation/sql/40_simulation_inputs.sql", {"sim_kind_deciles": 0})
+    u = con.execute("SELECT stratum_code, kind FROM sim_units").fetchnumpy()
+    assert np.array_equal(u["kind"], u["stratum_code"])
+    con = setup("eipm/errors/output/base", "eipm/estimation/sql/40_simulation_inputs.sql")
+    u = con.execute("SELECT stratum_code, kind FROM sim_units").fetchnumpy()
+    assert np.array_equal(u["kind"], u["stratum_code"])
+
+
+@pytest.mark.parametrize("prog", ["cert", "perm", "eipm", "part-d-ipm"])
+def test_kind_deciles_empty_kind_falls_back_to_stratum(prog):
+    """sim_kind_deciles = 10 with an audit that leaves the top payment decile
+    of every stratum unaudited: each empty kind takes its parent stratum's
+    pooled counts (n, f, g) and partial list, so its recipients are not
+    assigned p = 0 while the stratum has failures; kinds with audited units
+    keep their own counts (and stay at zero when they have no failure)."""
+    con, k, kind, strat, y, x, n_strata = kinded_kernel(prog, 10)
+    rng = np.random.default_rng(13)
+    top = (kind % 10) == 9
+    audited = ~top & (rng.random(k.units) < 0.3)
+    k.prepare(1, audited)
+    for h in range(k.n_kind):
+        s = k.stratum_of_kind[h]
+        assert s == h // 10
+        a_h = audited & (kind == h)
+        a_s = audited & (strat == s)
+        if h % 10 == 9:                                    # empty kind: the stratum's pooled audit
+            assert a_h.sum() == 0 and k._n[h] == a_s.sum() > 0
+            if prog == "eipm":
+                assert k._f[h] == (k.finding[a_s] > 0).sum() and k._g[h] == (k.finding[a_s] == 1).sum()
+                assert k._n_m[h] == k.can_monetary[a_s].sum() and len(k._ratios[h]) == k._g[h]
+            else:
+                err = y[a_s] != 0
+                assert k._f[h] == err.sum()
+                assert len(k._partial[h]) == k._g[h]
+            if k._f[h] > 0:
+                assert k._f[h] / k._n[h] > 0                 # not p = 0
+        else:                                              # audited kind: its own counts
+            assert k._n[h] == a_h.sum()
+            if prog == "eipm":
+                assert k._f[h] == (k.finding[a_h] > 0).sum()
+            else:
+                assert k._f[h] == (y[a_h] != 0).sum()
+    assert any(k._f[h] > 0 for h in range(k.n_kind) if h % 10 == 9)   # the check is not vacuous
+    for parametric in (False, True):                        # and it runs
+        k.parametric = parametric
+        got = k.iterate(None, rng)
+        assert all(np.isfinite(v) for v in got.values())
