@@ -1,0 +1,9 @@
+{
+  "base": {
+    "allocation.json": "b1271959742ae0e63f39cf2cb13293a98ca4d7bf44b52cba8fa984a0fe9fd3e9",
+    "config.yaml": "65cb38358096e7fc72638d53624178f806a1a72d76b5b1187c9f82c5bf9e6c7b",
+    "estimates.parquet": "2954d7062d9b3348cbbaaf4cb39154be9252f643a9d3e08610bdd6f3a8625fde",
+    "metrics.json": "b3a6c1ae1bf69550759f5615dd5332011eb38d1195b5653acf4bcf0075988553",
+    "truth.json": "197ec859d8ce4429cd9eb225432822d724fd01a4da664825e454ffd70ff0d32e"
+  }
+}

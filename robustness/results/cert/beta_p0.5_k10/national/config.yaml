@@ -1,0 +1,36 @@
+program: cert_estimation
+scenario: national
+master_seed: 20261016
+scenario_seed: 762094211143775391
+variables:
+  population_dir: robustness/output/cert/beta_p0.5/national
+  claim_audit:
+  - claim_type: ipps
+    n: 8750
+  - claim_type: part_a_other
+    n: 8651
+  - claim_type: part_b
+    n: 11600
+  - claim_type: dmepos
+    n: 8650
+  reps: 25
+  sim_reps: 25
+  sim_iterations: 500
+  sim_rates: parametric
+  sim_kind_deciles: 10
+  reg_predictors:
+  - x
+  reg_min_errors: 10
+  alpha: 0.05
+  scenario: national
+steps:
+- sql: cert/estimation/sql/01_frame.sql
+- sql: cert/estimation/sql/02_sample.sql
+- sql: cert/estimation/sql/10_expansion.sql
+- sql: cert/estimation/sql/20_ratio.sql
+- sql: cert/estimation/sql/30_regression.sql
+- python: shared/ipsim/regression.py
+  run: run
+- sql: cert/estimation/sql/40_simulation_inputs.sql
+- python: cert/estimation/simulation.py
+- sql: cert/estimation/sql/90_score.sql

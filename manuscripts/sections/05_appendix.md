@@ -90,6 +90,8 @@ Values marked *illustrative* are not published by CMS. These values are set to p
 
 Results for every program, measure, method, and audit year (including overpayments, underpayments, and net in dollars) are available in `shared/results/report/by_scenario.csv` and `by_audit_year.parquet` (analytic methods and parametric rates), and in `manuscripts/generated/results_long.csv` (all methods, including fixed rates). Each program's README reports the analytic methods and the parametric-rate simulation.
 
-## Appendix D. Interval calibration and robustness to size-dependent errors
+## Appendix D. Interval calibration, robustness to size-dependent errors, and payment-decile donor kinds
+
+Tables D1–D3 are described in Sections 2.8 and 3.6–3.7. Tables D4–D6 repeat the base and size-dependent populations with the simulation's donor kinds post-stratified into ten payment quantiles within each design stratum (`sim_kind_deciles: 10`; `robustness/run.py --only d4`). Part C is omitted from D4–D6 because its donor kinds are HCCs, whose coefficients do not depend on the enrollee's payment. In Part D the top GDC decile of the largest stratum holds about 61% of the true improper dollars and its rate is estimated from about ten audited failures per audit year, so the simulation's standard deviation roughly doubles; in the 25 audit years reported here that kind drew 220 failures against 265 expected, which accounts for the −12% mean in Table D4 (over 300 audit years the same estimator averages 0.99 of the truth).
 
 {{APPENDIXD}}

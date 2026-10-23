@@ -51,19 +51,18 @@ Estimators and Audit-Finding Simulation</h1>
 <strong>Corresponding author:</strong> andrewcistola@pm.me</p>
 <p><strong>Running title:</strong> Comparative accuracy of improper
 payment estimation methods</p>
-<p><strong>Word count:</strong> about 7,400 (main text, excluding tables
-and references); abstract about 350; 5 tables, 2 figures; Appendices
+<p><strong>Word count:</strong> about 8,300 (main text, excluding tables
+and references); abstract about 330; 5 tables, 2 figures; Appendices
 A–D.</p>
 <h2 id="abstract">Abstract</h2>
 <p><strong>Background.</strong> The Centers for Medicare &amp; Medicaid
 Services (CMS) estimates improper payments in Medicare Part C, Medicare
 Part D, Medicaid (PERM), Marketplace advance premium tax credits (EIPM),
 and Medicare fee-for-service (CERT) from audited samples, each with a
-95% confidence interval. The available projection methods are the
-design-based expansion, ratio, and regression estimators and
-audit-finding simulation, which assigns audited findings across the
-population and reruns the payment rules. These methods have not been
-compared against a known truth.</p>
+95% confidence interval, using design-based expansion, ratio, and
+regression estimators or audit-finding simulation, which assigns audited
+findings across the population and reruns the payment rules. These
+methods have not been compared against a known truth.</p>
 <p><strong>Purpose.</strong> The purpose of this study is to compare the
 point and interval accuracy of available methods for estimating improper
 payments in federal health programs.</p>
@@ -75,24 +74,27 @@ regression estimators were compared with simulation that held audited
 error rates fixed (plug-in) or redrew them from their binomial sampling
 distributions (parametric bootstrap). Each population was then rebuilt
 with error probability rising, and falling, with payment size within
-strata.</p>
+strata, and the simulation was rerun with donor kinds post-stratified on
+payment decile.</p>
 <p><strong>Results.</strong> Plug-in intervals were 5–21% as wide as the
 analytic intervals and covered the true gross rate in 25% of audit
 years. Parametric-bootstrap intervals covered in 121 of 125 audit years
-and were 9–23% narrower than the ratio interval in four programs, but
-were 5–12% narrower than the estimator’s own sampling variability in
-four programs over 100 audit years. When error probability depended on
-payment size, the simulation’s estimate was biased by 2% to 148% and its
-interval covered in 0 to 24 of 25 audit years; the ratio estimator
-remained unbiased with coverage of 22 to 25.</p>
+and were 9–23% narrower than the ratio interval in four programs; the
+simulation’s standard deviation was 23–72% below the ratio estimator’s
+in PERM, CERT, and Part D. When error probability depended on payment
+size, the simulation was biased by 2% to 148% and its interval covered
+in 0 to 24 of 25 audit years, while the ratio estimator remained
+unbiased; payment-decile donor kinds removed the bias in PERM and most
+of it in CERT and Part D.</p>
 <p><strong>Conclusions.</strong> Plug-in simulation intervals are
-invalid. The parametric-bootstrap simulation restores coverage and is
-more precise in Part D, PERM, and CERT, but both rest on error incidence
-being independent of payment size within strata. This study recommends
-the design-based ratio interval as the primary PIIA interval, with the
-parametric-bootstrap simulation alongside it, and a test of the
-independence assumption on real audit data before the simulation’s
-precision is used to reduce audit sizes.</p>
+invalid. Parametric-bootstrap simulation restores coverage and is more
+precise where payment rules are nonlinear, on the assumption that error
+incidence is independent of payment size within each donor kind. This
+study recommends it for PIIA improper payment rates with that assumption
+stated and tested every cycle against the design-based ratio estimate,
+payment-decile donor kinds where the test fails, and audit-size
+reductions deferred until the test has passed and coverage has been
+confirmed at the smaller size.</p>
 <p><strong>Keywords:</strong> improper payments; bootstrap; Monte Carlo
 simulation; survey sampling; Medicare; Medicaid; payment integrity;
 confidence intervals</p>
@@ -222,10 +224,11 @@ after the five CMS measurements; (2) explain any failure of the
 simulation interval; (3) test the parametric-bootstrap alternative; (4)
 test whether the results depend on the assumption, built into the
 synthetic populations, that error probability is independent of payment
-size within strata; and (5) determine whether the most accurate method
-could support smaller audits. Recovery uses of extrapolation
-(contract-level RADV demands and provider overpayment demands) are out
-of scope.</p>
+size within strata, and whether post-stratifying the simulation on
+payment removes that dependence; and (5) determine whether the most
+accurate method could support smaller audits. Recovery uses of
+extrapolation (contract-level RADV demands and provider overpayment
+demands) are out of scope.</p>
 <h2 id="methods">2. Methods</h2>
 <h3 id="study-design">2.1 Study design</h3>
 <p>This study is a Monte Carlo evaluation against a known truth, in the
@@ -499,7 +502,14 @@ error rates are stated count rates with no dollar target, uses ±0.25
 with the count rates rescaled so that its true gross rate stays at 1.38%
 (at ±0.5 its heavy-tailed drug costs would move the gross rate to 6.8%
 and 0.6%). The simulation’s implicit model is wrong in both, and the
-analytic estimators’ is not. The results are in Appendix D.</p>
+analytic estimators’ is not. Third, a remedy is tested: the simulation’s
+donor kinds are post-stratified into ten equal-count quantiles of
+payment within each design stratum (<em>sim_kind_deciles</em> = 10), so
+that findings are borrowed only among units of similar size; a kind with
+no audited unit inherits its parent stratum’s pooled rates, and the
+audit design and the analytic estimators are unchanged. This is run on
+the base and both size-dependent populations. The results are in
+Appendix D.</p>
 <h2 id="results">3. Results</h2>
 <p>Table 2 provides, for each program, the median point estimate, median
 interval half-width, and coverage of the gross rate under every method
@@ -1403,16 +1413,49 @@ not depend on the enrollee’s payment) and largest where a stratum spans
 a heavy-tailed payment distribution (Part D’s “other non-LTC” stratum
 holds 90% of PDEs and all of the specialty drugs).</p>
 <p>These results show that the simulation’s point accuracy and its
-narrower interval in Sections 3.1 and 3.3 are consequences of the
-independence assumption built into the base populations, not properties
-of the method as such, and that the design-based ratio estimator does
-not share this exposure.</p>
+narrower interval in Sections 3.1 and 3.3 depend on the independence
+assumption built into the base populations, and that the design-based
+ratio estimator does not share this exposure. Section 3.8 tests whether
+the dependence can be removed by borrowing findings only among units of
+similar payment size.</p>
+<h3 id="payment-decile-donor-kinds">3.8 Payment-decile donor kinds</h3>
+<p>Appendix Tables D4–D6 test the remedy described in Section 2.8: the
+simulation borrows findings within design stratum × payment decile
+rather than within the design stratum, with no change to the audit. In
+PERM the remedy works. With errors concentrated on large payments the
+simulation’s bias fell from −14% to −4% and coverage rose from 6 to 22
+of 25; with errors on small payments, from +7% to +0.4% and from 18 to
+25 of 25; on the base population the estimate stayed unbiased and the
+standard deviation rose only from 0.32 to 0.35 points, still below the
+ratio estimator’s 0.43. In CERT and Part D the remedy is partial. CERT’s
+bias fell from −22% to −5% (coverage 0 to 13 of 25) and from +12% to
++1.6% (coverage 0 to 20 of 25), but its standard deviation rose from
+0.11 to 0.17 points, the ratio estimator’s value, so the precision gain
+was spent. Part D’s bias fell from −65% to −38% and from +148% to +19%,
+with coverage of 15 and 23 of 25, and its standard deviation doubled
+from 0.11 to 0.24 points (the ratio estimator’s is 0.47). EIPM was
+unaffected in every scenario, as it was without the deciles.</p>
+<p>The reason the remedy is partial where it is partial is the shape of
+the payment distribution. Claim payments and gross drug costs are
+heavy-tailed, so the top decile of a stratum still spans two orders of
+magnitude and holds most of the improper dollars (in Part D, 61% of the
+truth sits in the top decile of the largest stratum); error incidence
+that depends on size keeps varying within that decile, and the decile’s
+own rate is estimated from a tenth of the stratum’s audit, which is
+where the lost precision goes. In PERM, where Medicaid payments within a
+type × quintile stratum are far less dispersed, a decile is nearly
+homogeneous and the remedy is almost complete. The Part D
+base-population mean of −12% in Table D4 is a Monte Carlo accident of
+these 25 audit years rather than a property of the method: the
+top-decile kind drew 220 audited failures against 265 expected, and over
+300 audit years the same estimator averages 0.99 of the truth (Appendix
+D).</p>
 <h2 id="discussion">4. Discussion</h2>
 <h3 id="principal-findings">4.1 Principal findings</h3>
 <p>In five synthetic populations designed after the five CMS improper
 payment measurements, this study compared the expansion, ratio, and
 model-assisted regression estimators with audit-finding simulation in
-its plug-in and parametric-bootstrap versions. Four findings stand
+its plug-in and parametric-bootstrap versions. Five findings stand
 out.</p>
 <p>First, the plug-in simulation interval is invalid in every program.
 Because the audit is never resampled, the interval measures only how the
@@ -1431,81 +1474,125 @@ D, PERM, and EIPM the resulting interval is still 5–12% narrower than
 the simulation estimator’s own sampling variability, because the error
 sizes are held fixed and the rates of different donor kinds are redrawn
 independently; in CERT it is 13% wider.</p>
-<p>Third, the simulation’s narrower interval is partly efficiency and
-partly under-coverage, and the balance differs by program. Over 100
-audit years, the standard deviation of the simulation’s point estimate
-was 3% below the ratio estimator’s in Part C and 4% below in EIPM, so in
-those programs most of the narrower interval in Table 4 is an interval
-that is too short. In PERM (23%), CERT (35%), and Part D (72%) the
-efficiency gain is real. It comes from the simulation using the
-payments, HCCs, benefit positions, and APTC inputs of every population
-unit, which makes it a model-based estimator in the sense of Valliant,
-Dorfman and Royall (2000): it borrows only the audited error counts and
-takes every unit’s error size from the population.</p>
-<p>Fourth, and most important for policy, that model is a condition, not
-a convenience. When the populations were rebuilt so that error
-probability rises with payment size within strata, the simulation’s
-point estimate ran low by 3% in Part C, 8% in EIPM, 14% in PERM, 22% in
-CERT, and 65% in Part D, and its interval covered the truth in 24, 21,
-6, 0, and 0 of 25 audit years. When error probability falls with payment
-size, the estimate ran high by 9% in Part C, 7% in PERM, and 148% in
-Part D, with coverage of 18, 18, and 0. The design-based estimators were
-unaffected: the ratio estimator covered in 22 to 25 of 25 audit years in
-every scenario, and its bias stayed within 2% except in EIPM (where
-every method runs 5–6% low in every scenario) and Part D (5–8%). The
-simulation’s advantage therefore depends on an assumption the analytic
-estimators do not need, and in the programs where the advantage is
-largest (Part D, CERT, PERM) the penalty for the assumption failing is
-also largest. Whether real audit findings satisfy the assumption is an
-empirical question that the public record does not answer. Pricing
-discrepancies on specialty drugs, documentation failures on high-cost
-inpatient stays, and eligibility errors on high-utilization
-beneficiaries are all plausible mechanisms by which they would not.</p>
+<p>Third, the simulation is more precise than the analytic estimators
+where the payment rules are nonlinear or the error dollars are
+heavy-tailed, and the gain is real rather than an artifact of a short
+interval. Over 100 audit years, the standard deviation of the
+simulation’s point estimate was 23% below the ratio estimator’s in PERM,
+35% below in CERT, and 72% below in Part D; in Part C and EIPM the gain
+was 3–4%, and most of the narrower interval there reflects the
+under-coverage of the second finding. The gain comes from the
+simulation’s use of the payments, HCCs, benefit positions, and APTC
+inputs of every population unit, which makes it a model-based estimator
+in the sense of Valliant, Dorfman and Royall (2000): it borrows only the
+audited error counts and takes every unit’s error size from the
+population.</p>
+<p>Fourth, that model carries one central assumption, which this study
+states as such: within each donor kind, error incidence is independent
+of payment size. The base populations satisfy it by construction. When
+they were rebuilt so that error probability rises with payment size
+within strata, the simulation’s point estimate ran low by 3% in Part C,
+8% in EIPM, 14% in PERM, 22% in CERT, and 65% in Part D, and its
+interval covered the truth in 24, 21, 6, 0, and 0 of 25 audit years;
+when error probability falls with payment size, it ran high by 9% in
+Part C, 7% in PERM, 12% in CERT, and 148% in Part D, with coverage of
+18, 18, 0, and 0. The design-based estimators were unaffected: the ratio
+estimator covered in 22 to 25 of 25 audit years in every scenario. A
+design-based estimator pays for an omitted variable in variance; a
+model-based estimator pays in bias, and because the simulation’s
+interval is narrow the bias is not visible from the interval itself. The
+sign of the association does not matter, and a negative association,
+which the author’s experience of these programs suggests is the more
+common pattern, overstates the improper payment rate.</p>
+<p>Fifth, the assumption can be checked from the audit alone, and where
+it fails there is a partial remedy. Post-stratifying the simulation’s
+donor kinds on payment decile within each design stratum removed the
+bias in PERM at almost no cost in precision (bias −14% → −4% and +7% →
++0.4%; standard deviation 0.32 → 0.35 points against 0.43 for the ratio
+estimator). In CERT and Part D, where payments within a stratum span two
+orders of magnitude and most of the improper dollars sit in the top
+decile, the deciles removed between half and seven-eighths of the bias
+(CERT −22% → −5% and +12% → +1.6%; Part D −65% → −38% and +148% → +19%)
+and gave back most of the precision gain (CERT’s standard deviation rose
+to the ratio estimator’s; Part D’s doubled but stayed at half of the
+ratio estimator’s). The remedy therefore works where the payment
+distribution within strata is moderately dispersed and runs out where it
+is heavy-tailed, which is where a smooth unit-level error model (Section
+4.3) is needed instead.</p>
 <h3 id="policy-implications">4.2 Policy implications</h3>
-<p><strong>Recommendation 1 – Discontinue plug-in simulation
-intervals.</strong> Any CMS measurement whose interval comes from a
-simulation that reuses the audited error rates in every iteration should
-replace it. The Part D interval algorithm is not public; its Sampling
-and Estimation Methodology Plan should be checked for this feature, and
-if present the interval should be recomputed with parametric rates for
-the current cycle. This change costs nothing in record review and can be
-verified by the census check used here (auditing every unit must return
-the true rate exactly).</p>
-<p><strong>Recommendation 2 – Report the design-based ratio interval as
-the primary PIIA interval, with the parametric-bootstrap simulation
-alongside it.</strong> The ratio estimator was within 2% of the truth
-and held close to nominal coverage in every population and every
-robustness scenario, because its validity rests on the sampling design
-alone. The parametric-bootstrap simulation should be reported with it
-where a program already simulates, so that the two can be compared: a
-simulation estimate that drifts from the ratio estimate is itself
-evidence that error incidence depends on unit characteristics within
-strata. A program that reports the simulation as its only estimate has
-no such check.</p>
-<p><strong>Recommendation 3 – Treat the simulation’s precision gain as
-conditional, and test the condition before relying on it.</strong> The
-gain is real in PERM, CERT, and Part D under the stated model. Before it
-is used to justify a smaller audit, three things should be done: (a)
-compare audited error rates across payment quantiles within each
-stratum, which the audit data already permit; (b) stratify or
-post-stratify the simulation’s donor kinds finely enough on payment that
-the within-stratum dependence is small; and (c) confirm coverage
-directly at the reduced audit size with a Monte Carlo study on a
-population built to match the observed dependence. If interval width
-scales with 1/√<em>n</em>, the parametric interval would match the
-current ratio interval at about 83% of the Part C audit, 63% of PERM,
-77% of EIPM, and 59% of CERT (Table 4); from the calibrated standard
-deviations these shares are about 93%, 60%, 93%, and 42%. These figures
-are projections (as opposed to demonstrated results), apply only to the
-gross rate, and hold only where the independence assumption does.</p>
-<p><strong>Recommendation 4 – Protect sparse components.</strong>
-Components that CMS reports separately and that rest on few audited
-errors (underpayments, technically improper payments) were undercovered
-by every method, with the misses below the truth. They need their own
-precision check under any method, and a reduction in audit size for the
-gross rate should not be taken to extend to them.</p>
+<p><strong>Recommendation 1 – Adopt parametric-bootstrap audit-finding
+simulation for PIIA improper payment rates, under a stated and tested
+assumption.</strong> The simulation with parametric rates produced valid
+intervals for the gross rate, the most accurate point estimates, and, in
+Part D, PERM, and CERT, materially narrower intervals than the analytic
+estimators from the same audit. These properties hold on the assumption
+that error incidence is independent of payment size within each donor
+kind. Any Sampling and Estimation Methodology Plan that adopts the
+method should state this assumption explicitly and show the check in
+Recommendation 2 each cycle. Plug-in intervals that reuse the audited
+rates in every iteration should be discontinued wherever they are in
+use; the Part D interval algorithm is not public and should be reviewed
+for this feature.</p>
+<p><strong>Recommendation 2 – Verify the assumption every cycle from the
+audit itself.</strong> The audit contains what is needed. Within each
+stratum, the audited error rate and the audited taint should be
+tabulated across payment quantiles (deciles of the population payment
+distribution within the stratum), with a trend test or a logistic
+regression of error on log payment with stratum fixed effects, pooled
+across strata and across cycles where the per-stratum counts are small.
+The simplest single diagnostic is the comparison the design already
+permits: the simulation estimate and the design-based ratio estimate
+from the same audit, stratum by stratum. Audited errors that sit on
+larger-than-typical units make the ratio estimate exceed the
+simulation’s; the drift is the test, and it costs no additional review.
+Both estimates should be reported together, with the ratio interval as
+the design-based benchmark, until a program has several cycles of
+evidence that the assumption holds.</p>
+<p><strong>Recommendation 3 – Where the check shows an association,
+post-stratify the donor kinds on payment, and judge the remedy by the
+payment distribution.</strong> For a program whose payments within
+strata are moderately dispersed, as in the PERM population here,
+borrowing findings within stratum × payment decile removes the bias and
+keeps most of the precision gain, and the simulation can proceed on that
+basis. For a program whose payments are heavy-tailed within strata, as
+in CERT and Part D here, the deciles are a partial remedy that gives
+back most of the precision gain; such a program should report the ratio
+and simulation estimates together, treat the difference between them as
+the measure of the assumption’s impact, and not reduce its audit on the
+strength of the simulation until a unit-level error model has been
+validated.</p>
+<p><strong>Recommendation 4 – Reduce audit sizes only after the
+assumption has passed and coverage has been confirmed at the smaller
+size.</strong> If interval width scales with 1/√<em>n</em>, the
+parametric interval would match the current ratio interval at about 83%
+of the Part C audit, 63% of PERM, 77% of EIPM, and 59% of CERT (Table
+4), and from the calibrated standard deviations at about 93%, 60%, 93%,
+and 42%. In Part D the gain is larger still but rests on the
+heaviest-tailed population. These are projections (as opposed to
+demonstrated results), they apply to the gross rate only, and they hold
+only where Recommendation 2’s check passes. Two steps should precede any
+reduction: confirm coverage directly at the reduced size with a Monte
+Carlo study on a population built to match the observed error pattern,
+and check the sparse components (underpayments, technically improper
+payments) separately, since every method undercovered them.</p>
 <h3 id="future-research">4.3 Future research</h3>
-<p>Future research should first identify the audit size at which each
+<p>Future research should first replace the within-kind independence
+assumption with a model. A unit-level error model (logistic or
+zero-inflated regression of error probability and size on log payment,
+provider type, drug class, or HCC count), fit on the audit and used to
+assign findings in the simulation, would retain the simulation’s use of
+population structure while removing the assumption that Appendix D shows
+to be decisive, and would succeed where payment deciles run out, in the
+heavy-tailed top of the CERT and Part D distributions. Its coverage
+should be tested on populations built with size-dependent errors, as
+here. Hierarchical models that pool rates across strata, HCCs, or states
+would give zero-failure kinds a plausible nonzero rate, and resampling
+the partial-size list within each iteration, together with a joint
+rather than independent redraw of correlated rates, would address the
+5–12% under-coverage found in the calibration run. BCa or
+double-bootstrap calibration (Efron 1987; Hall 1988) could be applied to
+the iteration distribution for sparse components.</p>
+<p>Second, future research should identify the audit size at which each
 program’s interval still covers the truth at the nominal rate, by
 rerunning each design at reduced sizes (for example 50%, 65%, and 80% of
 current) with at least 200 audit years, for the gross rate and for the
@@ -1514,21 +1601,6 @@ time: Neyman allocation minimizes the variance of the analytic estimator
 (as opposed to the simulation), and the cost of review differs by
 stratum, so cost-weighted allocation (<em>n_h</em> ∝ <em>N_h S_h</em> /
 √<em>c_h</em>) belongs in the same study.</p>
-<p>Second, future research should replace the simulation’s independence
-assumption with a model. A unit-level error model (logistic or
-zero-inflated regression of error probability and size on payment,
-provider type, drug class, or HCC count), fit on the audit and used to
-assign findings in the simulation, would retain the simulation’s use of
-population structure while removing the assumption that Appendix D shows
-to be decisive; its coverage should be tested on populations built with
-size-dependent errors. Hierarchical models that pool rates across
-strata, HCCs, or states would give zero-failure strata a plausible
-nonzero rate, and resampling the partial-size list within each
-iteration, together with a joint rather than independent redraw of
-correlated rates, would address the 5–12% under-coverage found in the
-calibration run. BCa or double-bootstrap calibration (Efron 1987; Hall
-1988) could be applied to the iteration distribution for sparse
-components.</p>
 <p>Third, the same design should be extended to the settings where
 interval accuracy carries dollar consequences: state-level PERM
 eligibility rates, which carry federal match consequences beginning in
@@ -1537,28 +1609,33 @@ FY 2030 (P.L. 119-21); State-based Exchange measurement beginning in
 lower bound for recovery. Finally, under an appropriate data use
 agreement, the two assumptions this study had to make, the share of
 partial errors and the independence of error probability from payment
-size within strata, should be checked against held-out real audit
-samples.</p>
+size within strata, should be measured on held-out real audit samples;
+the second of these is the check in Recommendation 2, applied
+retrospectively.</p>
 <h3 id="limitations">4.4 Limitations</h3>
 <p>The major limitation of this study is that its populations are
 synthetic. They are calibrated only to public aggregates, and the error
 mechanisms, partial-error shares, and, in the main results, the
 independence of errors from payment size within strata are assumptions.
-Appendix D shows that the last assumption decides the comparison, and
-the real degree of dependence is unknown. Strata and audit sizes that
-the agencies do not publish (EIPM, Part C IPM, both Part D audits, and
-CERT’s service-level and jurisdiction strata) are illustrative; MAC
-jurisdictions, denied claims, and the CERT Part A-to-B rebilling
-adjustment are not modeled; PERM is one cycle of nine states rather than
-a three-year rotation of seventeen; Part D’s underpayments are
-structurally sparser than in production.</p>
+Appendix D shows that the last assumption decides the simulation’s
+accuracy, and the real degree and direction of dependence in each
+program are not public. Strata and audit sizes that the agencies do not
+publish (EIPM, Part C IPM, both Part D audits, and CERT’s service-level
+and jurisdiction strata) are illustrative; MAC jurisdictions, denied
+claims, and the CERT Part A-to-B rebilling adjustment are not modeled;
+PERM is one cycle of nine states rather than a three-year rotation of
+seventeen; Part D’s underpayments are structurally sparser than in
+production.</p>
 <p>Second, the main results rest on 25 audit years per program, for
 which the Monte Carlo standard error of a coverage estimate is 4.4
 points, so coverage counts of 22 to 25 cannot be distinguished. The
 100-audit-year calibration run (standard error 2.2 points) and the
 width-to-standard-deviation ratio are the stronger evidence, and they
-show the parametric interval to be 5–12% too narrow in four
-programs.</p>
+show the parametric interval to be 5–12% too narrow in four programs.
+The payment-decile results in Appendix D are also 25-audit-year results,
+and in Part D the fine kinds make the simulation’s point estimate noisy
+enough that its base-population mean is 12% low in these 25 years by
+chance.</p>
 <p>Third, review is assumed to be error-free and final, with no appeals,
 and every method is given the same perfect findings.</p>
 <p>Fourth, the Part D comparison mixes designs and estimators. The ratio
@@ -1572,30 +1649,34 @@ mind.</p>
 <p>Fifth, the parametric version redraws the rates of different donor
 kinds independently and holds the audited error sizes fixed, which is
 why its interval is somewhat too narrow; it is also only one of several
-ways the audit’s uncertainty could be propagated.</p>
+ways the audit’s uncertainty could be propagated, and payment deciles
+are only one way to define donor kinds.</p>
 <p>Sixth, this study addresses two-sided PIIA rate intervals. Recovery
 uses rely on one-sided lower bounds, which were not tested, and no CMS
 program is shown here to use a plug-in simulation; the policy case for
-Recommendation 1 is conditional on that being so.</p>
+discontinuing them is conditional on that being so.</p>
 <h3 id="conclusion">4.5 Conclusion</h3>
-<p>On the question of comparative accuracy, the answer has two parts.
+<p>On the question of comparative accuracy, the answer has three parts.
 Audit-finding simulation with fixed rates produces point estimates as
 accurate as the analytic estimators but intervals far too narrow to be
 valid, because the audit is never resampled and the sampling error of
 the rates is omitted; redrawing the rates from their binomial sampling
-distribution restores nominal coverage for the gross rate. However, the
-simulation’s accuracy and its narrower interval rest on error incidence
-being independent of payment size within strata, an assumption the
-populations satisfied by construction and the design-based estimators do
-not need; when it fails, the simulation is biased and its interval
-misses, while the ratio estimator does not. This study therefore
-recommends that CMS programs discontinue any plug-in simulation
-interval, report the design-based ratio interval as the primary PIIA
-interval with the parametric-bootstrap simulation alongside it, and
-treat the simulation’s precision gain, which is real in Part D, PERM,
-and CERT under the stated model, as a reason to test the independence
-assumption on real audit data and to develop unit-level error models,
-rather than as a basis for smaller audits today.</p>
+distribution restores nominal coverage for the gross rate, and in Part
+D, PERM, and CERT the simulation is then materially more precise than
+the analytic estimators from the same audit. That precision rests on one
+assumption that the design-based estimators do not need, that error
+incidence is independent of payment size within each donor kind; when it
+fails, the simulation is biased in the direction opposite to the
+association and its interval does not reveal it. The assumption can be
+checked from the audit each cycle, and where it fails, borrowing
+findings within payment deciles removes the bias where payments are
+moderately dispersed and reduces it where they are heavy-tailed. This
+study therefore recommends parametric-bootstrap audit-finding simulation
+for PIIA improper payment rates, with the independence assumption stated
+in the methodology plan and tested every cycle against the design-based
+ratio estimate, with payment-decile donor kinds where the test fails,
+and with any reduction in audit size deferred until the test has passed
+and coverage has been confirmed at the smaller size.</p>
 <h2 id="data-and-code-availability">Data and code availability</h2>
 <p>All code, configuration, synthetic populations (or their SHA-256
 manifests where a population is too large to commit), results, the
@@ -2249,8 +2330,22 @@ overpayments, underpayments, and net in dollars) are available in
 rates), and in <code>manuscripts/generated/results_long.csv</code> (all
 methods, including fixed rates). Each program’s README reports the
 analytic methods and the parametric-rate simulation.</p>
-<h2 id="appendix-d.-interval-calibration-and-robustness-to-size-dependent-errors">Appendix
-D. Interval calibration and robustness to size-dependent errors</h2>
+<h2 id="appendix-d.-interval-calibration-robustness-to-size-dependent-errors-and-payment-decile-donor-kinds">Appendix
+D. Interval calibration, robustness to size-dependent errors, and
+payment-decile donor kinds</h2>
+<p>Tables D1–D3 are described in Sections 2.8 and 3.6–3.7. Tables D4–D6
+repeat the base and size-dependent populations with the simulation’s
+donor kinds post-stratified into ten payment quantiles within each
+design stratum (<code>sim_kind_deciles: 10</code>;
+<code>robustness/run.py --only d4</code>). Part C is omitted from D4–D6
+because its donor kinds are HCCs, whose coefficients do not depend on
+the enrollee’s payment. In Part D the top GDC decile of the largest
+stratum holds about 61% of the true improper dollars and its rate is
+estimated from about ten audited failures per audit year, so the
+simulation’s standard deviation roughly doubles; in the 25 audit years
+reported here that kind drew 220 failures against 265 expected, which
+accounts for the −12% mean in Table D4 (over 300 audit years the same
+estimator averages 0.99 of the truth).</p>
 <p><strong>Table D1. Interval calibration over 100 audit years (base
 populations, gross rate)</strong></p>
 <table style="width:100%;">
@@ -3153,5 +3248,797 @@ Bootstrap simulation run at 500 iterations per audit year.</em></p>
 mean payment)^-0.5, capped at 0.95, before calibration to the same
 public targets; designs, audit sizes and methods are unchanged.
 Bootstrap simulation run at 500 iterations per audit year.</em></p>
+<p><strong>Table D4. Simulation donor kinds post-stratified by payment
+decile, sim_kind_deciles = 10, base populations (25 audit years, gross
+rate)</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Program</th>
+<th>Method</th>
+<th>Audit years</th>
+<th>True rate</th>
+<th>Mean estimate</th>
+<th>MAE (% of truth)</th>
+<th>SD of estimate (pts)</th>
+<th>Mean half-width (pts)</th>
+<th>Half-width ÷ 1.96·SD</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Part D</td>
+<td>Expansion</td>
+<td>25</td>
+<td>1.38%</td>
+<td>1.30%</td>
+<td>30.5%</td>
+<td>0.543</td>
+<td>0.727</td>
+<td>0.68</td>
+<td>18/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>1.38%</td>
+<td>1.38%</td>
+<td>23.4%</td>
+<td>0.465</td>
+<td>0.659</td>
+<td>0.72</td>
+<td>18/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>1.38%</td>
+<td>1.49%</td>
+<td>27.9%</td>
+<td>0.473</td>
+<td>0.548</td>
+<td>0.59</td>
+<td>15/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PDE expansion (marginal)</td>
+<td>25</td>
+<td>1.38%</td>
+<td>1.32%</td>
+<td>42.0%</td>
+<td>0.735</td>
+<td>1.112</td>
+<td>0.77</td>
+<td>16/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PDE ratio (marginal)</td>
+<td>25</td>
+<td>1.38%</td>
+<td>1.34%</td>
+<td>41.9%</td>
+<td>0.757</td>
+<td>1.107</td>
+<td>0.75</td>
+<td>17/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>1.38%</td>
+<td>1.22%</td>
+<td>15.9%</td>
+<td>0.243</td>
+<td>0.508</td>
+<td>1.07</td>
+<td>21/25</td>
+</tr>
+<tr class="odd">
+<td>PERM</td>
+<td>Expansion</td>
+<td>25</td>
+<td>6.09%</td>
+<td>6.00%</td>
+<td>5.5%</td>
+<td>0.428</td>
+<td>0.824</td>
+<td>0.98</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>6.09%</td>
+<td>6.01%</td>
+<td>5.6%</td>
+<td>0.432</td>
+<td>0.813</td>
+<td>0.96</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>6.09%</td>
+<td>6.00%</td>
+<td>5.3%</td>
+<td>0.410</td>
+<td>0.785</td>
+<td>0.98</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>6.09%</td>
+<td>6.05%</td>
+<td>4.8%</td>
+<td>0.349</td>
+<td>0.668</td>
+<td>0.98</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td>EIPM</td>
+<td>Expansion</td>
+<td>25</td>
+<td>0.92%</td>
+<td>0.86%</td>
+<td>17.7%</td>
+<td>0.201</td>
+<td>0.351</td>
+<td>0.89</td>
+<td>22/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>0.92%</td>
+<td>0.86%</td>
+<td>17.6%</td>
+<td>0.200</td>
+<td>0.351</td>
+<td>0.89</td>
+<td>22/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>0.92%</td>
+<td>0.87%</td>
+<td>18.1%</td>
+<td>0.204</td>
+<td>0.350</td>
+<td>0.88</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>0.92%</td>
+<td>0.86%</td>
+<td>16.7%</td>
+<td>0.186</td>
+<td>0.326</td>
+<td>0.89</td>
+<td>22/25</td>
+</tr>
+<tr class="odd">
+<td>CERT</td>
+<td>Expansion</td>
+<td>25</td>
+<td>6.50%</td>
+<td>6.55%</td>
+<td>2.2%</td>
+<td>0.169</td>
+<td>0.382</td>
+<td>1.16</td>
+<td>25/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>6.50%</td>
+<td>6.55%</td>
+<td>2.3%</td>
+<td>0.171</td>
+<td>0.376</td>
+<td>1.12</td>
+<td>24/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>6.50%</td>
+<td>6.55%</td>
+<td>2.3%</td>
+<td>0.169</td>
+<td>0.374</td>
+<td>1.13</td>
+<td>24/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>6.50%</td>
+<td>6.56%</td>
+<td>2.0%</td>
+<td>0.168</td>
+<td>0.335</td>
+<td>1.02</td>
+<td>23/25</td>
+</tr>
+</tbody>
+</table>
+<p><em>Donor-kind post-stratification of the bootstrap simulation
+(<code>sim_kind_deciles = 10</code>): each non-audited unit receives
+findings only from audited units of its own design stratum AND its own
+payment decile within that stratum (10 equal-count quantiles of the
+payment variable, computed on the population; Part D: submitted gross
+drug cost per PDE, PERM: the payment, EIPM: annual APTC, CERT: amount
+paid), so that error incidence can vary with payment size within a
+stratum. The audit design, strata, allocation and the analytic
+estimators are unchanged (their rows equal those of the corresponding
+table above up to Monte Carlo seeding); Part C is omitted because its
+HCC donor kinds already carry this structure. A kind with no audited
+unit borrows its parent stratum’s pooled counts, partial sizes and
+parametric redraw; a kind with audited units but no failure assigns
+none, as before. Bootstrap simulation run at 500 iterations per audit
+year.</em></p>
+<p><strong>Table D5. Simulation donor kinds post-stratified by payment
+decile, sim_kind_deciles = 10, size_beta = +0.5 populations (25 audit
+years, gross rate)</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Program</th>
+<th>Method</th>
+<th>Audit years</th>
+<th>True rate</th>
+<th>Mean estimate</th>
+<th>MAE (% of truth)</th>
+<th>SD of estimate (pts)</th>
+<th>Mean half-width (pts)</th>
+<th>Half-width ÷ 1.96·SD</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Part D</td>
+<td>Expansion</td>
+<td>25</td>
+<td>1.41%</td>
+<td>1.04%</td>
+<td>37.6%</td>
+<td>0.526</td>
+<td>0.762</td>
+<td>0.74</td>
+<td>15/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>1.41%</td>
+<td>1.52%</td>
+<td>30.4%</td>
+<td>0.567</td>
+<td>0.846</td>
+<td>0.76</td>
+<td>22/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>1.41%</td>
+<td>1.58%</td>
+<td>34.2%</td>
+<td>0.597</td>
+<td>0.667</td>
+<td>0.57</td>
+<td>18/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PDE expansion (marginal)</td>
+<td>25</td>
+<td>1.41%</td>
+<td>1.18%</td>
+<td>45.0%</td>
+<td>0.744</td>
+<td>1.225</td>
+<td>0.84</td>
+<td>17/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PDE ratio (marginal)</td>
+<td>25</td>
+<td>1.41%</td>
+<td>1.20%</td>
+<td>45.3%</td>
+<td>0.761</td>
+<td>1.220</td>
+<td>0.82</td>
+<td>17/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>1.41%</td>
+<td>0.87%</td>
+<td>38.3%</td>
+<td>0.235</td>
+<td>0.459</td>
+<td>1.00</td>
+<td>15/25</td>
+</tr>
+<tr class="odd">
+<td>PERM</td>
+<td>Expansion</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.18%</td>
+<td>6.4%</td>
+<td>0.511</td>
+<td>1.045</td>
+<td>1.04</td>
+<td>25/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.18%</td>
+<td>6.3%</td>
+<td>0.507</td>
+<td>1.005</td>
+<td>1.01</td>
+<td>25/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.16%</td>
+<td>6.4%</td>
+<td>0.516</td>
+<td>0.906</td>
+<td>0.90</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>6.10%</td>
+<td>5.88%</td>
+<td>5.9%</td>
+<td>0.394</td>
+<td>0.691</td>
+<td>0.90</td>
+<td>22/25</td>
+</tr>
+<tr class="odd">
+<td>EIPM</td>
+<td>Expansion</td>
+<td>25</td>
+<td>0.93%</td>
+<td>0.87%</td>
+<td>17.6%</td>
+<td>0.190</td>
+<td>0.351</td>
+<td>0.94</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>0.93%</td>
+<td>0.87%</td>
+<td>17.6%</td>
+<td>0.190</td>
+<td>0.350</td>
+<td>0.94</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>0.93%</td>
+<td>0.87%</td>
+<td>17.6%</td>
+<td>0.190</td>
+<td>0.350</td>
+<td>0.94</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>0.93%</td>
+<td>0.85%</td>
+<td>17.6%</td>
+<td>0.178</td>
+<td>0.317</td>
+<td>0.91</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td>CERT</td>
+<td>Expansion</td>
+<td>25</td>
+<td>6.44%</td>
+<td>6.45%</td>
+<td>2.5%</td>
+<td>0.199</td>
+<td>0.494</td>
+<td>1.27</td>
+<td>25/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>6.44%</td>
+<td>6.45%</td>
+<td>2.5%</td>
+<td>0.199</td>
+<td>0.474</td>
+<td>1.22</td>
+<td>25/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>6.44%</td>
+<td>6.46%</td>
+<td>2.5%</td>
+<td>0.206</td>
+<td>0.452</td>
+<td>1.12</td>
+<td>25/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>6.44%</td>
+<td>6.10%</td>
+<td>5.3%</td>
+<td>0.149</td>
+<td>0.350</td>
+<td>1.19</td>
+<td>13/25</td>
+</tr>
+</tbody>
+</table>
+<p><em>Donor-kind post-stratification of the bootstrap simulation
+(<code>sim_kind_deciles = 10</code>): each non-audited unit receives
+findings only from audited units of its own design stratum AND its own
+payment decile within that stratum (10 equal-count quantiles of the
+payment variable, computed on the population; Part D: submitted gross
+drug cost per PDE, PERM: the payment, EIPM: annual APTC, CERT: amount
+paid), so that error incidence can vary with payment size within a
+stratum. The audit design, strata, allocation and the analytic
+estimators are unchanged (their rows equal those of the corresponding
+table above up to Monte Carlo seeding); Part C is omitted because its
+HCC donor kinds already carry this structure. A kind with no audited
+unit borrows its parent stratum’s pooled counts, partial sizes and
+parametric redraw; a kind with audited units but no failure assigns
+none, as before. Bootstrap simulation run at 500 iterations per audit
+year.</em></p>
+<p><strong>Table D6. Simulation donor kinds post-stratified by payment
+decile, sim_kind_deciles = 10, size_beta = -0.5 populations (25 audit
+years, gross rate)</strong></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Program</th>
+<th>Method</th>
+<th>Audit years</th>
+<th>True rate</th>
+<th>Mean estimate</th>
+<th>MAE (% of truth)</th>
+<th>SD of estimate (pts)</th>
+<th>Mean half-width (pts)</th>
+<th>Half-width ÷ 1.96·SD</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Part D</td>
+<td>Expansion</td>
+<td>25</td>
+<td>1.39%</td>
+<td>1.60%</td>
+<td>26.5%</td>
+<td>0.502</td>
+<td>0.622</td>
+<td>0.63</td>
+<td>22/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>1.39%</td>
+<td>1.32%</td>
+<td>16.4%</td>
+<td>0.295</td>
+<td>0.489</td>
+<td>0.85</td>
+<td>22/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>1.39%</td>
+<td>1.47%</td>
+<td>20.0%</td>
+<td>0.347</td>
+<td>0.405</td>
+<td>0.60</td>
+<td>19/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PDE expansion (marginal)</td>
+<td>25</td>
+<td>1.39%</td>
+<td>1.36%</td>
+<td>40.2%</td>
+<td>0.698</td>
+<td>0.810</td>
+<td>0.59</td>
+<td>16/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PDE ratio (marginal)</td>
+<td>25</td>
+<td>1.39%</td>
+<td>1.37%</td>
+<td>38.9%</td>
+<td>0.695</td>
+<td>0.817</td>
+<td>0.60</td>
+<td>16/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>1.39%</td>
+<td>1.64%</td>
+<td>23.0%</td>
+<td>0.288</td>
+<td>0.556</td>
+<td>0.98</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td>PERM</td>
+<td>Expansion</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.14%</td>
+<td>5.5%</td>
+<td>0.419</td>
+<td>0.787</td>
+<td>0.96</td>
+<td>25/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.14%</td>
+<td>5.4%</td>
+<td>0.424</td>
+<td>0.779</td>
+<td>0.94</td>
+<td>25/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.15%</td>
+<td>5.5%</td>
+<td>0.433</td>
+<td>0.746</td>
+<td>0.88</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>6.10%</td>
+<td>6.13%</td>
+<td>4.1%</td>
+<td>0.317</td>
+<td>0.613</td>
+<td>0.98</td>
+<td>25/25</td>
+</tr>
+<tr class="odd">
+<td>EIPM</td>
+<td>Expansion</td>
+<td>25</td>
+<td>0.91%</td>
+<td>0.87%</td>
+<td>16.1%</td>
+<td>0.174</td>
+<td>0.348</td>
+<td>1.02</td>
+<td>24/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>0.91%</td>
+<td>0.87%</td>
+<td>16.1%</td>
+<td>0.173</td>
+<td>0.348</td>
+<td>1.02</td>
+<td>24/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>0.91%</td>
+<td>0.87%</td>
+<td>16.1%</td>
+<td>0.173</td>
+<td>0.346</td>
+<td>1.02</td>
+<td>24/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>0.91%</td>
+<td>0.86%</td>
+<td>14.3%</td>
+<td>0.158</td>
+<td>0.328</td>
+<td>1.06</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td>CERT</td>
+<td>Expansion</td>
+<td>25</td>
+<td>6.52%</td>
+<td>6.57%</td>
+<td>1.9%</td>
+<td>0.155</td>
+<td>0.294</td>
+<td>0.97</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Ratio</td>
+<td>25</td>
+<td>6.52%</td>
+<td>6.57%</td>
+<td>1.9%</td>
+<td>0.160</td>
+<td>0.300</td>
+<td>0.96</td>
+<td>23/25</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regression</td>
+<td>25</td>
+<td>6.52%</td>
+<td>6.57%</td>
+<td>1.9%</td>
+<td>0.160</td>
+<td>0.293</td>
+<td>0.94</td>
+<td>23/25</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Simulation (parametric rates)</td>
+<td>25</td>
+<td>6.52%</td>
+<td>6.63%</td>
+<td>2.4%</td>
+<td>0.173</td>
+<td>0.290</td>
+<td>0.86</td>
+<td>20/25</td>
+</tr>
+</tbody>
+</table>
+<p><em>Donor-kind post-stratification of the bootstrap simulation
+(<code>sim_kind_deciles = 10</code>): each non-audited unit receives
+findings only from audited units of its own design stratum AND its own
+payment decile within that stratum (10 equal-count quantiles of the
+payment variable, computed on the population; Part D: submitted gross
+drug cost per PDE, PERM: the payment, EIPM: annual APTC, CERT: amount
+paid), so that error incidence can vary with payment size within a
+stratum. The audit design, strata, allocation and the analytic
+estimators are unchanged (their rows equal those of the corresponding
+table above up to Monte Carlo seeding); Part C is omitted because its
+HCC donor kinds already carry this structure. A kind with no audited
+unit borrows its parent stratum’s pooled counts, partial sizes and
+parametric redraw; a kind with audited units but no failure assigns
+none, as before. Bootstrap simulation run at 500 iterations per audit
+year.</em></p>
 </body>
 </html>

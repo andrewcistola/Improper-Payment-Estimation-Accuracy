@@ -159,26 +159,33 @@ coverage, half-width</td>
 interval; a valid interval scores about 24. Half-width in percentage
 points. Last two rows: errors more likely on large payments / on small
 payments.</em></p>
-<p><strong>Finding 3: the simulation’s advantage depends on an
-assumption.</strong> The simulation borrows only the audited error
-<em>counts</em> and takes every unit’s size from the population, so it
-is accurate only if error probability does not depend on payment size
-within a stratum. In the base populations that is true by construction.
-When it is not, the simulation is biased by 2% to 148% and its narrow
-interval misses, while the design-based ratio estimator stays unbiased
-and covers in 22–25 of 25 audit years in every program.</p>
-<p><strong>Recommendations.</strong> (1) Discontinue any plug-in
-simulation interval; the Part D interval algorithm is not public and
-should be checked. (2) Report the design-based ratio interval as the
-primary PIIA interval, with the parametric-bootstrap simulation
-alongside it; a simulation estimate that drifts from the ratio estimate
-is itself a warning that the assumption fails. (3) Treat the
-simulation’s precision gain, real in Part D, PERM and CERT under the
-stated model, as conditional: compare audited error rates across payment
-quantiles within strata, stratify the simulation’s donor kinds finely on
-payment, and confirm coverage directly at any reduced audit size before
-adopting it. (4) Check sparse components (underpayments, technically
-improper payments) separately; every method undercovered them.</p>
+<p><strong>Finding 3: the simulation’s advantage rests on one stated
+assumption, which can be checked and partly repaired.</strong> The
+simulation borrows only the audited error <em>counts</em> and takes
+every unit’s size from the population, so it is accurate only if error
+probability does not depend on payment size within a donor kind. When it
+does, the simulation is biased by 2% to 148% (in the direction opposite
+to the association) and its narrow interval misses, while the
+design-based ratio estimator stays unbiased and covers in 22–25 of 25
+audit years. Borrowing findings within payment deciles inside each
+stratum removes the bias in PERM (−14% → −4%; +7% → +0.4%) at little
+cost in precision, and removes half to three-quarters of it in CERT and
+Part D, whose payments are heavy-tailed within strata, at the cost of
+most of the precision gain.</p>
+<p><strong>Recommendations.</strong> (1) Adopt parametric-bootstrap
+simulation for PIIA improper payment rates, with the within-kind
+independence of error and payment size stated as a central assumption in
+the methodology plan; discontinue any plug-in interval (the Part D
+algorithm is not public and should be checked). (2) Verify the
+assumption every cycle from the audit: tabulate error rates and taints
+across payment deciles within strata, and report the simulation and the
+design-based ratio estimate together — a drift between them is the test.
+(3) Where the check fails, borrow findings within payment deciles; where
+payments are heavy-tailed within strata, report ratio and simulation
+together and treat their difference as the impact of the assumption. (4)
+Reduce audit sizes (projected 59–83% of today’s for the same width) only
+after the check has passed and coverage has been confirmed at the
+smaller size; check sparse components separately.</p>
 <p><strong>Limitations.</strong> The populations are synthetic and
 calibrated to public aggregates only; strata CMS does not publish are
 illustrative; 25 audit years give a Monte Carlo SE of about 4 points on
@@ -187,10 +194,11 @@ weak because audited error dollars are heavy-tailed; review is assumed
 perfect; one-sided recovery bounds were not tested.</p>
 <p><strong>Future research.</strong> Future research should (1) replace
 the simulation’s independence assumption with a unit-level error model
-fit on the audit and test it on populations with size-dependent errors;
-(2) identify the optimal audit size by rerunning each design at 50–80%
-of the current audit with 200+ audit years; and (3) extend this work to
-state PERM eligibility rates, State-based Exchanges, and one-sided
-recovery bounds.</p>
+fit on the audit, which would succeed where payment deciles run out, and
+test it on populations with size-dependent errors; (2) identify the
+optimal audit size by rerunning each design at 50–80% of the current
+audit with 200+ audit years; and (3) extend this work to state PERM
+eligibility rates, State-based Exchanges, and one-sided recovery
+bounds.</p>
 </body>
 </html>

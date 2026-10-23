@@ -1,0 +1,39 @@
+{
+  "config_file": "eipm/estimation/config.yaml",
+  "config_sha256": "6a1fad8ca08af3e0223d78050f9b7e71fa4bd7ad8f9eea64e89693758259a494",
+  "duckdb": "1.5.6",
+  "files": {
+    "allocation.json": {
+      "bytes": 481,
+      "sha256": "b1271959742ae0e63f39cf2cb13293a98ca4d7bf44b52cba8fa984a0fe9fd3e9"
+    },
+    "config.yaml": {
+      "bytes": 836,
+      "sha256": "65cb38358096e7fc72638d53624178f806a1a72d76b5b1187c9f82c5bf9e6c7b"
+    },
+    "estimates.parquet": {
+      "bytes": 11014,
+      "rows": 300,
+      "sha256": "2954d7062d9b3348cbbaaf4cb39154be9252f643a9d3e08610bdd6f3a8625fde"
+    },
+    "metrics.json": {
+      "bytes": 6613,
+      "sha256": "b3a6c1ae1bf69550759f5615dd5332011eb38d1195b5653acf4bcf0075988553"
+    },
+    "truth.json": {
+      "bytes": 367,
+      "sha256": "197ec859d8ce4429cd9eb225432822d724fd01a4da664825e454ffd70ff0d32e"
+    }
+  },
+  "packages": {
+    "blas": "scipy-openblas 0.3.34.106.0",
+    "numba": "0.68.0",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "pyyaml": "6.0.3",
+    "scipy": "1.18.1"
+  },
+  "program": "eipm_estimation",
+  "python": "3.13.16",
+  "scenario": "base"
+}
