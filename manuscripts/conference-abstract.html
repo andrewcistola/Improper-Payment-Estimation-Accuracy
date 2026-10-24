@@ -64,9 +64,10 @@ estimated with expansion, ratio, and regression estimators and with
 simulation (1,000 iterations) in two versions: plug-in (audited error
 rates held fixed) and parametric bootstrap (rates redrawn from their
 binomial sampling distributions). Each population was then rebuilt with
-error probability rising, and falling, with payment size within strata.
-Outcomes were point accuracy, coverage, width, and the ratio of
-half-width to the estimator’s empirical standard deviation.</p>
+error probability rising, and falling, with payment size within strata,
+and the simulation rerun with donor kinds post-stratified on payment
+decile. Outcomes were point accuracy, coverage, width, and half-width
+relative to the estimator’s empirical standard deviation.</p>
 <p><strong>Population Studied.</strong> Synthetic populations of 330,253
 Medicare Advantage enrollees, 108,000 Part D beneficiaries (4.5 million
 drug claims), 3.1 million Medicaid payments, 142,152 Marketplace
@@ -78,28 +79,28 @@ contained the truth in 31 of 125 audit years (25%), because reusing the
 audited rates omits their sampling error. - <strong>Parametric-bootstrap
 intervals restore coverage.</strong> They contained the true gross rate
 in 121 of 125 audit years and were 9–23% narrower than the ratio
-interval in four programs. Over 100 audit years they were 5–12% narrower
-than the estimator’s own sampling variability in four programs; the real
-efficiency gain over the ratio estimator was 3% (Part C), 4% (EIPM), 23%
-(PERM), 35% (CERT), and 72% (Part D). - <strong>The simulation’s
-advantage depends on an assumption.</strong> When error probability rose
-or fell with payment size, the simulation’s estimate was biased by 2% to
-148% and its interval covered in 0 to 24 of 25 audit years; the ratio
-estimator remained unbiased and covered in 22 to 25. - <strong>Sparse
-measures</strong> (underpayments, technically improper payments) were
-undercovered by every method.</p>
+interval in four programs; over 100 audit years the simulation’s
+standard deviation was 3–4% (Part C, EIPM) to 23–72% (PERM, CERT, Part
+D) below the ratio estimator’s. - <strong>The simulation’s advantage
+rests on one assumption.</strong> When error probability rose or fell
+with payment size, the simulation’s estimate was biased by 2% to 148%
+and its interval covered in 0 to 24 of 25 audit years; the ratio
+estimator remained unbiased (22 to 25). Payment-decile donor kinds
+removed the bias in PERM and most of it in CERT and Part D. -
+<strong>Sparse measures</strong> (underpayments, technically improper
+payments) were undercovered by every method.</p>
 <p><strong>Conclusions.</strong> Plug-in simulation intervals should be
 discontinued. Redrawing the audited rates produces valid intervals, and
-the simulation is more precise where payment rules are nonlinear, but
-its accuracy rests on an independence assumption the design-based ratio
-estimator does not need.</p>
+the simulation is more precise where payment rules are nonlinear, on one
+assumption the design-based ratio estimator does not need: that error
+incidence is independent of payment size within each donor kind.</p>
 <p><strong>Implications for Policy or Practice.</strong> CMS
-measurements should report the design-based ratio interval as the
-primary PIIA interval, with the parametric-bootstrap simulation
-alongside it as a check, and any plug-in simulation interval in use
-should be replaced. The simulation’s precision gain should not be used
-to reduce audit sizes until the independence assumption has been tested
-on real audit data and coverage confirmed at the reduced size;
-unit-level error models are the natural next step.</p>
+measurements should adopt parametric-bootstrap simulation with the
+independence assumption stated and tested every cycle (against the
+design-based ratio estimate where the audit and payment units coincide,
+and from the within-stratum error pattern where they do not), use
+payment-decile donor kinds where the test fails, and defer audit-size
+reductions until the test has passed and coverage is confirmed at the
+smaller size. Unit-level error models are the natural next step.</p>
 </body>
 </html>

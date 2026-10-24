@@ -177,15 +177,19 @@ simulation for PIIA improper payment rates, with the within-kind
 independence of error and payment size stated as a central assumption in
 the methodology plan; discontinue any plug-in interval (the Part D
 algorithm is not public and should be checked). (2) Verify the
-assumption every cycle from the audit: tabulate error rates and taints
-across payment deciles within strata, and report the simulation and the
-design-based ratio estimate together — a drift between them is the test.
-(3) Where the check fails, borrow findings within payment deciles; where
-payments are heavy-tailed within strata, report ratio and simulation
-together and treat their difference as the impact of the assumption. (4)
-Reduce audit sizes (projected 59–83% of today’s for the same width) only
-after the check has passed and coverage has been confirmed at the
-smaller size; check sparse components separately.</p>
+assumption every cycle from the audit: where the audit unit is the
+payment unit (Part C, PERM, EIPM, CERT), report the simulation and the
+design-based ratio estimate together — a drift between them is the test;
+where the frames differ (Part D audits PDEs but pays by
+beneficiary-year), tabulate error rates and taints across payment
+deciles within strata and compare the simulation with and without decile
+donor kinds. (3) Where the check fails, borrow findings within payment
+deciles; where payments are heavy-tailed within strata, report both
+simulation versions (and the ratio where available) and treat their
+difference as the impact of the assumption. (4) Reduce audit sizes
+(projected 59–83% of today’s for the same width) only after the check
+has passed and coverage has been confirmed at the smaller size; check
+sparse components separately.</p>
 <p><strong>Limitations.</strong> The populations are synthetic and
 calibrated to public aggregates only; strata CMS does not publish are
 illustrative; 25 audit years give a Monte Carlo SE of about 4 points on

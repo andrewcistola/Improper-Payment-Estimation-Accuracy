@@ -26,7 +26,7 @@ Terminology: "plug-in audit-finding simulation" (fixed rates) and "parametric-bo
 
 **Recommendations as now written (your framing)**
 1. Adopt parametric-bootstrap simulation for PIIA rates, with the within-kind independence of error and payment size stated as a central assumption in the S&EMP; discontinue plug-in intervals (check the Part D S&EMP).
-2. Verify the assumption every cycle from the audit: error rate and taint by payment decile within strata (trend test / logistic on log payment with stratum effects, pooled across strata and cycles); report simulation and ratio together — the drift is the test.
+2. Verify the assumption every cycle from the audit. Where the audit unit is the payment unit (Part C, PERM, EIPM, CERT): report simulation and ratio from the same audit together — the drift is the test. Where the frames differ (Part D: PDE audit, beneficiary-year payment), no same-audit design-based benchmark exists; the check is error rate and taint by payment decile within strata plus the simulation with vs without decile donor kinds.
 3. Where the test fails, post-stratify donor kinds on payment decile; where payments are heavy-tailed within strata (CERT, Part D) treat it as partial, report ratio and simulation together, and wait for a unit-level model.
 4. Reduce audit sizes (83/63/77/59% of current from Table 4; 93/60/93/42% from calibrated SDs) only after the test passes and coverage is confirmed at the smaller size; sparse components checked separately.
 
